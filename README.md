@@ -2,7 +2,7 @@
 A generalized parser for any language code structured tagging with mapping for VFC tools usage 
 
 
-#BASIC FUNCITON - WORK IN PROGRESS
+#BASIC FUNCTION - WORK IN PROGRESS
 
 The languages dir contians a set of _lang files that are used to do language specific parsing
 

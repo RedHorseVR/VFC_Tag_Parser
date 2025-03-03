@@ -1,0 +1,73 @@
+;  IRL FlowCode Version: Version 10.0
+;  c1995-2015: Visual Flow Coder by 2LResearch
+;
+;  File Name : postProcess.py.vfc
+;  File Date : 02:46:57 PM - 02:Mar:2025
+
+
+input(def  postProcess( filename , comment_marker ):);//
+branch(try:);//// //////
+path();//
+branch(with open(filename, 'r') as file:);//// //////
+path();//
+generic(VFCsplitter = '//' ;);//
+branch(with open( f'{filename}.vfc' , 'w' ) as write_file :);//
+path();//
+loop(for line in file:);// ////
+generic(code = line.strip());//
+generic(comment = "");//
+generic(VFCobj = 'event');//
+branch(if comment_marker in line:);// ////
+path();//
+output();//print( '------------------------------------------------' , comment_marker )
+set(code, comment = code.split(comment_marker, 1));//
+branch(if 'input' in comment   :);//
+path( );//
+set(VFCobj = 'input' ;);//
+path(elif  'branch' in comment  :);//
+set(VFCobj = 'branch' ;);//
+path(elif   'loop' in comment :);//
+set(VFCobj = 'loop' ;);//
+path(elif  'output' in comment  :);//
+set(VFCobj = 'output' ;);//
+path(elif  'path' in comment  :);//
+set(VFCobj = 'path' ;);//
+path(elif  'lend' in comment  :);//
+set(VFCobj = 'lend' ;);//
+path(elif 'bend' in comment  :);//
+set(VFCobj = 'bend' ;);//
+path(elif  'end' in comment  :);//
+set(VFCobj = 'end' ;);//
+path(else:);//
+set(VFCobj = 'process' ;);//
+bend( );//
+output(VFCline =  f'{VFCobj}( {code} );{VFCsplitter}   {comment.strip()} ');//
+generic();//print(code.strip())
+generic();//print(f"{comment_marker} **  {comment.strip()}")
+path(else:);//
+output(VFCline =f'set({code.strip()});{VFCsplitter }>>>> {comment.strip()} ');//
+bend();//
+output(print( VFCline  ));//
+generic( write_file.write(VFCline + '\n')  # generic:168:);// 
+lend();//
+bend( );//
+bend();//
+path(except FileNotFoundError:);//// //////
+output(print(f"The file {filename} does not exist."));//// //////
+path(except Exception as e:);//// //////
+output(print(f"An error occurred: {e}"));//// //////
+set();//////
+bend();//
+end(return);//
+branch(if __name__ == '__main__':);//
+path();//
+bend( );//
+
+
+
+;INSECTA EMBEDDED SESSION INFORMATION
+; 255 16777215 65280 16777088 16711680 13158600 8453888 0 255 255 65535 12632256 64
+;    postProcess.py   #   .
+; notepad.exe
+;INSECTA EMBEDDED ALTSESSION INFORMATION
+; 928 101 2263 870 1 110   283   82    python.key  0

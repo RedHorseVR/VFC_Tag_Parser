@@ -1,0 +1,140 @@
+// TAGGED FOR VFC
+// TAGGED FOR VFC
+
+function showLineInfo( message = '' ) {
+	const e = new Error(); // tag // tagX
+ // tagX
+	console.log( `${message} LINE Executing at: ${lineInfo}` ); // tagX
+async function getCredentials(  ) { // tagB
+ // tag // tagX
+
+		const response = await fetch(addAPIKEY('/api/get-credentials'), { headers: { 'Cache-Control': 'no-cache' } }); // tag // tagX
+			throw new Error('Network response was not ok'); // tag
+		} // tagB
+ // tag
+	const text = await response.text(); // tagB
+		let data = JSON.parse(text); // tag // tagX
+		if( data.result[L-1].type === 'BLANK'  ) // tagX
+			return JSON.parse(   '[]'   ) ; // end
+		}else{ // tagB
+			return data.result; // end // tagX
+ // tagB
+	} catch (error) { // tagB
+ // tag // tagX
+ // tagX
+		}
+	} // tagB
+ // tagB
+
+ // tag
+ // tagB
+ // tag
+async function Confirmation ( prompt , callback ) { // tagB
+	var result = confirm( prompt  ); // tag // tagX
+	if( result  ) // tagX
+		return callback() ; // end
+	}else{ // tagB
+		ReLoad(  ) ; // tag // tagX
+		}
+	} // tagB
+async function SaveJSONdata(USER_ID, ITEMS) { // tagB
+	const payload = { userId: USER_ID,  files: ITEMS }; // tag // tagX
+ // tagX
+	const saveResponse = await fetch( addAPIKEY( '/api/save-credentials' )  , { method: 'POST',headers: {'Content-Type': 'application/json' },body: JSON.stringify(payload) }); // tagX
+	if (!saveResponse.ok) { // tagX
+		} // tag
+	const result = await saveResponse.json(); // tagB // tagX
+	if (!result.success) { // tagX
+		} // tag
+ // tagB // tagX
+} // tagB
+async function sendEmailData( userID , subject='From AMW' , reload = false ) {
+	var  URI =  addAPIKEY( '/api/send-checked-credentials' ) ; // tag // tagX
+	URI +=  `&subject=${ subject }` ; // tagX
+	var prompt =  `Confirm emailing ${numChecked()} selected documents to ${userID}.` ; // tagX
+	if( result  ) // tagX
+	}else{
+		return; // end // tagX
+	try { // tagB // tagX
+		const response = await fetch( URI, { method: 'GET'  }); // tag // tagX
+ // tagX
+		if( reload  ) // tagX
+			ReLoad(  ) ; // tag // tagX
+			}
+	} catch (error) { // tagB
+		console.error('Error sending email :', error); // tag // tagX
+	} // tagB
+function extractNumberAsText(inputString) { // tagB
+	if (!inputString) { // branch // tagX
+		return ''; // end // tagX
+ // tagB // tagX
+	if (matches) { // tagX
+		return   Number(matches[0]).toString(); // end
+	} else { // tagB
+		return ''; // end // tagX
+	} // tagB
+function popPage( page ) { // tagB
+	url  = `${page}?userId=${USER_ID}&apikey=${ APIKEY }` ; // tag // tagX
+	window.open(url, '_blank'); // tagX
+	}
+ // tagB
+
+function generateFolderName(email) {
+ // tag // tagX
+ // tagX
+ // tagX
+	const uniqueFolderName = `${sanitizedEmail}`; // tagX
+	return uniqueFolderName; // tagX
+function togglePopup( message ) { // tagB
+	var popup = document.getElementById("myPopup"); // tag // tagX
+	}
+function toggleHelp( ID) { // tagB
+	alert( 'help toggle ' +  ID   ) ; // tag // tagX
+	popup.classList.toggle("show"); // tagX
+let userData; // tagB
+async function getUserData( user = '' ) {
+ // tag // tagX
+	var url ; // tagX
+
+		if( user!= ''   ) // branch // tagX
+			url = addAPIKEY( `/api/get-user?userId=${user}` ) // tag
+		}else{ // tagB
+			url = addAPIKEY( `/api/get-user` ) ; // tag // tagX
+ // tagB // tagX
+		const data = await response.json(); // tagX
+ // tagX
+	} catch (error) { // tagB
+		console.error("Error getUser profile:", error); // tag // tagX
+ // tagB // tagX
+function Load( url  ) { // tagB
+	var start_page = addAPIKEY(  url ) ; // tag // tagX
+	location.replace( start_page  ) ; // tagX
+function ReLoad( ) { // tagB
+ // tag // tagX
+	console.error(  "START PAGE SET TO ", start_page   ) ; // tagX
+	}
+async function deleteChecked( user ){ // tagB
+	hitEndPoint( addAPIKEY(  '/api/remove-checked-credentials' ) , USER_ID, [], true) // tag // tagX
+	console.error('remove-checked-credentials FileStates:'  ) ; // tagX
+ // tagX
+async function loadJsonFile() { // tagB
+ // tag // tagX
+
+		const response = await fetch(JSON_FILE); // tag // tagX
+
+			data = await response.json(); // tag // tagX
+ // tagX
+	} catch (error) { // tagB
+		console.error(`INFO Error loading JSON:`, error); // tag // tagX
+ // tagX
+ // tagX
+		}
+	} // tagB
+function updateChecked( user ){ // tagB
+	hitEndPoint(  '/api/update-checked-credentials' , USER_ID, [], true) // tag // tagX
+	AI_process_Data();setTimeout(function(){location.reload();},1000); // tagX
+window.onload = async function init() { // tagB
+ // tag // tagX
+} // tagB
+//  Export  Date: 12:44:54 PM - 22:Feb:2025...
+

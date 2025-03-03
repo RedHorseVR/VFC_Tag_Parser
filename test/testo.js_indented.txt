@@ -1,0 +1,161 @@
+function showLineInfo(message = "") {
+	const e = new Error(); // (indent start)
+	const stack = e.stack.split("\n");
+	const lineInfo = stack[2].trim();
+	console.log(`${message} LINE Executing at: ${lineInfo}`);
+} // (indent end)
+async function getCredentials() {
+	try { // (indent start)
+		const response = await fetch(addAPIKEY("/api/get-credentials"), { // (indent start)
+			headers: { "Cache-Control": "no-cache" }, // (indent start)
+		}); // (indent end)
+		if (!response.ok) {
+			throw new Error("Network response was not ok"); // (indent start)
+		} // (indent end)
+		const text = await response.text();
+		let data = JSON.parse(text);
+		let L = data.result.length;
+		if (data.result[L - 1].type === "BLANK") {
+			return JSON.parse("[]"); // (indent start)
+		} else { // (indent end)
+			return data.result; // (indent start)
+		} // (indent end)
+	} catch (error) { // (indent end)
+		console.info("EMPTY WALLET ON SERVER :", error); // (indent start)
+		return JSON.parse("[]");
+	} // (indent end)
+} // (indent end)
+async function Confirmation(prompt, callback) {
+	var result = confirm(prompt); // (indent start)
+	if (result) {
+		return callback(); // (indent start)
+	} else { // (indent end)
+		ReLoad(); // (indent start)
+		return;
+	} // (indent end)
+} // (indent end)
+async function SaveJSONdata(USER_ID, ITEMS) {
+	const payload = { userId: USER_ID, files: ITEMS }; // (indent start)
+	const saveResponse = await fetch(addAPIKEY("/api/save-credentials"), {
+		method: "POST", // (indent start)
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(payload),
+	}); // (indent end)
+	if (!saveResponse.ok) {
+		throw new Error(`Save failed: ${saveResponse.status}`); // (indent start)
+	} // (indent end)
+	const result = await saveResponse.json();
+	if (!result.success) {
+		throw new Error(result.message || "Save operation failed"); // (indent start)
+	} // (indent end)
+	return result.result;
+} // (indent end)
+async function sendEmailData(userID, subject = "From AMW", reload = false) {
+	var URI = addAPIKEY("/api/send-checked-credentials"); // (indent start)
+	URI += `&subject=${subject}`;
+	var prompt = `Confirm emailing ${numChecked()} selected documents to ${userID}.`;
+	var result = confirm(prompt);
+	if (result) {
+	} else {
+		return; // (indent start)
+	} // (indent end)
+	try {
+		const response = await fetch(URI, { method: "GET" }); // (indent start)
+		const result = await response.json();
+		alert("Credentials email sent");
+		if (reload) {
+			ReLoad(); // (indent start)
+		} // (indent end)
+	} catch (error) { // (indent end)
+		console.error("Error sending email :", error); // (indent start)
+	} // (indent end)
+} // (indent end)
+function extractNumberAsText(inputString) {
+	if (!inputString) { // (indent start)
+		return ""; // (indent start)
+	} // (indent end)
+	const matches = inputString.match(/\d+(\.\d+)?/);
+	if (matches) {
+		return Number(matches[0]).toString(); // (indent start)
+	} else { // (indent end)
+		return ""; // (indent start)
+	} // (indent end)
+} // (indent end)
+function popPage(page) {
+	url = `${page}?userId=${USER_ID}&apikey=${APIKEY}`; // (indent start)
+	window.open(url, "_blank");
+	return false;
+} // (indent end)
+function generateFolderName(email) {
+	const invalidChars = /[<>:"/\\|?*\s]+/g; // (indent start)
+	let sanitizedEmail = email.replace(invalidChars, "_");
+	const timestamp = new Date().getTime();
+	const uniqueFolderName = `${sanitizedEmail}`;
+	return uniqueFolderName;
+} // (indent end)
+function togglePopup(message) {
+	var popup = document.getElementById("myPopup"); // (indent start)
+	popup.classList.toggle("show");
+} // (indent end)
+function toggleHelp(ID) {
+	alert("help toggle " + ID); // (indent start)
+	var popup = document.getElementById(ID);
+	popup.classList.toggle("show");
+} // (indent end)
+let userData;
+async function getUserData(user = "") {
+	var response; // (indent start)
+	var url;
+	try {
+		if (user != "") { // (indent start)
+			url = addAPIKEY(`/api/get-user?userId=${user}`); // (indent start)
+		} else { // (indent end)
+			url = addAPIKEY(`/api/get-user`); // (indent start)
+		} // (indent end)
+		response = await fetch(url);
+		const data = await response.json();
+		userData = data.result;
+	} catch (error) { // (indent end)
+		console.error("Error getUser profile:", error); // (indent start)
+	} // (indent end)
+	return userData;
+} // (indent end)
+function Load(url) {
+	var start_page = addAPIKEY(url); // (indent start)
+	console.error("START PAGE SET TO ", start_page);
+	location.replace(start_page);
+} // (indent end)
+function ReLoad() {
+	var start_page = addAPIKEY(location.href); // (indent start)
+	console.error("START PAGE SET TO ", start_page);
+} // (indent end)
+async function deleteChecked(user) {
+	hitEndPoint(addAPIKEY("/api/remove-checked-credentials"), USER_ID, [], true); // (indent start)
+	console.error("remove-checked-credentials FileStates:");
+} // (indent end)
+async function loadJsonFile() {
+	try { // (indent start)
+		const response = await fetch(JSON_FILE); // (indent start)
+		if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+		data = await response.json();
+		window.credentials = data;
+		return true;
+	} catch (error) { // (indent end)
+		console.error(`INFO Error loading JSON:`, error); // (indent start)
+		showLineInfo();
+		sessionStorage.setItem("sessionAIprocessing", "false");
+		return false;
+	} // (indent end)
+} // (indent end)
+function updateChecked(user) {
+	hitEndPoint("/api/update-checked-credentials", USER_ID, [], true); // (indent start)
+	console.error("update-checked-credentials FileStates:", FileStates);
+	AI_process_Data();
+	setTimeout(function () {
+		location.reload(); // (indent start)
+	}, 1000); // (indent end)
+} // (indent end)
+window.onload = async function init() {
+	return; // (indent start)
+}; // (indent end)
+//  Export  Date: 12:44:54 PM - 22:Feb:2025...

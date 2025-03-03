@@ -1,0 +1,325 @@
+// TAGGED FOR VFC
+// TAGGED FOR VFC
+	 // (indent bridge)
+  // === Final Pretty Printed Code === // tag
+function showLineInfo(message = "") { // tagB
+	const e = new Error(); // tag // tagX
+ // tagB
+	const lineInfo = stack[2].trim(); // tag // tagX
+} // tagB
+async function getCredentials() {
+	try { // branch
+		const response = await fetch(addAPIKEY("/api/get-credentials"), { // tag
+			headers: { "Cache-Control": "no-cache" }, // tag
+		}); // tagB // tagX
+			throw new Error("Network response was not ok"); // tag
+		} // tagB
+ // tagB
+	 // (indent bridge)
+		const text = await response.text(); // tag // tagX
+			return JSON.parse("[]"); // end
+		} else { // tagB
+			return data.result; // end
+		} // tagB
+	} catch (error) { // tagB
+		console.info("EMPTY WALLET ON SERVER :", error); // tag
+ // tagB
+	 // (indent bridge)
+		return JSON.parse("[]"); // end
+	} // tagB
+} // tagB
+
+async function Confirmation(prompt, callback) {
+	var result = confirm(prompt); // tag
+ // tagB
+	if (result) { // branch
+		return callback(); // end
+	} else { // tagB
+		ReLoad(); // tag // tagX
+	} // tagB
+} // tagB
+async function SaveJSONdata(USER_ID, ITEMS) {
+	const payload = { userId: USER_ID, files: ITEMS }; // tag
+ // tagB
+	const saveResponse = await fetch(addAPIKEY("/api/save-credentials"), { // tag
+		method: "POST", // tag // tagX
+	}); // tagB
+ // tagB
+	if (!saveResponse.ok) { // branch
+		throw new Error(`Save failed: ${saveResponse.status}`); // tag
+	} // tagB // tagX
+ // tagB
+	if (!result.success) { // branch
+		throw new Error(result.message || "Save operation failed"); // tag
+	} // tagB
+ // tagB
+	return result.result; // end
+} // tagB
+async function sendEmailData(userID, subject = "From AMW", reload = false) {
+	var URI = addAPIKEY("/api/send-checked-credentials"); // tag
+ // tagB
+	URI += `&subject=${subject}`; // tag
+ // tagB
+	var prompt = `Confirm emailing ${numChecked()} selected documents to ${userID}.`; // tag // tagX
+		return; // end
+	} // tagB // tagX
+		const response = await fetch(URI, { method: "GET" }); // tag // tagX
+ // tagB
+	 // (indent bridge)
+		alert("Credentials email sent"); // tag // tagX
+			ReLoad(); // tag
+		} // tagB
+	} catch (error) { // tagB
+		console.error("Error sending email :", error); // tag
+	} // tagB
+} // tagB
+function extractNumberAsText(inputString) {
+	if (!inputString) { // branch
+		return ""; // end
+	} // tagB
+ // tagB
+	const matches = inputString.match(/\d+(\.\d+)?/); // tag // tagX
+		return Number(matches[0]).toString(); // end
+	} else { // tagB
+		return ""; // end
+	} // tagB
+} // tagB
+function popPage(page) {
+	url = `${page}?userId=${USER_ID}&apikey=${APIKEY}`; // tag
+ // tagB
+	window.open(url, "_blank"); // tag // tagX
+} // tagB
+
+function generateFolderName(email) {
+	const invalidChars = /[<>:"/\\|?*\s]+/g; // tag
+ // tagB
+	let sanitizedEmail = email.replace(invalidChars, "_"); // tag
+ // tagB
+	const timestamp = new Date().getTime(); // tag // tagX
+ // tagB
+	return uniqueFolderName; // end
+} // tagB
+function togglePopup(message) {
+	var popup = document.getElementById("myPopup"); // tag // tagX
+} // tagB
+function toggleHelp(ID) {
+	alert("help toggle " + ID); // tag // tagX
+} // tagB
+let userData;
+async function getUserData(user = "") {
+	var response; // tag // tagX
+		if (user != "") { // branch
+			url = addAPIKEY(`/api/get-user?userId=${user}`); // tag
+		} else { // tagB
+			url = addAPIKEY(`/api/get-user`); // tag
+		} // tagB
+ // tagB
+	 // (indent bridge)
+		response = await fetch(url); // tag // tagX
+	} catch (error) { // tagB
+		console.error("Error getUser profile:", error); // tag
+	} // tagB
+ // tagB
+	return userData; // end
+} // tagB
+function Load(url) {
+	var start_page = addAPIKEY(url); // tag // tagX
+} // tagB
+function ReLoad() {
+	var start_page = addAPIKEY(location.href); // tag // tagX
+} // tagB
+async function deleteChecked(user) {
+	hitEndPoint(addAPIKEY("/api/remove-checked-credentials"), USER_ID, [], true); // tag
+ // tagB
+	console.error("remove-checked-credentials FileStates:"); // tag
+} // tagB
+async function loadJsonFile() {
+	try { // branch
+		const response = await fetch(JSON_FILE); // tag // tagX
+ // tagB
+	 // (indent bridge)
+		data = await response.json(); // tag // tagX
+ // tagB
+	 // (indent bridge)
+		return true; // end
+	} catch (error) { // tagB
+		console.error(`INFO Error loading JSON:`, error); // tag // tagX
+ // tagB
+	 // (indent bridge)
+		sessionStorage.setItem("sessionAIprocessing", "false"); // tag
+ // tagB
+	 // (indent bridge)
+		return false; // end
+	} // tagB
+} // tagB
+function updateChecked(user) {
+	hitEndPoint("/api/update-checked-credentials", USER_ID, [], true); // tag // tagX
+		location.reload(); // tag
+	}, 1000); // tagB
+} // tagB
+window.onload = async function init() {
+	return; // end
+}; // tagB
+//  Export  Date: 12:44:54 PM - 22:Feb:2025...
+
+);   // === Final Pretty Printed Code ===
+function showLineInfo(message = "") {
+	const e = new Error(); // tag // tagX
+ // tagB
+	const lineInfo = stack[2].trim(); // tag // tagX
+} // tagB
+async function getCredentials() {
+	try { // branch
+		const response = await fetch(addAPIKEY("/api/get-credentials"), { // tag
+			headers: { "Cache-Control": "no-cache" }, // tag
+		}); // tagB // tagX
+			throw new Error("Network response was not ok"); // tag
+		} // tagB
+ // tagB
+	 // (indent bridge)
+		const text = await response.text(); // tag // tagX
+			return JSON.parse("[]"); // end
+		} else { // tagB
+			return data.result; // end
+		} // tagB
+	} catch (error) { // tagB
+		console.info("EMPTY WALLET ON SERVER :", error); // tag
+ // tagB
+	 // (indent bridge)
+		return JSON.parse("[]"); // end
+	} // tagB
+} // tagB
+
+async function Confirmation(prompt, callback) {
+	var result = confirm(prompt); // tag
+ // tagB
+	if (result) { // branch
+		return callback(); // end
+	} else { // tagB
+		ReLoad(); // tag // tagX
+	} // tagB
+} // tagB
+async function SaveJSONdata(USER_ID, ITEMS) {
+	const payload = { userId: USER_ID, files: ITEMS }; // tag
+ // tagB
+	const saveResponse = await fetch(addAPIKEY("/api/save-credentials"), { // tag
+		method: "POST", // tag // tagX
+	}); // tagB
+ // tagB
+	if (!saveResponse.ok) { // branch
+		throw new Error(`Save failed: ${saveResponse.status}`); // tag
+	} // tagB // tagX
+ // tagB
+	if (!result.success) { // branch
+		throw new Error(result.message || "Save operation failed"); // tag
+	} // tagB
+ // tagB
+	return result.result; // end
+} // tagB
+async function sendEmailData(userID, subject = "From AMW", reload = false) {
+	var URI = addAPIKEY("/api/send-checked-credentials"); // tag
+ // tagB
+	URI += `&subject=${subject}`; // tag
+ // tagB
+	var prompt = `Confirm emailing ${numChecked()} selected documents to ${userID}.`; // tag // tagX
+		return; // end
+	} // tagB // tagX
+		const response = await fetch(URI, { method: "GET" }); // tag // tagX
+ // tagB
+	 // (indent bridge)
+		alert("Credentials email sent"); // tag // tagX
+			ReLoad(); // tag
+		} // tagB
+	} catch (error) { // tagB
+		console.error("Error sending email :", error); // tag
+	} // tagB
+} // tagB
+function extractNumberAsText(inputString) {
+	if (!inputString) { // branch
+		return ""; // end
+	} // tagB
+ // tagB
+	const matches = inputString.match(/\d+(\.\d+)?/); // tag // tagX
+		return Number(matches[0]).toString(); // end
+	} else { // tagB
+		return ""; // end
+	} // tagB
+} // tagB
+function popPage(page) {
+	url = `${page}?userId=${USER_ID}&apikey=${APIKEY}`; // tag
+ // tagB
+	window.open(url, "_blank"); // tag // tagX
+} // tagB
+
+function generateFolderName(email) {
+	const invalidChars = /[<>:"/\\|?*\s]+/g; // tag
+ // tagB
+	let sanitizedEmail = email.replace(invalidChars, "_"); // tag
+ // tagB
+	const timestamp = new Date().getTime(); // tag // tagX
+ // tagB
+	return uniqueFolderName; // end
+} // tagB
+function togglePopup(message) {
+	var popup = document.getElementById("myPopup"); // tag // tagX
+} // tagB
+function toggleHelp(ID) {
+	alert("help toggle " + ID); // tag // tagX
+} // tagB
+let userData;
+async function getUserData(user = "") {
+	var response; // tag // tagX
+		if (user != "") { // branch
+			url = addAPIKEY(`/api/get-user?userId=${user}`); // tag
+		} else { // tagB
+			url = addAPIKEY(`/api/get-user`); // tag
+		} // tagB
+ // tagB
+	 // (indent bridge)
+		response = await fetch(url); // tag // tagX
+	} catch (error) { // tagB
+		console.error("Error getUser profile:", error); // tag
+	} // tagB
+ // tagB
+	return userData; // end
+} // tagB
+function Load(url) {
+	var start_page = addAPIKEY(url); // tag // tagX
+} // tagB
+function ReLoad() {
+	var start_page = addAPIKEY(location.href); // tag // tagX
+} // tagB
+async function deleteChecked(user) {
+	hitEndPoint(addAPIKEY("/api/remove-checked-credentials"), USER_ID, [], true); // tag
+ // tagB
+	console.error("remove-checked-credentials FileStates:"); // tag
+} // tagB
+async function loadJsonFile() {
+	try { // branch
+		const response = await fetch(JSON_FILE); // tag // tagX
+ // tagB
+	 // (indent bridge)
+		data = await response.json(); // tag // tagX
+ // tagB
+	 // (indent bridge)
+		return true; // end
+	} catch (error) { // tagB
+		console.error(`INFO Error loading JSON:`, error); // tag // tagX
+ // tagB
+	 // (indent bridge)
+		sessionStorage.setItem("sessionAIprocessing", "false"); // tag
+ // tagB
+	 // (indent bridge)
+		return false; // end
+	} // tagB
+} // tagB
+function updateChecked(user) {
+	hitEndPoint("/api/update-checked-credentials", USER_ID, [], true); // tag // tagX
+		location.reload(); // tag
+	}, 1000); // tagB
+} // tagB
+window.onload = async function init() {
+	return; // end
+}; // tagB
+//  Export  Date: 12:44:54 PM - 22:Feb:2025...
+

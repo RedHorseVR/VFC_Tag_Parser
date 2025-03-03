@@ -1,0 +1,159 @@
+;  IRL FlowCode Version: Version 10.0
+;  c1995-2015: Visual Flow Coder by 2LResearch
+;
+;  File Name : python_lang.vfc
+;  File Date : 12:51:28 PM - 02:Mar:2025
+
+event(import black);// // event //
+generic();// // -------------------- language settings -------------------- //
+end();//// // -------------------- pretty printer -------------------- ////
+
+input(def pretty_print(source):);// // input //
+generic(""");//
+generic(Format Python source code using Black.);// ////
+generic(This function uses Black's API to format the code.);// ////
+generic(Then, it replaces every group of 4 spaces with a tab to enforce tab-only indentation.);// ////
+set(The pretty printed code is printed for verification.);//// //////
+generic(""");//
+set();//
+set(mode = black.FileMode(line_length=500, target_versions={black.TargetVersion.PY38}));// // set //
+branch(try:);// // branch //
+path();//
+process(formatted = black.format_str(source, mode=mode));// // process //
+process(formatted = re.sub(r"( {4})", "\t", formatted));// // process //
+generic(print(");   // pretty printed code:")                    # output ////);//
+output(print(formatted));// // output //
+output(return formatted);// // output //
+path(except black.NothingChanged:);// // path //
+generic(print(" black made no changes"));//
+end(return source);// // fallback output //
+bend();// ////
+end();// //     //
+set(language = "python");//
+generic(comment_marker = "#");//
+branch();//
+path(blockTypeRules = [);//// //////
+generic({"type": "input",  "regex": r"^def\s+\w+\s*\(.*\):"},);// // : function definition //
+set({"type": "branch", "regex": r"^if\s+.*:"},);//// // : if statement ////
+set({"type": "path",   "regex": r"^(elif|else)\b.*:"},);//// // : elif/else clause ////
+set({"type": "loop",   "regex": r"^(for|while)\s+.*:"},);//// // : for/while loops ////
+generic({"type": "try",    "regex": r"^try\s*:"},);// // try block //
+generic({"type": "except", "regex": r"^except\b.*:"},);// // except clause //
+generic({"type": "finally","regex": r"^finally\s*:"},);// // finally clause //
+generic({"type": "with",   "regex": r"^with\s+.*:"});// // with block //
+set(]);//// //                             ////
+path(closureMapping = {);//// //////
+generic("input": "end",);// // function closes with "end" //
+set("branch": "bend",);//// // if block closes with "bend" ////
+set("path": "bend",);//// // elif/else block closes with "bend" ////
+set("loop": "lend",);//// // loops close with "lend" ////
+generic("try": "end",);// // try block closes with "end" //
+generic("except": "end",);// // except block closes with "end" //
+generic("finally": "end",);// // finally block closes with "end" //
+generic("with": "end");//
+set(});//// //                                     # set ////
+path(outputRules = [);//// //////
+set({"regex": r"print\s*\(", "tag": "output"},);//// // tag for print() calls ////
+set({"regex": r"^\s*return\b", "tag": "output"});//// // tag for return statements ////
+set(]);//// //                                      # set ////
+bend();//
+end();//// // -------------------- single-line expansion rules -------------------- ////
+set(singleLineExpansions = []);// // set//
+set(global _tag_stack);// // set //
+set(_tag_stack = []);// // set //
+
+input(def reset_tag_stack():);// // input //
+generic(""");//
+generic(Reset the language module's internal tag stack.);// ////
+generic(""");//
+end();// // end //
+
+input(def tagMapper(line, isIndent, lineNumber):);// // input //
+set(global _tag_stack);// // set //
+generic(""");//
+set(Debug version of tagMapper() for Python.);//// //////
+generic(This function prints the line number, whether it's processing an indent (header));// ////
+generic(or an outdent (closer), and the line content with any generic tag removed.);// ////
+generic(It then returns a refined lowercase tag based on simple heuristics:);// ////
+set(- if the line starts with "if" ? return "branch" and push "bend" );   //////);//////
+set(- if it starts with "for" or "while" ? return "loop" and push "lend" );   //////);//
+set(- if it starts with "def" ? return "input" and push "end" );   //////);//
+set(- if it starts with "elif" or "else" ? return "path" (do not push));// ////
+set(- if it starts with "try:" ? return "try" and push "end" );   //////);//
+set(- if it starts with "except" ? return "except" (no push));// ////
+set(- if it starts with "finally:" ? return "finally" (no push));// ////
+set(- if it starts with "with" ? return "with" and push "end" );   //////);//
+set(- otherwise, return "tag" and push "tag" );   //////);//////
+generic(For outdent lines (isIndent=False), it pops from the global stack and returns that value,);// ////
+set(or returns "tag" if the stack is empty.);//// //////
+set(""");//
+set();//
+set();//
+set();//
+process(cleaned = re.sub(r"\s*"+re.escape(comment_marker)+r"\s*tag.*", "", line).strip());// // process //
+set(status = "indent" if isIndent else "outdent");//
+output(print(f"DEBUG: Line {lineNumber} ({status}): {cleaned}"));// // output debug info //
+branch(if isIndent:);// ////
+path();//
+branch(if re.match(r"^if\s+", cleaned, re.IGNORECASE):);// ////
+path();//
+set(_tag_stack.append("bend"));//// // push closure for if ////
+output(return "branch");//
+path(elif re.match(r"^(for|while)\s+", cleaned, re.IGNORECASE):);// ////
+set(_tag_stack.append("lend"));//// // push closure for loop ////
+output(return "loop");//
+path(elif re.match(r"^def\s+\w+\s*\(.*\):", cleaned):);// ////
+set(_tag_stack.append("end"));//// // push closure for function ////
+output(return "input");//
+path(elif re.match(r"^(elif|else)\b", cleaned, re.IGNORECASE):);// ////
+output(return "path");//
+path(elif re.match(r"^try\s*:", cleaned):);// ////
+set(_tag_stack.append("bend"));//// // push closure for try ////
+output(return "branch");//
+path(elif re.match(r"^except\b", cleaned, re.IGNORECASE):);// ////
+output(return "path");//
+path(elif re.match(r"^finally\s*:", cleaned, re.IGNORECASE):);// ////
+output(return "path");//
+path(elif re.match(r"^with\s+", cleaned, re.IGNORECASE):);// ////
+set(_tag_stack.append("bend"));//// // push closure for with ////
+output(return "branch");//
+path(else:);// ////
+generic(_tag_stack.append("tag"));// // push default closure //
+output(return "tag");//
+bend();// //   //
+path(else:);// ////
+branch(if _tag_stack:);// ////
+path();//
+output(return _tag_stack.pop());// // output closure tag from stack //
+path(else:);// ////
+end(return "tag");//
+bend();// ////
+bend();// // //
+end();// // end //
+
+input(if __name__ == "__main__":);// // input //
+event(import sys);// ////
+branch(if len(sys.argv) > 1:);// ////
+path();//
+branch(with open(sys.argv[1], "r", encoding="utf-8") as f:);//// //////
+path();//
+bend(source = f.read());//// //////
+generic(pretty = pretty_print(source));// ////
+generic(print(");   // === Final Pretty Printed Code ===")   # output ////);//
+output(print(pretty));// // output //
+path(else:);// ////
+output(print("\nUsage: python python_lang.py <source_file>"));// 
+bend();// // //
+generic();// // END //
+end();//// // -------------------- global stack for tagMapper -------------------- ////
+event(import black);// ////
+event(import re);// // event //
+
+
+
+;INSECTA EMBEDDED SESSION INFORMATION
+; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 3289650
+;    python_lang.py   #   .
+; notepad.exe
+;INSECTA EMBEDDED ALTSESSION INFORMATION
+; 501 169 2707 1613 84 129   797   4294965058    python.key  0

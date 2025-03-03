@@ -1,0 +1,220 @@
+;  IRL FlowCode Version: Version 10.0
+;  c1995-2015: Visual Flow Coder by 2LResearch
+;
+;  File Name : test.vfc
+;  File Date : 07:36:17 PM - 24:Feb:2025
+
+
+input(function showLineInfo(message = '') { );// ////
+set(const e = new Error(); );// ////
+set(const stack = e.stack.split('\n'); );// ////
+set(const lineInfo = stack[2].trim(); );// ////
+output(console.log(`${message} LINE Executing at: ${lineInfo}`); );// ////
+end(} );// ////
+end();// ////
+
+input(async function getCredentials() { );// ////
+branch(try { );// ////
+path();//
+process(const response = await fetch(addAPIKEY('/api/get-credentials'), { headers: { 'Cache-Control': 'no-cache' } }); );// ////
+branch(if (!response.ok) { );// ////
+path();//
+output(throw new Error('Network response was not ok'); );// ////
+bend(} );// ////
+set(const text = await response.text(); );// ////
+set(let data = JSON.parse(text); );// ////
+set(let L = data.result.length; );// ////
+branch(if (data.result[L - 1].type === 'BLANK') { );// ////
+path();//
+output(return JSON.parse('[]'); );// ////
+path(} else { );// ////
+output(return data.result; );// ////
+bend(} );// ////
+path(} catch (error) { );// ////
+output(console.info('EMPTY WALLET ON SERVER :', error); );// ////
+output(return JSON.parse('[]'); );// ////
+bend(} );// ////
+end(} );// ////
+end();// ////
+
+input(async function Confirmation(prompt, callback) { );// ////
+set(var result = confirm(prompt); );// ////
+branch(if (result) { );// ////
+path();//
+output(return callback(); );// ////
+path(} else { );// ////
+process(ReLoad(); );// ////
+output(return; );// ////
+bend(} );// ////
+end(} );// ////
+end();// ////
+
+input(async function SaveJSONdata(USER_ID, ITEMS) { );// ////
+set(const payload = { userId: USER_ID, files: ITEMS }; );// ////
+process(const saveResponse = await fetch(addAPIKEY('/api/save-credentials'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); );// ////
+branch(if (!saveResponse.ok) { );// ////
+path();//
+output(throw new Error(`Save failed: ${saveResponse.status}`); );// ////
+bend(} );// ////
+set(const result = await saveResponse.json(); );// ////
+branch(if (!result.success) { );// ////
+path();//
+output(throw new Error(result.message || 'Save operation failed'); );// ////
+bend(} );// ////
+output(return result.result; );// ////
+end(} );// ////
+end();// ////
+
+input(async function sendEmailData(userID, subject = 'From AMW', reload = false) { );// ////
+set(var URI = addAPIKEY('/api/send-checked-credentials'); );// ////
+set(URI += `&subject=${subject}`; );// ////
+set(var prompt = `Confirm emailing ${numChecked()} selected documents to ${userID}.`; );// ////
+set(var result = confirm(prompt); );// ////
+branch(if (result) { );// ////
+path(} else { );// ////
+output(return; );// ////
+bend(} );// ////
+branch(try { );// ////
+path();//
+process(const response = await fetch(URI, { method: 'GET' }); );// ////
+set(const result = await response.json(); );// ////
+output(alert('Credentials email sent'); );// ////
+branch(if (reload) { );// ////
+path();//
+process(ReLoad(); );// ////
+bend(} );// ////
+path(} catch (error) { );// ////
+output(console.error('Error sending email :', error); );// ////
+bend(} );// ////
+end(} );// ////
+end();// ////
+
+input(function extractNumberAsText(inputString) { );// ////
+branch(if (!inputString) { );// ////
+path();//
+output(return ''; );// ////
+bend(} );// ////
+set(const matches = inputString.match(/\d+(\.\d+)?/); );// ////
+branch(if (matches) { );// ////
+path();//
+output(return Number(matches[0]).toString(); );// ////
+path(} else { );// ////
+output(return ''; );// ////
+bend(} );// ////
+end(} );// ////
+end();// ////
+
+input(function popPage(page) { );// ////
+set(url = `${page}?userId=${USER_ID}&apikey=${APIKEY}`; );// ////
+output(window.open(url, '_blank'); );// ////
+output(return false; );// ////
+end(} );// ////
+end();// ////
+
+input(function generateFolderName(email) { );// ////
+set(const invalidChars = /[<>:"/\\|?*\s]+/g; );   //////);//
+set(let sanitizedEmail = email.replace(invalidChars, "_"); );// ////
+set(const timestamp = new Date().getTime(); );// ////
+set(const uniqueFolderName = `${sanitizedEmail}`; );// ////
+output(return uniqueFolderName; );// ////
+end(} );// ////
+end();// ////
+
+input(function togglePopup(message) { );// ////
+set(var popup = document.getElementById("myPopup"); );// ////
+process(popup.classList.toggle("show"); );// ////
+end(} );// ////
+end();// ////
+
+input(function toggleHelp(ID) { );// ////
+output(alert('help toggle ' + ID); );// ////
+set(var popup = document.getElementById(ID); );// ////
+process(popup.classList.toggle("show"); );// ////
+end(} );// ////
+set(let userData; );// ////
+end();// ////
+
+input(async function getUserData(user = '') { );// ////
+set(var response; );// ////
+set(var url; );// ////
+branch(try { );// ////
+path();//
+branch(if (user != '') { );// ////
+path();//
+set(url = addAPIKEY(`/api/get-user?userId=${user}`); );// ////
+path(} else { );// ////
+set(url = addAPIKEY(`/api/get-user`); );// ////
+bend(} );// ////
+process(response = await fetch(url); );// ////
+set(const data = await response.json(); );// ////
+set(userData = data.result; );// ////
+path(} catch (error) { );// ////
+output(console.error("Error getUser profile:", error); );// ////
+bend(} );// ////
+output(return userData; );// ////
+end(} );// ////
+end();// ////
+
+input(function Load(url) { );// ////
+set(var start_page = addAPIKEY(url); );// ////
+output(console.error("START PAGE SET TO ", start_page); );// ////
+process(location.replace(start_page); );// ////
+end(} );// ////
+end();// ////
+
+input(function ReLoad() { );// ////
+set(var start_page = addAPIKEY(location.href); );// ////
+output(console.error("START PAGE SET TO ", start_page); );// ////
+end(} );// ////
+end();// ////
+
+input(async function deleteChecked(user) { );// ////
+process(hitEndPoint(addAPIKEY('/api/remove-checked-credentials'), USER_ID, [], true); );// ////
+output(console.error('remove-checked-credentials FileStates:'); );// ////
+end(} );// ////
+end();// ////
+
+input(async function loadJsonFile() { );// ////
+branch(try { );// ////
+path();//
+process(const response = await fetch(JSON_FILE); );// ////
+branch(if (!response.ok) { );// ////
+path();//
+output(throw new Error(`HTTP error! status: ${response.status}`); );// ////
+bend(} );// ////
+set(data = await response.json(); );// ////
+set(window.credentials = data; );// ////
+output(return true; );// ////
+path(} catch (error) { );// ////
+output(console.error(`INFO Error loading JSON:`, error); );// ////
+process(showLineInfo(); );// ////
+set(sessionStorage.setItem('sessionAIprocessing', 'false'); );// ////
+output(return false; );// ////
+bend(} );// ////
+end(} );// ////
+end();// ////
+
+input(function updateChecked(user) { );// ////
+process(hitEndPoint('/api/update-checked-credentials', USER_ID, [], true); );// ////
+output(console.error('update-checked-credentials FileStates:', FileStates); );// ////
+process(AI_process_Data(); );// ////
+
+input(setTimeout(function() { );// ////
+output(location.reload(); );// ////
+end(}, 1000); );// ////
+end(} );// ////
+end();// ////
+
+input(window.onload = async function init() { );// ////
+output(return; );// ////
+end(} );// ////
+event();// ////
+
+
+
+;INSECTA EMBEDDED SESSION INFORMATION
+; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 3289650
+;    //   //   ...
+; notepad.exe
+;INSECTA EMBEDDED ALTSESSION INFORMATION
+; 4294966288 4294965742 968 3655 0 130   448   4294962575    java.key  0

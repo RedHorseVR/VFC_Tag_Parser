@@ -1,0 +1,245 @@
+;  IRL FlowCode Version: Version 10.0
+;  c1995-2015: Visual Flow Coder by 2LResearch
+;
+;  File Name : common.js.vfc
+;  File Date : 12:44:54 PM - 22:Feb:2025
+
+event();//const crypto = require('crypto');
+set();//var PASSKEY = "123456";
+set();//var USER_ID = getUserIDLocal() ;
+end();//
+
+input(function showLineInfo( message = '' ) {);// ////
+generic(const e = new Error(););// ////
+generic(const stack = e.stack.split('\n'););// ////
+generic();// // This will typically be the second line of the stack trace//
+generic(const lineInfo = stack[2].trim(););// ////
+generic(console.log( `${message} LINE Executing at: ${lineInfo}` ););// ////
+end(});//// //////
+
+input(async function getCredentials(  ) {);// ////
+output();//console.log("INFO .... from index") ;
+branch(try {);// ////
+path();//
+event(const response = await fetch(addAPIKEY('/api/get-credentials'), { headers: { 'Cache-Control': 'no-cache' } }););//// //////
+branch(if (!response.ok));// ////
+path( throw new Error('Network response was not ok'););//
+bend();//
+
+input(const text = await response.text(););//// //////
+generic(let data = JSON.parse(text););// 
+generic(let L = data.result.length;);// 
+branch(if( data.result[L-1].type === 'BLANK'  ));//
+path( {);//
+end(return JSON.parse(   '[]'   ) ;);// 
+path( }else{);//
+end(return data.result;);//// //////
+bend( });//
+generic( );//data.result  = data.result.filter(record => record.type !== 'BLANK');
+path(} catch (error) {);// ////
+generic( ////);//console.error('Error:', error);
+output(console.info('EMPTY WALLET ON SERVER :', error););//// //////
+generic( ////);//throw error;
+end(return JSON.parse(   '[]'   ) ;);// 
+bend(});// ////
+end(});//// //////
+output();//alert(  '! onPageLoad - Credentials '    ) ;
+
+input();// // Asynchronous function to get credentials //
+set();//
+
+input();//function getUserIDLocal() {
+end();//return id; }
+
+input(async function Confirmation ( prompt , callback ) {);//
+generic(var result = confirm( prompt  ););//
+generic();//alert(  "in Confirmation"   );
+branch(if( result  ));//
+path( {);//
+end(return callback() ;);//////
+path( }else{);//
+process(ReLoad(  ) ;);//location.reload();
+end(return;);//////
+bend( });//
+end(  });//
+
+input(async function SaveJSONdata(USER_ID, ITEMS) {);// ////
+generic(const payload = { userId: USER_ID,  files: ITEMS };);//
+generic();//
+output();//console.log(`[v${VERSION}] Saving to endpoint: ${SAVE_ENDPOINT}`);
+output();//console.log(`[Save payload:`, payload);
+process(const saveResponse = await fetch( addAPIKEY( '/api/save-credentials' )  , { method: 'POST',headers: {'Content-Type': 'application/json' },body: JSON.stringify(payload) }););//t fetch( '/api/save-credentials'
+output(// //////);//console.log(`[Save response status:`, saveResponse.status);
+branch(if (!saveResponse.ok) {);// ////
+path(throw new Error(`Save failed: ${saveResponse.status}`););// ////
+bend(});//// //////
+generic(const result = await saveResponse.json(););// ////
+output(// //////);//console.log(`[Save response:`, result);
+branch(if (!result.success) {);// ////
+path(throw new Error(result.message || 'Save operation failed'););// ////
+bend(});//// //////
+output();//alert( ( result.result ) );
+end(return result.result ;);// 
+end(});//// //////
+
+input(async function sendEmailData( userID , subject='From AMW' , reload = false ) {);//// ////FILE:..\serverFunctions.py.vfc -Goto 22
+set(var  URI =  addAPIKEY( '/api/send-checked-credentials' ) ;);//
+generic( );//const Params = new URLSearchParams(params).toString();
+set( URI +=  `&subject=${ subject }` ;);//
+output();//console.log(`Calling  endpoint: ${URI}`);
+set(var prompt =  `Confirm emailing ${numChecked()} selected documents to ${userID}.` ;);//
+generic(var result = confirm(  prompt  ););//
+branch(if( result  ));//
+path( {);//
+path( }else{);//
+end(return;);//////
+bend( });//
+branch(try {);//// //////
+path();//
+generic(const response = await fetch( URI, { method: 'GET'  }););//
+generic(const result = await response.json(););// ////
+output(// //////);//console.log('Success:', result);
+output(alert(  'Credentials email sent'   ) ;);//
+branch(if( reload  ));//
+path( {);//
+generic(ReLoad(  ) ;);//location.reload();
+output();//console.error('Error!'); debugger; 
+bend( });//
+path(} catch (error) {);//// //////
+output(console.error('Error sending email :', error););//// //////
+bend(});//// //////
+end(});//// //////
+
+input(function extractNumberAsText(inputString) {);// ////
+branch(if (!inputString) {);// ////
+path();//
+generic(return '';);// ////
+bend(});// ////
+generic();// // Use regex to match any number (including decimals) //
+set(const matches = inputString.match(/\d+(\.\d+)?/););//// //////
+branch(if (matches) {);// ////
+path();//
+end(return   Number(matches[0]).toString(););// // Returns the number as text //
+path(} else {);// ////
+generic(return '';);// ////
+bend(});// ////
+end(});//// //////
+
+input(function popPage( page ) {);// ////
+set(url  = `${page}?userId=${USER_ID}&apikey=${ APIKEY }` ;);//// //////
+generic();// //alert( page) ; //
+generic(window.open(url, '_blank'););// ////
+generic(return false;);// ////
+end(});//// //////
+set();//
+set();//
+
+input(function generateFolderName(email) {);//
+set();//
+set(const invalidChars = /[<>:"/\\|?*\s]+/g;);//
+set();//
+set(let sanitizedEmail = email.replace(invalidChars, "_"););//
+set();//
+set(const timestamp = new Date().getTime(););//
+set(const uniqueFolderName = `${sanitizedEmail}`;);//
+set();//
+set(return uniqueFolderName;);//
+end(});//
+
+input(function togglePopup( message ) {);// ////
+generic(var popup = document.getElementById("myPopup"););// ////
+generic(popup.classList.toggle("show"););// ////
+end(});//// //////
+
+input(function toggleHelp( ID) {);// ////
+output(alert( 'help toggle ' +  ID   ) ;);//
+generic(var popup = document.getElementById( ID ););// ////
+generic(popup.classList.toggle("show"););// ////
+end(});//// //////
+set(let userData;);//window.onload = getUserData;
+
+input(async function getUserData( user = '' ) {);//
+output();//console.log( "getUserData ... " , user );
+set(var response;);//
+set(var url ;);//
+branch(try {);//
+path();//
+branch(if( user!= ''   ));//
+path( {);//
+generic(url = addAPIKEY( `/api/get-user?userId=${user}` ));// ////
+path(}else{);//
+generic( url = addAPIKEY( `/api/get-user` ) ;);// ////
+bend( });//
+output();//console.log( "getUserData ... url " , url );
+set(response = await fetch(  url  ););//const response = await fetch(   `/api/get-user`   );
+set(const data = await response.json(););//
+set(userData = data.result;);//
+set();//
+output();//console.log( "USER DATA", userData );
+path(} catch (error) {);//
+output(console.error("Error getUser profile:", error););//////
+bend(});//
+output();//alert(  '!' + userData) ;
+end(return userData ;  });//
+
+input(function Load( url  ) {);//
+generic(var start_page = addAPIKEY(  url ) ;);// 
+output(console.error(  "START PAGE SET TO ", start_page   ) ;);//
+set(location.replace( start_page  ) ;);//location.reload();
+end(  });//
+
+input(function ReLoad( ) {);//
+output();//console.error('start_page in ReLoad :', start_page ); debugger;
+generic(var start_page = addAPIKEY(  location.href ) ;);// 
+output( console.error(  "START PAGE SET TO ", start_page   ) ;);//
+set();//location.replace( start_page  ) ;
+end(  });//
+
+input(async function deleteChecked( user ){);// ////
+generic(hitEndPoint( addAPIKEY(  '/api/remove-checked-credentials' ) , USER_ID, [], true));// 
+generic( ////);//let FileStates = await loadNUMORGANIZED();
+output(console.error('remove-checked-credentials FileStates:'  ) ;);//// //////
+generic();// //alert(); //
+generic();//setTimeout(function(){location.reload();},1000); 
+end(});//// //////
+
+input(async function loadJsonFile() {);//
+output( );//console.log(`INFO Loading JSON file`);
+branch(try {);//
+path();//
+set(const response = await fetch(JSON_FILE););//
+branch(if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`););//////
+path();//
+set(data = await response.json(););//
+generic(window.credentials = data;);// ////
+process(// //////);//renderContent();
+bend(return true;);//////
+path(} catch (error) {);//
+output(console.error(`INFO Error loading JSON:`, error););//
+event(showLineInfo(););//
+output();//console.error('Error!' ); debugger;
+generic(sessionStorage.setItem('sessionAIprocessing', 'false'););//
+generic();//document.getElementById('refreshButton').disabled = false ;
+set(return false;);//
+bend(});//
+end(});//
+
+input(function updateChecked( user ){);// ////
+generic(hitEndPoint(  '/api/update-checked-credentials' , USER_ID, [], true));// ////
+generic(console.error('update-checked-credentials FileStates:' , FileStates) ;);// ////
+generic(AI_process_Data();setTimeout(function(){location.reload();},1000););// ////
+end(});//// //////
+
+input(window.onload = async function init() {);//
+set();//console.log(`[v${VERSION}] ++++++++++++++++++++++++++Initializing application`);
+end(return;);//
+end(});//
+
+
+
+;INSECTA EMBEDDED SESSION INFORMATION
+; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 3289650
+;    common.js   //   ...
+; notepad.exe
+;INSECTA EMBEDDED ALTSESSION INFORMATION
+; 329 183 1898 1507 13 144   782   4294957700    javascript.key  0

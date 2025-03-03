@@ -1,0 +1,220 @@
+;  IRL FlowCode Version: Version 10.0
+;  c1995-2015: Visual Flow Coder by 2LResearch
+;
+;  File Name : javascript_lang.vfc
+;  File Date : 02:47:13 PM - 02:Mar:2025
+
+event(import re);//
+event(import subprocess);//
+end();//// // Basic language settings               # set ////
+set(language = "JavaScript");//
+set(comment_marker = "//");//
+branch();//// // (Optional) Block type rules           # set ////
+path(blockTypeRules = [);////// ////////
+generic({"type": "input", "regex": r"(async|function)\b\("},);//{"type": "input", "regex": r"^(async\s+function|function)\s+\w+\s*\("},
+generic({"type": "branch", "regex": r"^if\s*\("},);// ////
+generic({"type": "path",   "regex": r"(else|catch|finally)\b"},);//
+generic({"type": "loop",   "regex": r"^(for\s*\(|while\s*\("});// ////
+set(]);////// // set //////
+path(closureMapping = {);////// ////////
+generic("input": "end",);// ////
+generic("branch": "bend",);// ////
+generic("path": "bend",);// ////
+generic("loop": "lend");//
+set(});////// // set //////
+path(outputRules = [);////// ////////
+generic({"regex": r"\bconsole\.(log|info|error|warn)\s*\(", "tag": "output"},);// ////
+generic();//{"regex": r"^\s*return\b", "tag": "output"}
+set(]);////// // set //////
+bend();//
+branch(singleLineExpansions = [);////// ////////
+path({);//// //////
+generic("name": "singleIf",);// ////
+generic("regex": r"^\s*if\s*\((.*?)\)\s*(?!\{)(.*);$",);// ////
+generic("replacement": [);// ////
+set("if ($1) {",);//// //////
+set("\t$2;",);//// //////
+generic("}");// ////
+generic(]);// ////
+generic(},);// ////
+path({);//// //////
+generic("name": "singleElse",);// ////
+generic("regex": r"^\s*else\s+(.*);$",);// ////
+generic("replacement": [);// ////
+generic("else {",);// ////
+generic("\t$1;",);// ////
+generic("}");// ////
+generic(]);// ////
+generic(},);// ////
+path({);//// //////
+generic("name": "singleFor",);// ////
+generic("regex": r"^\s*for\s*\((.*?)\)\s*(?!\{)(.*);$",);// ////
+generic("replacement": [);// ////
+set("for ($1) {",);//// //////
+generic("\t$2;",);// ////
+generic("}");// ////
+generic(]);// ////
+generic(},);// ////
+path({);//// //////
+generic("name": "singleWhile",);// ////
+generic("regex": r"^\s*while\s*\((.*?)\)\s*(?!\{)(.*);$",);// ////
+generic("replacement": [);// ////
+set("while ($1) {",);//// //////
+generic("\t$2;",);// ////
+generic("}");// ////
+generic(]);// ////
+generic(});// ////
+bend(]);//// // set ////
+set(_tag_stack = []);// // set //
+end();//
+
+input(def pretty_print(source):);// // input//
+generic(""");//
+generic(Format JavaScript source code using Prettier.);// ////
+generic(This function calls 'npx prettier --use-tabs --stdin-filepath dummy.js');// ////
+set(to read the source from STDIN and return the formatted code from STDOUT.);//// //////
+generic(""");//
+branch(try:);//// //////
+path();//
+generic(result = subprocess.run();// ////
+generic(["npx", "prettier", "--use-tabs", "--stdin-filepath", "dummy.js"],);// ////
+generic(input=source.encode("utf-8"),);// ////
+generic(stdout=subprocess.PIPE,);// ////
+generic(stderr=subprocess.PIPE,);// ////
+generic(shell=True,);// // <-- Enable shell mode//
+generic(check=True);// ////
+generic());// ////
+end(tabbed_source = result.stdout.decode("utf-8"));//// // output////
+path(except subprocess.CalledProcessError as e:);//// //////
+output(print("Error in pretty_print:", e.stderr.decode("utf-8")));//// //////
+end(return source);// // fallback//
+bend();//
+end(return insert_comment_after_empty_if(tabbed_source));//////
+end();// // end//
+
+input(def replace_match(match):);// ////
+generic(if_part = match.group(1));// ////
+generic(whitespace = match.group(2));// ////
+generic(closing_brace = match.group(3));// ////
+generic();// // Extract indentation from the closing brace line //
+generic(indent = re.match(r'\n(\s*)}', closing_brace).group(1));// ////
+generic();// // Construct the replacement with the added comment line //
+end(return f"{if_part}{whitespace}// tagA\n{indent}\t{closing_brace}");// ////
+
+input(def insert_comment_after_empty_if(source):);// ////
+set(pattern = r'(if\s*\([^)]*\)\s*{)(\s*)(\n\s*})');//// //////
+generic();// // Apply the replacement //
+end(return re.sub(pattern, replace_match, source));// ////
+end();//
+set();//// // Example usage: ////
+generic();// // result = insert_comment_after_empty_if(source) //
+generic();// // print(result)//
+
+input(def reset_tag_stack():);// ////
+generic();///""" //
+generic(# Reset the language module's internal tag stack.);// ////
+generic();///""" //
+set(global _tag_stack);// // set //
+set(_tag_stack = []);// // set //
+end();// // end //
+set(i = 0);//
+
+input(def tagMapper(line, indentTag, lineNumber):);/// //////
+set(global i);//
+generic(""");//
+generic(Debug version of tagMapper().);// ////
+set(This function prints debug information for the given line (after default tag removal));//// //////
+generic(along with whether it's processing an indent (header) or an outdent (closer) and the line number.);// ////
+generic(Then it returns a placeholder refined tag based on simple heuristics.);// ////
+generic(Parameters:);// ////
+generic(- line: the code line (string) to be tagged (assumed to have default markers removed));// ////
+set(- indentTag: Boolean; True if the line is an indent/header, False if it's an outdent/closer.);///// ////////
+set(- lineNumber: the current line number.);//// //////
+generic(Heuristics:);// ////
+set(- If the line starts with "if(" ? return "branch" and push "bend" );  //////);//
+set(- If the line starts with "for(" or "while(" ? return "loop" and push "lend" );  //////);//
+set(- If the line starts with "async function" or "function" ? return "input" and push "end" );  //////);//
+set(- If the line starts with "else", "catch", or "finally" ? return "tag" (i.e. reuse previous closure));//// //////
+set(- Otherwise, return "tag" and push "tag".);//// //////
+set(""");//
+set();//
+set();//
+set();//
+set(global _tag_stack);// // set //
+process(cleaned = line.strip());// // process //
+output(print(f"DEBUG: Line {lineNumber} {i} ({ indentTag  }): {line} "));// // output //
+branch( if indentTag == 'tagA'  or indentTag == 'tagX'    :);// 
+path();//
+branch(if re.match(r"^(if\s*\()", cleaned, re.IGNORECASE):);//if  "try" in line  :
+path();//
+output(print( "--------->",  line  ));//
+generic(_tag_stack.append("bend"));// ////
+end(rtnval =  "branch");//
+path(elif re.match(r"^try", cleaned, re.IGNORECASE):);//
+set(_tag_stack.append("bend"));//
+end(rtnval =  "branch");//
+path(elif re.match(r"^(for\s*\(|while\s*\()", cleaned, re.IGNORECASE):);//// //////
+set(_tag_stack.append("lend"));// ////
+end(rtnval =  "loop");//
+path(elif "async" in line :);// elif re.match(r"async", line , re.IGNORECASE):
+set(_tag_stack.append("end"));// ////
+end(rtnval =  "input---");//
+path(elif re.match(r"function", line , re.IGNORECASE):);// 
+set(_tag_stack.append("end"));// ////
+end(rtnval =  "input");//
+path( elif re.match(r"(\}\s*else|\}\s*catch|finally)", cleaned, re.IGNORECASE):);//elif  "else" or "catch" or "finally" in line and len(line) < 10  :
+set();// // Do not push a new closure for else/catch; reuse prior closure. //
+generic();//_tag_stack.append("bend")
+set();//i -=1
+output(print( '------------------------------------------------'));//
+end(rtnval =  "path...");//
+path(elif re.match(r"^(return|continue)", cleaned, re.IGNORECASE):);// 
+end(rtnval =  "end");//
+path(else:);//// //////
+generic(_tag_stack.append("tag"));// ////
+end(rtnval =  "process");//
+bend();//
+path(else:);//// //////
+branch(if _tag_stack  and  indentTag == 'tagB' :);//
+path();//
+set(i -=1);//
+end(rtnval =  _tag_stack.pop());///// ////////
+path(else:);//// //////
+branch(if  re.match( r"^if\b", cleaned ) :);//catch the a line empty if
+path( );//
+generic(_tag_stack.append("bend"));// ////
+end(rtnval =  "branch");//
+path(else:);//
+end(rtnval =  "process");//
+bend( );//
+bend();//// // end ////
+bend();//// // end ////
+end(return rtnval);//
+end();//
+
+input(if __name__ == "__main__":);// // input //
+event(import sys);// ////
+branch(if len(sys.argv) > 1:);// ////
+path();//
+branch(with open(sys.argv[1], "r", encoding="utf-8") as f:);//// //////
+path();//
+generic(source = f.read());// ////
+bend();//
+generic(pretty = pretty_print(source));// ////
+output(print(");   // === Final Pretty Printed Code ===")   # output ////);//
+output(print(pretty));// // output //
+path(else:);//// //////
+output(print("Usage: python javascript_lang.py <source_file>"));//// //
+bend();//// // end////
+end();//
+end();//
+end();//
+
+
+
+;INSECTA EMBEDDED SESSION INFORMATION
+; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 3289650
+;    javascript_lang.py   #   .
+; notepad.exe
+;INSECTA EMBEDDED ALTSESSION INFORMATION
+; 1291 151 2027 1000 118 209   871   4294964311    python.key  0

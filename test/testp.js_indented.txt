@@ -1,0 +1,323 @@
+// === Final Pretty Printed Code ===
+function showLineInfo(message = "") { // input
+	const e = new Error();
+	const stack = e.stack.split("\n");
+	const lineInfo = stack[2].trim();
+	console.log(`${message} LINE Executing at: ${lineInfo}`);
+} // end
+async function getCredentials() { // input---
+	try { // branch
+		const response = await fetch(addAPIKEY("/api/get-credentials"), { // tag
+			headers: { "Cache-Control": "no-cache" },
+		}); // tag
+		if (!response.ok) { // branch
+			throw new Error("Network response was not ok");
+		} // bend
+		const text = await response.text();
+		let data = JSON.parse(text);
+		let L = data.result.length;
+		if (data.result[L - 1].type === "BLANK") { // branch
+			return JSON.parse("[]");
+		} else { // path...
+			return data.result;
+		} // bend
+	} catch (error) { // path...
+		console.info("EMPTY WALLET ON SERVER :", error);
+		return JSON.parse("[]");
+	} // bend
+} // end
+async function Confirmation(prompt, callback) { // input---
+	var result = confirm(prompt);
+	if (result) { // branch
+		return callback();
+	} else { // path...
+		ReLoad();
+		return;
+	} // bend
+} // end
+async function SaveJSONdata(USER_ID, ITEMS) { // input---
+	const payload = { userId: USER_ID, files: ITEMS };
+	const saveResponse = await fetch(addAPIKEY("/api/save-credentials"), { // tag
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(payload),
+	}); // tag
+	if (!saveResponse.ok) { // branch
+		throw new Error(`Save failed: ${saveResponse.status}`);
+	} // bend
+	const result = await saveResponse.json();
+	if (!result.success) { // branch
+		throw new Error(result.message || "Save operation failed");
+	} // bend
+	return result.result;
+} // end
+async function sendEmailData(userID, subject = "From AMW", reload = false) { // input---
+	var URI = addAPIKEY("/api/send-checked-credentials");
+	URI += `&subject=${subject}`;
+	var prompt = `Confirm emailing ${numChecked()} selected documents to ${userID}.`;
+	var result = confirm(prompt);
+	if (result) {
+	} else { // path...
+		return;
+	} // end
+	try { // branch
+		const response = await fetch(URI, { method: "GET" });
+		const result = await response.json();
+		alert("Credentials email sent");
+		if (reload) { // branch
+			ReLoad();
+		} // bend
+	} catch (error) { // path...
+		console.error("Error sending email :", error);
+	} // bend
+} // tag
+function extractNumberAsText(inputString) { // input
+	if (!inputString) { // branch
+		return "";
+	} // bend
+	const matches = inputString.match(/\d+(\.\d+)?/);
+	if (matches) { // branch
+		return Number(matches[0]).toString();
+	} else { // path...
+		return "";
+	} // bend
+} // end
+function popPage(page) { // input
+	url = `${page}?userId=${USER_ID}&apikey=${APIKEY}`;
+	window.open(url, "_blank");
+	return false;
+} // end
+function generateFolderName(email) { // input
+	const invalidChars = /[<>:"/\\|?*\s]+/g;
+	let sanitizedEmail = email.replace(invalidChars, "_");
+	const timestamp = new Date().getTime();
+	const uniqueFolderName = `${sanitizedEmail}`;
+	return uniqueFolderName;
+} // end
+function togglePopup(message) { // input
+	var popup = document.getElementById("myPopup");
+	popup.classList.toggle("show");
+} // end
+function toggleHelp(ID) { // input
+	alert("help toggle " + ID);
+	var popup = document.getElementById(ID);
+	popup.classList.toggle("show");
+} // end
+let userData;
+async function getUserData(user = "") { // input---
+	var response;
+	var url;
+	try { // branch
+		if (user != "") { // branch
+			url = addAPIKEY(`/api/get-user?userId=${user}`);
+		} else { // path...
+			url = addAPIKEY(`/api/get-user`);
+		} // bend
+		response = await fetch(url);
+		const data = await response.json();
+		userData = data.result;
+	} catch (error) { // path...
+		console.error("Error getUser profile:", error);
+	} // bend
+	return userData;
+} // end
+function Load(url) { // input
+	var start_page = addAPIKEY(url);
+	console.error("START PAGE SET TO ", start_page);
+	location.replace(start_page);
+} // end
+function ReLoad() { // input
+	var start_page = addAPIKEY(location.href);
+	console.error("START PAGE SET TO ", start_page);
+} // end
+async function deleteChecked(user) { // input---
+	hitEndPoint(addAPIKEY("/api/remove-checked-credentials"), USER_ID, [], true);
+	console.error("remove-checked-credentials FileStates:");
+} // end
+async function loadJsonFile() { // input---
+	try { // branch
+		const response = await fetch(JSON_FILE);
+		if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+		data = await response.json();
+		window.credentials = data;
+		return true;
+	} catch (error) { // path...
+		console.error(`INFO Error loading JSON:`, error);
+		showLineInfo();
+		sessionStorage.setItem("sessionAIprocessing", "false");
+		return false;
+	} // bend
+} // end
+function updateChecked(user) { // input
+	hitEndPoint("/api/update-checked-credentials", USER_ID, [], true);
+	console.error("update-checked-credentials FileStates:", FileStates);
+	AI_process_Data();
+	setTimeout(function () { // tag
+		location.reload();
+	}, 1000); // tag
+} // end
+window.onload = async function init() { // input---
+	return;
+}; // end
+//  Export  Date: 12:44:54 PM - 22:Feb:2025...
+function showLineInfo(message = "") { // input
+	const e = new Error();
+	const stack = e.stack.split("\n");
+	const lineInfo = stack[2].trim();
+	console.log(`${message} LINE Executing at: ${lineInfo}`);
+} // end
+async function getCredentials() { // input---
+	try { // branch
+		const response = await fetch(addAPIKEY("/api/get-credentials"), { // tag
+			headers: { "Cache-Control": "no-cache" },
+		}); // tag
+		if (!response.ok) { // branch
+			throw new Error("Network response was not ok");
+		} // bend
+		const text = await response.text();
+		let data = JSON.parse(text);
+		let L = data.result.length;
+		if (data.result[L - 1].type === "BLANK") { // branch
+			return JSON.parse("[]");
+		} else { // path...
+			return data.result;
+		} // bend
+	} catch (error) { // path...
+		console.info("EMPTY WALLET ON SERVER :", error);
+		return JSON.parse("[]");
+	} // bend
+} // end
+async function Confirmation(prompt, callback) { // input---
+	var result = confirm(prompt);
+	if (result) { // branch
+		return callback();
+	} else { // path...
+		ReLoad();
+		return;
+	} // bend
+} // end
+async function SaveJSONdata(USER_ID, ITEMS) { // input---
+	const payload = { userId: USER_ID, files: ITEMS };
+	const saveResponse = await fetch(addAPIKEY("/api/save-credentials"), { // tag
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(payload),
+	}); // tag
+	if (!saveResponse.ok) { // branch
+		throw new Error(`Save failed: ${saveResponse.status}`);
+	} // bend
+	const result = await saveResponse.json();
+	if (!result.success) { // branch
+		throw new Error(result.message || "Save operation failed");
+	} // bend
+	return result.result;
+} // end
+async function sendEmailData(userID, subject = "From AMW", reload = false) { // input---
+	var URI = addAPIKEY("/api/send-checked-credentials");
+	URI += `&subject=${subject}`;
+	var prompt = `Confirm emailing ${numChecked()} selected documents to ${userID}.`;
+	var result = confirm(prompt);
+	if (result) {
+	} else { // path...
+		return;
+	} // end
+	try { // branch
+		const response = await fetch(URI, { method: "GET" });
+		const result = await response.json();
+		alert("Credentials email sent");
+		if (reload) { // branch
+			ReLoad();
+		} // bend
+	} catch (error) { // path...
+		console.error("Error sending email :", error);
+	} // bend
+} // tag
+function extractNumberAsText(inputString) { // input
+	if (!inputString) { // branch
+		return "";
+	} // bend
+	const matches = inputString.match(/\d+(\.\d+)?/);
+	if (matches) { // branch
+		return Number(matches[0]).toString();
+	} else { // path...
+		return "";
+	} // bend
+} // end
+function popPage(page) { // input
+	url = `${page}?userId=${USER_ID}&apikey=${APIKEY}`;
+	window.open(url, "_blank");
+	return false;
+} // end
+function generateFolderName(email) { // input
+	const invalidChars = /[<>:"/\\|?*\s]+/g;
+	let sanitizedEmail = email.replace(invalidChars, "_");
+	const timestamp = new Date().getTime();
+	const uniqueFolderName = `${sanitizedEmail}`;
+	return uniqueFolderName;
+} // end
+function togglePopup(message) { // input
+	var popup = document.getElementById("myPopup");
+	popup.classList.toggle("show");
+} // end
+function toggleHelp(ID) { // input
+	alert("help toggle " + ID);
+	var popup = document.getElementById(ID);
+	popup.classList.toggle("show");
+} // end
+let userData;
+async function getUserData(user = "") { // input---
+	var response;
+	var url;
+	try { // branch
+		if (user != "") { // branch
+			url = addAPIKEY(`/api/get-user?userId=${user}`);
+		} else { // path...
+			url = addAPIKEY(`/api/get-user`);
+		} // bend
+		response = await fetch(url);
+		const data = await response.json();
+		userData = data.result;
+	} catch (error) { // path...
+		console.error("Error getUser profile:", error);
+	} // bend
+	return userData;
+} // end
+function Load(url) { // input
+	var start_page = addAPIKEY(url);
+	console.error("START PAGE SET TO ", start_page);
+	location.replace(start_page);
+} // end
+function ReLoad() { // input
+	var start_page = addAPIKEY(location.href);
+	console.error("START PAGE SET TO ", start_page);
+} // end
+async function deleteChecked(user) { // input---
+	hitEndPoint(addAPIKEY("/api/remove-checked-credentials"), USER_ID, [], true);
+	console.error("remove-checked-credentials FileStates:");
+} // end
+async function loadJsonFile() { // input---
+	try { // branch
+		const response = await fetch(JSON_FILE);
+		if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+		data = await response.json();
+		window.credentials = data;
+		return true;
+	} catch (error) { // path...
+		console.error(`INFO Error loading JSON:`, error);
+		showLineInfo();
+		sessionStorage.setItem("sessionAIprocessing", "false");
+		return false;
+	} // bend
+} // end
+function updateChecked(user) { // input
+	hitEndPoint("/api/update-checked-credentials", USER_ID, [], true);
+	console.error("update-checked-credentials FileStates:", FileStates);
+	AI_process_Data();
+	setTimeout(function () { // tag
+		location.reload();
+	}, 1000); // tag
+} // end
+window.onload = async function init() { // input---
+	return;
+}; // end
+//  Export  Date: 12:44:54 PM - 22:Feb:2025...

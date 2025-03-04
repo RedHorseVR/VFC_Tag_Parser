@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : python_lang.vfc
-;  File Date : 02:04:14 PM - 04:Mar:2025
+;  File Date : 02:06:58 PM - 04:Mar:2025
 
 event(import sys);// ////
 event(import black);// ////
@@ -107,7 +107,7 @@ set(_tag_stack.append("bend"));//// // push closure for with ////
 output(return "branch");//
 path(else:);// ////
 generic(_tag_stack.append("tag"));// // push default closure //
-output(return "tag");//
+output(return "tag-----<<<");//
 bend();// //   //
 path(else:);// ////
 branch(if _tag_stack:);// ////
@@ -141,4 +141,4 @@ end();//// // -------------------- global stack for tagMapper ------------------
 ;    python_lang.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 809 241 2884 1088 84 119   849   4294965077    python.key  0
+; 809 241 2884 1088 101 119   4294965966   4294965158    python.key  0

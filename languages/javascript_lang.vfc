@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : javascript_lang.vfc
-;  File Date : 02:47:13 PM - 02:Mar:2025
+;  File Date : 12:50:59 PM - 04:Mar:2025
 
 event(import re);//
 event(import subprocess);//
@@ -77,7 +77,7 @@ generic(""");//
 branch(try:);//// //////
 path();//
 generic(result = subprocess.run();// ////
-generic(["npx", "prettier", "--use-tabs", "--stdin-filepath", "dummy.js"],);// ////
+generic(["npx", "prettier", "--use-tabs", "--print-width", "500", "--stdin-filepath", "dummy.js"],);// ////
 generic(input=source.encode("utf-8"),);// ////
 generic(stdout=subprocess.PIPE,);// ////
 generic(stderr=subprocess.PIPE,);// ////
@@ -217,4 +217,4 @@ end();//
 ;    javascript_lang.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 1291 151 2027 1000 118 209   871   4294964311    python.key  0
+; 1291 151 1317 1046 118 128   658   4294966252    python.key  0

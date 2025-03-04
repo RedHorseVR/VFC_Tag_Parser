@@ -70,7 +70,7 @@ def pretty_print(source):
 	try:
 	
 		result = subprocess.run(
-		["npx", "prettier", "--use-tabs", "--stdin-filepath", "dummy.js"],
+		["npx", "prettier", "--use-tabs", "--print-width", "500", "--stdin-filepath", "dummy.js"],
 		input=source.encode("utf-8"),
 		stdout=subprocess.PIPE,
 		stderr=subprocess.PIPE,
@@ -197,5 +197,5 @@ if __name__ == "__main__":
 	
 
 
-#  Export  Date: 02:47:13 PM - 02:Mar:2025.
+#  Export  Date: 12:50:59 PM - 04:Mar:2025.
 

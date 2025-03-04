@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : postProcess.py.vfc
-;  File Date : 02:46:57 PM - 02:Mar:2025
+;  File Date : 01:30:20 PM - 04:Mar:2025
 
 
 input(def  postProcess( filename , comment_marker ):);//
@@ -44,8 +44,8 @@ bend( );//
 output(VFCline =  f'{VFCobj}( {code} );{VFCsplitter}   {comment.strip()} ');//
 generic();//print(code.strip())
 generic();//print(f"{comment_marker} **  {comment.strip()}")
-path(else:);//
-output(VFCline =f'set({code.strip()});{VFCsplitter }>>>> {comment.strip()} ');//
+path(else:);//<----- use generic mappings for now for outputs and ends
+output(VFCline =f'{ match_GENERIC_type(code.strip()) }({ code.strip() });  {VFCsplitter }   ----->>>> {comment.strip()} ');//VFCline =f'set({code.strip()});{VFCsplitter }>>>> {comment.strip()} '
 bend();//
 output(print( VFCline  ));//
 generic( write_file.write(VFCline + '\n')  # generic:168:);// 
@@ -59,9 +59,31 @@ output(print(f"An error occurred: {e}"));//// //////
 set();//////
 bend();//
 end(return);//
+
+input(def match_GENERIC_type(  search_str ):);//
+output(genericTypes = { "end" : "return end continue;" , "output" : "alert throw console print echo" ,  "set" : "= var const" });//////
+generic();//search_words = set(search_str.split())
+loop(for key, value in genericTypes.items():);// 
+generic( value_words = set(value.split()));// // Split the value into words//
+loop(for tok  in  value_words:);//
+branch(if tok in  search_str :);//
+path();//
+end(return key);//// //////
+bend();//////
+lend( );//
+lend();//
+end(return 'set');//
+end();//
 branch(if __name__ == '__main__':);//
 path();//
+process( postProcess(  'testo.js_indented.txt'  , '//' ));//
+process( postProcess(  'testo.py_indented.txt' , '#'  ));//
 bend( );//
+end();//
+end();//
+end();//
+end();//
+end();//
 
 
 
@@ -70,4 +92,4 @@ bend( );//
 ;    postProcess.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 928 101 2263 870 1 110   283   82    python.key  0
+; 260 133 2905 1610 1 140   953   4294966476    python.key  0

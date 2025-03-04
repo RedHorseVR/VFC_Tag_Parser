@@ -6,9 +6,7 @@ function showLineInfo(message = "") { // input
 } // end
 async function getCredentials() { // input---
 	try { // branch
-		const response = await fetch(addAPIKEY("/api/get-credentials"), { // process
-			headers: { "Cache-Control": "no-cache" },
-		}); // tag
+		const response = await fetch(addAPIKEY("/api/get-credentials"), { headers: { "Cache-Control": "no-cache" } });
 		if (!response.ok) { // branch
 			throw new Error("Network response was not ok");
 		} // bend
@@ -36,11 +34,7 @@ async function Confirmation(prompt, callback) { // input---
 } // end
 async function SaveJSONdata(USER_ID, ITEMS) { // input---
 	const payload = { userId: USER_ID, files: ITEMS };
-	const saveResponse = await fetch(addAPIKEY("/api/save-credentials"), { // process
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify(payload),
-	}); // tag
+	const saveResponse = await fetch(addAPIKEY("/api/save-credentials"), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
 	if (!saveResponse.ok) { // branch
 		throw new Error(`Save failed: ${saveResponse.status}`);
 	} // bend

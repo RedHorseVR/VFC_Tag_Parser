@@ -38,7 +38,7 @@ def  postProcess( filename , comment_marker ):
 						
 						
 					else:
-						VFCline =f'set({code.strip()});{VFCsplitter }>>>> {comment.strip()} '
+						VFCline =f'{ match_GENERIC_type(code.strip()) }({ code.strip() });  {VFCsplitter }   ----->>>> {comment.strip()} '
 						
 					print( VFCline  )
 					write_file.write(VFCline + '\n')  # generic:168:
@@ -52,8 +52,29 @@ def  postProcess( filename , comment_marker ):
 		
 		
 	return
+def match_GENERIC_type(  search_str ):
+	genericTypes = { "end" : "return end continue;" , "output" : "alert throw console print echo" ,  "set" : "= var const" }
+	
+	for key, value in genericTypes.items():
+		value_words = set(value.split())
+		for tok  in  value_words:
+			if tok in  search_str :
+			
+				return key
+				
+					
+			
+	return 'set'
+
 if __name__ == '__main__':
 
+	postProcess(  'testo.js_indented.txt'  , '//' )
+	postProcess(  'testo.py_indented.txt' , '#'  )
 	
-#  Export  Date: 02:46:57 PM - 02:Mar:2025.
+
+
+
+
+
+#  Export  Date: 01:30:20 PM - 04:Mar:2025.
 

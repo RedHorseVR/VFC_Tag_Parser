@@ -1,0 +1,192 @@
+process( import argparse   );//   event 
+process( import os   );//   event 
+process( import re   );//   event 
+process( import sys   );//   event 
+process(  );//   Helper to load a language module based on command line argument. 
+input( def load_language_module(lang_name):  );//   input 
+set(lang_name = lang_name.lower());  //   ----->>>>  
+branch( if lang_name == "javascript":  );//   branch 
+set(import languages.javascript_lang as mod);  //   ----->>>>  
+path( elif lang_name == "python":  );//   path 
+set(import languages.python_lang as mod);  //   ----->>>>  
+path( elif lang_name == "perl":  );//   path 
+set(import languages.perl_lang as mod);  //   ----->>>>  
+path( else:  );//   path 
+set(sys.exit("Unsupported language: " + lang_name));  //   ----->>>>  
+process( return mod  );//   tag 
+process(  );//   Convert groups of spaces to tabs (assuming 4 spaces per tab).  # event 
+process(  );//   tag 
+input( def convert_spaces_to_tabs(text, spaces_per_tab=4):  );//   input 
+end(return re.sub(" {" + str(spaces_per_tab) + r"}", "\t", text));  //   ----->>>>  
+process(  );//   ----- Phase 1: Pretty Print, Reindent & Mark Block Lines ----- 
+process(  );//   tag 
+input( def phase1_reindent(lines, comment_marker):  );//   input 
+set(""");  //   ----->>>>  
+output(Assumes the source has been pretty printed.);  //   ----->>>>  
+set(Reindent the code using a simple brace counter.);  //   ----->>>>  
+end(Every line that ends with "{" or starts with "}" is appended with the generic tag " tag".);  //   ----->>>>  
+end(Additionally, if a control statement does not end with "{" but the following line is a lone "{",);  //   ----->>>>  
+set(then mark the control statement with " tag-header" and the brace line with " tag-brace".);  //   ----->>>>  
+set(""");  //   ----->>>>  
+set(indent_level = 0);  //   ----->>>>  
+set(new_lines = []);  //   ----->>>>  
+set(i = 0);  //   ----->>>>  
+loop( while i < len(lines):  );//   loop 
+set(line = lines[i].rstrip());  //   ----->>>>  
+process(  );//   Look ahead for a header pair. 
+branch( if i < len(lines) - 1 and not line.rstrip().endswith("{"):  );//   branch 
+set(next_line = lines[i + 1].rstrip());  //   ----->>>>  
+branch( if next_line.strip() == "{" or next_line.strip().startswith("{" + " " + comment_marker + " tag"):  );//   branch 
+set(new_indent = "\t" * indent_level);  //   ----->>>>  
+process(  );//   Mark control statement with special header marker. 
+branch( if comment_marker + " tag-header" not in line:  );//   branch 
+end(new_lines.append(new_indent + line.strip() + " " + comment_marker + " tag-header"));  //   ----->>>>  
+path( else:  );//   path 
+end(new_lines.append(new_indent + line.strip()));  //   ----->>>>  
+process( indent_level += 1  );//   tag 
+set(new_indent = "\t" * indent_level);  //   ----->>>>  
+process(  );//   Mark lone brace with special brace marker. 
+branch( if comment_marker + " tag-brace" not in next_line:  );//   branch 
+end(new_lines.append(new_indent + next_line.strip() + " " + comment_marker + " tag-brace"));  //   ----->>>>  
+path( else:  );//   path 
+end(new_lines.append(new_indent + next_line.strip()));  //   ----->>>>  
+process( i += 2  );//   tag 
+set(continue);  //   ----->>>>  
+process(  );//   Normal processing. 
+process(  );//   tag 
+process( stripped = line.strip()  );//   tag 
+branch( if stripped.startswith("}"):  );//   branch 
+set(indent_level = max(0, indent_level - 1));  //   ----->>>>  
+process( new_indent = "\t" * indent_level  );//   tag 
+branch( if stripped.endswith("{") or stripped.startswith("}"):  );//   branch 
+branch( if comment_marker + " tag" not in stripped:  );//   branch 
+end(new_lines.append(new_indent + stripped + " " + comment_marker + " tag"));  //   ----->>>>  
+path( else:  );//   path 
+end(new_lines.append(new_indent + stripped));  //   ----->>>>  
+process(  );//   tag 
+path( else:  );//   path 
+end(new_lines.append(new_indent + stripped));  //   ----->>>>  
+branch( if stripped.endswith("{"):  );//   branch 
+set(indent_level += 1);  //   ----->>>>  
+process( i += 1  );//   tag 
+process( return new_lines  );//   tag 
+process(  );//   ----- Phase 2: Discriminate & Map Tags Using tagMapper() and a Stack ----- 
+process(  );//   tag 
+input( def phase2_map_tags(lines, comment_marker, lang):  );//   input 
+set(""");  //   ----->>>>  
+set(Process lines marked with a generic tag.);  //   ----->>>>  
+loop( For header lines:  );//   loop 
+process(  );//   tag 
+set(- If a line contains "tag-header", remove that marker and call lang.tagMapper() with isIndent=True);  //   ----->>>>  
+process( on the header's content. Replace the marker with the refined tag and push the expected closure (via lang.closureMapping)  );//   tag 
+process( onto a local stack.  );//   tag 
+set(- For the following line marked "tag-brace", simply replace its marker with " path".);  //   ----->>>>  
+end(- For normal header lines (ending with "{ tag"), process similarly.);  //   ----->>>>  
+process(  );//   tag 
+loop( For closing lines (lines starting with "}" with " tag"), call lang.tagMapper() with isIndent=False to get the refined closing tag.  );//   loop 
+set(""");  //   ----->>>>  
+set(new_lines = []);  //   ----->>>>  
+process( stack = []   );//   local stack for expected closures 
+set(line_num = 0);  //   ----->>>>  
+input( def remove_marker(line, marker):  );//   input 
+end(return re.sub(r"\s*" + re.escape(comment_marker) + r"\s*" + re.escape(marker), "", line));  //   ----->>>>  
+loop( for line in lines:  );//   loop 
+set(line_num += 1);  //   ----->>>>  
+process(  );//   Process header line with "tag-header". 
+branch( if comment_marker + " tag-header" in line:  );//   branch 
+set(header_line = line);  //   ----->>>>  
+set(cleaned = remove_marker(header_line, "tag-header").rstrip());  //   ----->>>>  
+set(refined = lang.tagMapper(cleaned, True, line_num));  //   ----->>>>  
+process( new_header = re.sub(  );//   tag 
+set(r"\s*" + re.escape(comment_marker) + r"\s*tag-header",);  //   ----->>>>  
+set(" " + comment_marker + " " + refined,);  //   ----->>>>  
+set(header_line,);  //   ----->>>>  
+process( )  );//   tag 
+end(new_lines.append(new_header));  //   ----->>>>  
+set(expected = lang.closureMapping.get(refined, refined));  //   ----->>>>  
+end(stack.append(expected));  //   ----->>>>  
+set(continue);  //   ----->>>>  
+process(  );//   Process the following brace line marked "tag-brace". 
+branch( if comment_marker + " tag-brace" in line:  );//   branch 
+process( new_brace = re.sub(  );//   tag 
+set(r"\s*" + re.escape(comment_marker) + r"\s*tag-brace",);  //   ----->>>>  
+set(" " + comment_marker + " path",);  //   ----->>>>  
+set(line,);  //   ----->>>>  
+process( )  );//   tag 
+end(new_lines.append(new_brace));  //   ----->>>>  
+set(continue);  //   ----->>>>  
+process(  );//   Process normal header lines with generic "tag". 
+branch( if comment_marker + " tag" in line:  );//   branch 
+set(stripped = line.strip());  //   ----->>>>  
+branch( if stripped.endswith("{ " + comment_marker + " tag"):  );//   branch 
+set(header_line = line);  //   ----->>>>  
+set(cleaned = remove_marker(header_line, "tag").rstrip());  //   ----->>>>  
+branch( if cleaned.endswith("{"):  );//   branch 
+set(header_content = cleaned[:-1].strip());  //   ----->>>>  
+path( else:  );//   path 
+set(header_content = cleaned.strip());  //   ----->>>>  
+process( refined = lang.tagMapper(header_content, True, line_num)  );//   tag 
+process( new_line = re.sub(  );//   tag 
+set(r"\s*" + re.escape(comment_marker) + r"\s*tag",);  //   ----->>>>  
+set(" " + comment_marker + " " + refined,);  //   ----->>>>  
+set(line,);  //   ----->>>>  
+process( )  );//   tag 
+end(new_lines.append(new_line));  //   ----->>>>  
+set(expected = lang.closureMapping.get(refined, refined));  //   ----->>>>  
+end(stack.append(expected));  //   ----->>>>  
+set(continue);  //   ----->>>>  
+process(  );//   Process closing lines marked with generic "tag". 
+branch( if stripped.startswith("}") and (comment_marker + " tag") in stripped:  );//   branch 
+set(base_line = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag", "", line).rstrip());  //   ----->>>>  
+set(refined = lang.tagMapper(base_line, False, line_num));  //   ----->>>>  
+set(new_line = base_line + " " + comment_marker + " " + refined);  //   ----->>>>  
+end(new_lines.append(new_line));  //   ----->>>>  
+set(continue);  //   ----->>>>  
+process(  );//   Lines without any generic marker pass through. 
+process(  );//   tag 
+process( new_lines.append(line)  );//   tag 
+process( return new_lines  );//   tag 
+process(  );//   tag 
+input( def main():  );//   input 
+output(parser = argparse.ArgumentParser(description="VFCtagger: Pretty print and tag code with structure."));  //   ----->>>>  
+set(parser.add_argument("language", help="Language (e.g., javascript, python, perl)"));  //   ----->>>>  
+set(parser.add_argument("file", help="Source file to tag"));  //   ----->>>>  
+set(args = parser.parse_args());  //   ----->>>>  
+process(  );//   Load language module. 
+set(lang = None);  //   ----->>>>  
+branch( try:  );//   branch 
+set(lang = load_language_module(args.language.lower()));  //   ----->>>>  
+path( except Exception as e:  );//   path 
+set(sys.exit("Error loading language module: " + str(e)));  //   ----->>>>  
+branch( try:  );//   branch 
+branch( with open(args.file, "r", encoding="utf-8") as f:  );//   branch 
+set(source = f.read());  //   ----->>>>  
+process(  );//   tag 
+path( except Exception as e:  );//   path 
+set(sys.exit(f"Error reading source file: {e}"));  //   ----->>>>  
+process(  );//   Use the language module's pretty_print() function to format the code. 
+process( formatted = lang.pretty_print(source)  );//   tag 
+process(  );//   Convert any spaces to tabs. 
+set(formatted = convert_spaces_to_tabs(formatted, spaces_per_tab=4));  //   ----->>>>  
+set(lines = formatted.splitlines());  //   ----->>>>  
+process(  );//   Reset the language module's tag stack. 
+set(lang.reset_tag_stack());  //   ----->>>>  
+process(  );//   Phase 1: Reindent and mark block headers/closers. 
+set(phase1_lines = phase1_reindent(lines, lang.comment_marker));  //   ----->>>>  
+process(  );//   Phase 2: Discriminate and map tags using the language module's tagMapper(). 
+set(final_lines = phase2_map_tags(phase1_lines, lang.comment_marker, lang));  //   ----->>>>  
+set(output_file = os.path.basename(args.file) + ".txt");  //   ----->>>>  
+branch( try:  );//   branch 
+branch( with open(output_file, "w", encoding="utf-8") as out:  );//   branch 
+set(out.write(f"{lang.comment_marker} TAGGED FOR VFC\n"));  //   ----->>>>  
+set(out.write(f"{lang.comment_marker} TAGGED FOR VFC\n"));  //   ----->>>>  
+loop( for l in final_lines:  );//   loop 
+set(out.write(l + "\n"));  //   ----->>>>  
+process(  );//   tag 
+process(  );//   tag 
+path( except Exception as e:  );//   path 
+set(sys.exit(f"Error writing output file: {e}"));  //   ----->>>>  
+process( print(f"Output written to: {output_file}")  );//   tag 
+process(  );//   tag 
+branch( if __name__ == "__main__":  );//   branch 
+set(main());  //   ----->>>>  

@@ -1,3 +1,6 @@
+import sys
+import black
+import re
 import black
 
 
@@ -58,32 +61,17 @@ def reset_tag_stack():
 	Reset the language module's internal tag stack.
 	"""
 	
-def tagMapper(line, isIndent, lineNumber):
+i = 0
+def tagMapper(line, indentTag, lineNumber):
+	global i
 	global _tag_stack
-	"""
-	Debug version of tagMapper() for Python.
-	This function prints the line number, whether it's processing an indent (header)
-	or an outdent (closer), and the line content with any generic tag removed.
-	It then returns a refined lowercase tag based on simple heuristics:
-	- if the line starts with "if" ? return "branch" and push "bend" );   //////
-	- if it starts with "for" or "while" ? return "loop" and push "lend" );   //////
-	- if it starts with "def" ? return "input" and push "end" );   //////
-	- if it starts with "elif" or "else" ? return "path" (do not push)
-	- if it starts with "try:" ? return "try" and push "end" );   //////
-	- if it starts with "except" ? return "except" (no push)
-	- if it starts with "finally:" ? return "finally" (no push)
-	- if it starts with "with" ? return "with" and push "end" );   //////
-	- otherwise, return "tag" and push "tag" );   //////
-	For outdent lines (isIndent=False), it pops from the global stack and returns that value,
-	or returns "tag" if the stack is empty.
-	"""
 	
 	
 	
 	cleaned = re.sub(r"\s*"+re.escape(comment_marker)+r"\s*tag.*", "", line).strip()
-	status = "indent" if isIndent else "outdent"
-	print(f"DEBUG: Line {lineNumber} ({status}): {cleaned}")
-	if isIndent:
+	
+	print(f"DEBUG: Line {lineNumber} {i} ({ indentTag  }): {line} ")
+	if indentTag == 'tagA'  or indentTag == 'tagX'    :
 	
 		if re.match(r"^if\s+", cleaned, re.IGNORECASE):
 		
@@ -121,21 +109,18 @@ def tagMapper(line, isIndent, lineNumber):
 		
 	
 if __name__ == "__main__":
-	import sys
 	if len(sys.argv) > 1:
 	
 		with open(sys.argv[1], "r", encoding="utf-8") as f:
 		
 			source = f.read()
+			
 		pretty = pretty_print(source)
-		print(");   // === Final Pretty Printed Code ===")   # output ////
 		print(pretty)
 	else:
 		print("\nUsage: python python_lang.py <source_file>")
 		
 	
 	
-import black
-import re
-#  Export  Date: 12:51:28 PM - 02:Mar:2025.
+#  Export  Date: 02:04:14 PM - 04:Mar:2025.
 

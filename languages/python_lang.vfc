@@ -2,8 +2,11 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : python_lang.vfc
-;  File Date : 12:51:28 PM - 02:Mar:2025
+;  File Date : 02:04:14 PM - 04:Mar:2025
 
+event(import sys);// ////
+event(import black);// ////
+event(import re);// // event //
 event(import black);// // event //
 generic();// // -------------------- language settings -------------------- //
 end();//// // -------------------- pretty printer -------------------- ////
@@ -67,33 +70,18 @@ generic(""");//
 generic(Reset the language module's internal tag stack.);// ////
 generic(""");//
 end();// // end //
+set(i = 0);//
 
-input(def tagMapper(line, isIndent, lineNumber):);// // input //
+input(def tagMapper(line, indentTag, lineNumber):);// // input //
+set(global i);//
 set(global _tag_stack);// // set //
-generic(""");//
-set(Debug version of tagMapper() for Python.);//// //////
-generic(This function prints the line number, whether it's processing an indent (header));// ////
-generic(or an outdent (closer), and the line content with any generic tag removed.);// ////
-generic(It then returns a refined lowercase tag based on simple heuristics:);// ////
-set(- if the line starts with "if" ? return "branch" and push "bend" );   //////);//////
-set(- if it starts with "for" or "while" ? return "loop" and push "lend" );   //////);//
-set(- if it starts with "def" ? return "input" and push "end" );   //////);//
-set(- if it starts with "elif" or "else" ? return "path" (do not push));// ////
-set(- if it starts with "try:" ? return "try" and push "end" );   //////);//
-set(- if it starts with "except" ? return "except" (no push));// ////
-set(- if it starts with "finally:" ? return "finally" (no push));// ////
-set(- if it starts with "with" ? return "with" and push "end" );   //////);//
-set(- otherwise, return "tag" and push "tag" );   //////);//////
-generic(For outdent lines (isIndent=False), it pops from the global stack and returns that value,);// ////
-set(or returns "tag" if the stack is empty.);//// //////
-set(""");//
 set();//
 set();//
 set();//
 process(cleaned = re.sub(r"\s*"+re.escape(comment_marker)+r"\s*tag.*", "", line).strip());// // process //
-set(status = "indent" if isIndent else "outdent");//
-output(print(f"DEBUG: Line {lineNumber} ({status}): {cleaned}"));// // output debug info //
-branch(if isIndent:);// ////
+set();//status = "indent" if isIndent else "outdent"
+output(print(f"DEBUG: Line {lineNumber} {i} ({ indentTag  }): {line} "));// // output //
+branch( if indentTag == 'tagA'  or indentTag == 'tagX'    :);// 
 path();//
 branch(if re.match(r"^if\s+", cleaned, re.IGNORECASE):);// ////
 path();//
@@ -132,22 +120,19 @@ bend();// // //
 end();// // end //
 
 input(if __name__ == "__main__":);// // input //
-event(import sys);// ////
 branch(if len(sys.argv) > 1:);// ////
 path();//
 branch(with open(sys.argv[1], "r", encoding="utf-8") as f:);//// //////
 path();//
-bend(source = f.read());//// //////
+generic(source = f.read());// ////
+bend();//
 generic(pretty = pretty_print(source));// ////
-generic(print(");   // === Final Pretty Printed Code ===")   # output ////);//
 output(print(pretty));// // output //
 path(else:);// ////
 output(print("\nUsage: python python_lang.py <source_file>"));// 
 bend();// // //
 generic();// // END //
 end();//// // -------------------- global stack for tagMapper -------------------- ////
-event(import black);// ////
-event(import re);// // event //
 
 
 
@@ -156,4 +141,4 @@ event(import re);// // event //
 ;    python_lang.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 501 169 2707 1613 84 129   797   4294965058    python.key  0
+; 809 241 2884 1088 84 119   849   4294965077    python.key  0

@@ -13,13 +13,13 @@ def load_language_module(lang_name): # input
 		import languages.perl_lang as mod
 	else: # path
 		sys.exit("Unsupported language: " + lang_name)
-	return mod # tag
+	return mod # bend
 # Convert groups of spaces to tabs (assuming 4 spaces per tab).  # event
-# tag
+# end
 def convert_spaces_to_tabs(text, spaces_per_tab=4): # input
 	return re.sub(" {" + str(spaces_per_tab) + r"}", "\t", text)
 # ----- Phase 1: Pretty Print, Reindent & Mark Block Lines -----
-# tag
+# end
 def phase1_reindent(lines, comment_marker): # input
 	"""
 	Assumes the source has been pretty printed.
@@ -43,35 +43,35 @@ def phase1_reindent(lines, comment_marker): # input
 					new_lines.append(new_indent + line.strip() + " " + comment_marker + " tag-header")
 				else: # path
 					new_lines.append(new_indent + line.strip())
-				indent_level += 1 # tag
+				indent_level += 1 # bend
 				new_indent = "\t" * indent_level
 				# Mark lone brace with special brace marker.
 				if comment_marker + " tag-brace" not in next_line: # branch
 					new_lines.append(new_indent + next_line.strip() + " " + comment_marker + " tag-brace")
 				else: # path
 					new_lines.append(new_indent + next_line.strip())
-				i += 2 # tag
+				i += 2 # bend
 				continue
 		# Normal processing.
-			# tag
-		stripped = line.strip() # tag
+			# bend
+		stripped = line.strip() # bend
 		if stripped.startswith("}"): # branch
 			indent_level = max(0, indent_level - 1)
-		new_indent = "\t" * indent_level # tag
+		new_indent = "\t" * indent_level # bend
 		if stripped.endswith("{") or stripped.startswith("}"): # branch
 			if comment_marker + " tag" not in stripped: # branch
 				new_lines.append(new_indent + stripped + " " + comment_marker + " tag")
 			else: # path
 				new_lines.append(new_indent + stripped)
-			# tag
+			# bend
 		else: # path
 			new_lines.append(new_indent + stripped)
 		if stripped.endswith("{"): # branch
 			indent_level += 1
-		i += 1 # tag
-	return new_lines # tag
+		i += 1 # bend
+	return new_lines # bend
 # ----- Phase 2: Discriminate & Map Tags Using tagMapper() and a Stack -----
-# tag
+# lend
 def phase2_map_tags(lines, comment_marker, lang): # input
 	"""
 	Process lines marked with a generic tag.
@@ -83,7 +83,7 @@ def phase2_map_tags(lines, comment_marker, lang): # input
 	  - For the following line marked "tag-brace", simply replace its marker with " path".
 	  - For normal header lines (ending with "{ tag"), process similarly.
 		# tag
-	For closing lines (lines starting with "}" with " tag"), call lang.tagMapper() with isIndent=False to get the refined closing tag. # loop
+	For closing lines (lines starting with "}" with " tag"), call lang.tagMapper() with isIndent=False to get the refined closing tag. # lend
 	"""
 	new_lines = []
 	stack = []  # local stack for expected closures
@@ -125,7 +125,7 @@ def phase2_map_tags(lines, comment_marker, lang): # input
 					header_content = cleaned[:-1].strip()
 				else: # path
 					header_content = cleaned.strip()
-				refined = lang.tagMapper(header_content, True, line_num) # tag
+				refined = lang.tagMapper(header_content, True, line_num) # bend
 				new_line = re.sub( # tag
 					r"\s*" + re.escape(comment_marker) + r"\s*tag",
 					" " + comment_marker + " " + refined,
@@ -143,10 +143,10 @@ def phase2_map_tags(lines, comment_marker, lang): # input
 				new_lines.append(new_line)
 				continue
 		# Lines without any generic marker pass through.
-			# tag
-		new_lines.append(line) # tag
-	return new_lines # tag
-# tag
+			# bend
+		new_lines.append(line) # bend
+	return new_lines # bend
+# bend
 def main(): # input
 	parser = argparse.ArgumentParser(description="VFCtagger: Pretty print and tag code with structure.")
 	parser.add_argument("language", help="Language (e.g., javascript, python, perl)")
@@ -161,11 +161,11 @@ def main(): # input
 	try: # branch
 		with open(args.file, "r", encoding="utf-8") as f: # branch
 			source = f.read()
-		# tag
+		# bend
 	except Exception as e: # path
 		sys.exit(f"Error reading source file: {e}")
 	# Use the language module's pretty_print() function to format the code.
-	formatted = lang.pretty_print(source) # tag
+	formatted = lang.pretty_print(source) # bend
 	# Convert any spaces to tabs.
 	formatted = convert_spaces_to_tabs(formatted, spaces_per_tab=4)
 	lines = formatted.splitlines()
@@ -182,11 +182,11 @@ def main(): # input
 			out.write(f"{lang.comment_marker} TAGGED FOR VFC\n")
 			for l in final_lines: # loop
 				out.write(l + "\n")
-			# tag
-		# tag
+			# lend
+		# bend
 	except Exception as e: # path
 		sys.exit(f"Error writing output file: {e}")
-	print(f"Output written to: {output_file}") # tag
-# tag
+	print(f"Output written to: {output_file}") # bend
+# bend
 if __name__ == "__main__": # branch
 	main()

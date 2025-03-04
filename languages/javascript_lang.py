@@ -1,3 +1,4 @@
+import sys
 import re
 import subprocess
 
@@ -110,22 +111,6 @@ def reset_tag_stack():
 i = 0
 def tagMapper(line, indentTag, lineNumber):
 	global i
-	"""
-	Debug version of tagMapper().
-	This function prints debug information for the given line (after default tag removal)
-	along with whether it's processing an indent (header) or an outdent (closer) and the line number.
-	Then it returns a placeholder refined tag based on simple heuristics.
-	Parameters:
-	- line: the code line (string) to be tagged (assumed to have default markers removed)
-	- indentTag: Boolean; True if the line is an indent/header, False if it's an outdent/closer.
-	- lineNumber: the current line number.
-	Heuristics:
-	- If the line starts with "if(" ? return "branch" and push "bend" );  //////
-	- If the line starts with "for(" or "while(" ? return "loop" and push "lend" );  //////
-	- If the line starts with "async function" or "function" ? return "input" and push "end" );  //////
-	- If the line starts with "else", "catch", or "finally" ? return "tag" (i.e. reuse previous closure)
-	- Otherwise, return "tag" and push "tag".
-	"""
 	
 	
 	
@@ -181,7 +166,6 @@ def tagMapper(line, indentTag, lineNumber):
 	return rtnval
 
 if __name__ == "__main__":
-	import sys
 	if len(sys.argv) > 1:
 	
 		with open(sys.argv[1], "r", encoding="utf-8") as f:
@@ -197,5 +181,5 @@ if __name__ == "__main__":
 	
 
 
-#  Export  Date: 12:50:59 PM - 04:Mar:2025.
+#  Export  Date: 02:04:11 PM - 04:Mar:2025.
 

@@ -4,6 +4,8 @@ import subprocess
 
 language = "JavaScript"
 comment_marker = "//"
+multiline_comment_start = "/*"
+multiline_comment_end = "*/"
 
 blockTypeRules = [
 	{"type": "input", "regex": r"(async|function)\b\("},
@@ -181,5 +183,5 @@ if __name__ == "__main__":
 	
 
 
-#  Export  Date: 02:04:11 PM - 04:Mar:2025.
+#  Export  Date: 04:06:04 PM - 04:Mar:2025.
 

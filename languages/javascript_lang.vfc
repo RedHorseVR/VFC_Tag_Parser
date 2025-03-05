@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : javascript_lang.vfc
-;  File Date : 02:04:11 PM - 04:Mar:2025
+;  File Date : 04:06:04 PM - 04:Mar:2025
 
 event(import sys);// ////
 event(import re);//
@@ -10,6 +10,8 @@ event(import subprocess);//
 end();//// // Basic language settings               # set ////
 set(language = "JavaScript");//
 set(comment_marker = "//");//
+generic(multiline_comment_start = "/*");//
+generic(multiline_comment_end = "*/");//
 branch();//// // (Optional) Block type rules           # set ////
 path(blockTypeRules = [);////// ////////
 generic({"type": "input", "regex": r"(async|function)\b\("},);//{"type": "input", "regex": r"^(async\s+function|function)\s+\w+\s*\("},
@@ -201,4 +203,4 @@ end();//
 ;    javascript_lang.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 2460 1120 1340 818 118 138   685   4294963149    python.key  0
+; 2460 1120 1340 818 118 138   598   4294967133    python.key  0

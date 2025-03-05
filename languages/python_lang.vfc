@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : python_lang.vfc
-;  File Date : 02:06:58 PM - 04:Mar:2025
+;  File Date : 07:08:37 PM - 04:Mar:2025
 
 event(import sys);// ////
 event(import black);// ////
@@ -24,16 +24,46 @@ branch(try:);// // branch //
 path();//
 process(formatted = black.format_str(source, mode=mode));// // process //
 process(formatted = re.sub(r"( {4})", "\t", formatted));// // process //
-generic(print(");   // pretty printed code:")                    # output ////);//
-output(print(formatted));// // output //
-output(return formatted);// // output //
+generic();//print(");   // pretty printed code:")                    # output ////
+generic(formatted = add_block_end_comments( formatted ));// ////
+output(return formatted);//
 path(except black.NothingChanged:);// // path //
 generic(print(" black made no changes"));//
 end(return source);// // fallback output //
 bend();// ////
 end();// //     //
+branch(if __name__ == "__main__":);//// // input ////
+path();//
+branch(if len(sys.argv) > 1:);// ////
+path();//
+event(from function import add_block_end_comments);//
+branch(with open(sys.argv[1], "r", encoding="utf-8") as f:);//// //////
+path();//
+generic(source = f.read());// ////
+bend();//
+generic(pretty = pretty_print(source));// ////
+branch(if   pretty == None  :);//
+path();//
+output(print( "pretty was None " ));// 
+path(else: );//
+branch(with open( 'Output.py' , 'w' ) as write_file :);//
+path();//
+output(write_file.write(pretty));// 
+bend( );//
+bend( );//
+output(print(pretty));// // output //
+path(else:);// ////
+output(print("\nUsage: python python_lang.py <source_file>"));// 
+bend();// // //
+path(else: );//
+event(from languages.function import add_block_end_comments);//
+bend();// // //
+generic();// // END //
+end();//// // -------------------- global stack for tagMapper -------------------- ////
 set(language = "python");//
 generic(comment_marker = "#");//
+generic(multiline_comment_start = '"""');//
+generic(multiline_comment_end = '"""');//
 branch();//
 path(blockTypeRules = [);//// //////
 generic({"type": "input",  "regex": r"^def\s+\w+\s*\(.*\):"},);// // : function definition //
@@ -119,26 +149,11 @@ bend();// ////
 bend();// // //
 end();// // end //
 
-input(if __name__ == "__main__":);// // input //
-branch(if len(sys.argv) > 1:);// ////
-path();//
-branch(with open(sys.argv[1], "r", encoding="utf-8") as f:);//// //////
-path();//
-generic(source = f.read());// ////
-bend();//
-generic(pretty = pretty_print(source));// ////
-output(print(pretty));// // output //
-path(else:);// ////
-output(print("\nUsage: python python_lang.py <source_file>"));// 
-bend();// // //
-generic();// // END //
-end();//// // -------------------- global stack for tagMapper -------------------- ////
-
 
 
 ;INSECTA EMBEDDED SESSION INFORMATION
-; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 3289650
+; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
 ;    python_lang.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 809 241 2884 1088 101 119   4294965966   4294965158    python.key  0
+; 732 278 2009 1644 84 139   1038   4294966958    python.key  0

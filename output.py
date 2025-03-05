@@ -2,29 +2,36 @@ import argparse  # event
 import os  # event
 import re  # event
 import sys  # event
+
+
 # Helper to load a language module based on command line argument.
 def load_language_module(lang_name):
-#enddef--------------
+#enddef-------------- 
 	lang_name = lang_name.lower()
 	if lang_name == "javascript":
- #endif----------------
+	#endif----------------
 		import languages.javascript_lang as mod
-	elif lang_name == "python": # tagB
- #endif----------------
+	elif lang_name == "python":
 		import languages.python_lang as mod
-	elif lang_name == "perl": # tagB
- #endif----------------
+	elif lang_name == "perl":
 		import languages.perl_lang as mod
-	else: # tagX
+	else:
 		sys.exit("Unsupported language: " + lang_name)
-	return mod # tagB
+	<if> [1]
+	return mod
+
+
+<def> [0]
 # Convert groups of spaces to tabs (assuming 4 spaces per tab).  # event
-def convert_spaces_to_tabs(text, spaces_per_tab=4): # tagB
-#enddef--------------
+def convert_spaces_to_tabs(text, spaces_per_tab=4):
+#enddef-------------- 
 	return re.sub(" {" + str(spaces_per_tab) + r"}", "\t", text)
+
+
+<def> [0]
 # ----- Phase 1: Pretty Print, Reindent & Mark Block Lines -----
-def phase1_reindent(lines, comment_marker): # tagB
-#enddef--------------
+def phase1_reindent(lines, comment_marker):
+#enddef-------------- 
 	"""
 	Assumes the source has been pretty printed.
 	Reindent the code using a simple brace counter.
@@ -36,56 +43,63 @@ def phase1_reindent(lines, comment_marker): # tagB
 	new_lines = []
 	i = 0
 	while i < len(lines):
- #endwhile--------------
+	#endwhile--------------
 		line = lines[i].rstrip()
 		# Look ahead for a header pair.
 		if i < len(lines) - 1 and not line.rstrip().endswith("{"):
-  #endif----------------
+		#endif----------------
 			next_line = lines[i + 1].rstrip()
 			if next_line.strip() == "{" or next_line.strip().startswith("{" + " " + comment_marker + " tag"):
-   #endif----------------
+			#endif----------------
 				new_indent = "\t" * indent_level
 				# Mark control statement with special header marker.
 				if comment_marker + " tag-header" not in line:
-	#endif----------------
+				#endif----------------
 					new_lines.append(new_indent + line.strip() + " " + comment_marker + " tag-header")
-				else: # tagX
+				else:
 					new_lines.append(new_indent + line.strip())
-				indent_level += 1 # tagB
+				<if> [4]
+				indent_level += 1
 				new_indent = "\t" * indent_level
 				# Mark lone brace with special brace marker.
 				if comment_marker + " tag-brace" not in next_line:
-	#endif----------------
+				#endif----------------
 					new_lines.append(new_indent + next_line.strip() + " " + comment_marker + " tag-brace")
-				else: # tagX
+				else:
 					new_lines.append(new_indent + next_line.strip())
-				i += 2 # tagB
+				<if> [4]
+				i += 2
 				continue
+		<if> [2]
 		# Normal processing.
-			# tagB
-		stripped = line.strip() # tagB
+		stripped = line.strip()
 		if stripped.startswith("}"):
-  #endif----------------
+		#endif----------------
 			indent_level = max(0, indent_level - 1)
-		new_indent = "\t" * indent_level # tagB
+		<if> [2]
+		new_indent = "\t" * indent_level
 		if stripped.endswith("{") or stripped.startswith("}"):
-  #endif----------------
+		#endif----------------
 			if comment_marker + " tag" not in stripped:
-   #endif----------------
+			#endif----------------
 				new_lines.append(new_indent + stripped + " " + comment_marker + " tag")
-			else: # tagX
+			else:
 				new_lines.append(new_indent + stripped)
-			# tagB
-		else: # tagX
+		else:
 			new_lines.append(new_indent + stripped)
-		if stripped.endswith("{"): # tagB
-  #endif----------------
+		if stripped.endswith("{"):
+		#endif----------------
 			indent_level += 1
-		i += 1 # tagB
-	return new_lines # tagB
+		<if> [2]
+		i += 1
+	<if> [1]
+	return new_lines
+
+
+<if> [0]
 # ----- Phase 2: Discriminate & Map Tags Using tagMapper() and a Stack -----
-def phase2_map_tags(lines, comment_marker, lang): # tagB
-#enddef--------------
+def phase2_map_tags(lines, comment_marker, lang):
+#enddef-------------- 
 	"""
 	Process lines marked with a generic tag.
 	For header lines:
@@ -99,119 +113,135 @@ def phase2_map_tags(lines, comment_marker, lang): # tagB
 	new_lines = []
 	stack = []  # local stack for expected closures
 	line_num = 0
+
 	def remove_marker(line, marker):
- #enddef--------------
+	#enddef-------------- 
 		return re.sub(r"\s*" + re.escape(comment_marker) + r"\s*" + re.escape(marker), "", line)
-	for line in lines: # tagB
- #endfor--------------
+
+	<def> [1]
+	for line in lines:
+	#endfor--------------
 		line_num += 1
 		# Process header line with "tag-header".
 		if comment_marker + " tag-header" in line:
-  #endif----------------
+		#endif----------------
 			header_line = line
 			cleaned = remove_marker(header_line, "tag-header").rstrip()
 			refined = lang.tagMapper(cleaned, True, line_num)
-			new_header = re.sub( # tagA
+			new_header = re.sub(
 				r"\s*" + re.escape(comment_marker) + r"\s*tag-header",
 				" " + comment_marker + " " + refined,
 				header_line,
-			) # tagB
+			<if> [3]
+			)
 			new_lines.append(new_header)
 			expected = lang.closureMapping.get(refined, refined)
 			stack.append(expected)
 			continue
+		<for> [2]
 		# Process the following brace line marked "tag-brace".
-		if comment_marker + " tag-brace" in line: # tagB
-  #endif----------------
-			new_brace = re.sub( # tagA
+		if comment_marker + " tag-brace" in line:
+		#endif----------------
+			new_brace = re.sub(
 				r"\s*" + re.escape(comment_marker) + r"\s*tag-brace",
 				" " + comment_marker + " path",
 				line,
-			) # tagB
+			<if> [3]
+			)
 			new_lines.append(new_brace)
 			continue
 		# Process normal header lines with generic "tag".
-		if comment_marker + " tag" in line: # tagB
-  #endif----------------
+		if comment_marker + " tag" in line:
+		#endif----------------
 			stripped = line.strip()
 			if stripped.endswith("{ " + comment_marker + " tag"):
-   #endif----------------
+			#endif----------------
 				header_line = line
 				cleaned = remove_marker(header_line, "tag").rstrip()
 				if cleaned.endswith("{"):
-	#endif----------------
+				#endif----------------
 					header_content = cleaned[:-1].strip()
-				else: # tagX
+				else:
 					header_content = cleaned.strip()
-				refined = lang.tagMapper(header_content, True, line_num) # tagB
-				new_line = re.sub( # tagA
+				<if> [4]
+				refined = lang.tagMapper(header_content, True, line_num)
+				new_line = re.sub(
 					r"\s*" + re.escape(comment_marker) + r"\s*tag",
 					" " + comment_marker + " " + refined,
 					line,
-				) # tagB
+				<if> [4]
+				)
 				new_lines.append(new_line)
 				expected = lang.closureMapping.get(refined, refined)
 				stack.append(expected)
 				continue
 			# Process closing lines marked with generic "tag".
-			if stripped.startswith("}") and (comment_marker + " tag") in stripped: # tagB
-   #endif----------------
+			if stripped.startswith("}") and (comment_marker + " tag") in stripped:
+			#endif----------------
 				base_line = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag", "", line).rstrip()
 				refined = lang.tagMapper(base_line, False, line_num)
 				new_line = base_line + " " + comment_marker + " " + refined
 				new_lines.append(new_line)
 				continue
 		# Lines without any generic marker pass through.
-			# tagB
-		new_lines.append(line) # tagB
-	return new_lines # tagB
-def main(): # tagB
-#enddef--------------
+		new_lines.append(line)
+	<if> [1]
+	return new_lines
+
+
+<if> [0]
+def main():
+#enddef-------------- 
 	parser = argparse.ArgumentParser(description="VFCtagger: Pretty print and tag code with structure.")
 	parser.add_argument("language", help="Language (e.g., javascript, python, perl)")
 	parser.add_argument("file", help="Source file to tag")
 	args = parser.parse_args()
+
 	# Load language module.
 	lang = None
-	try: # tagA
+	try:
 		lang = load_language_module(args.language.lower())
-	except Exception as e: # tagB
- #endexcept--------------
+	except Exception as e:
 		sys.exit("Error loading language module: " + str(e))
-	try: # tagX
+
+	<def> [1]
+	try:
 		with open(args.file, "r", encoding="utf-8") as f:
-  #endwith--------------
 			source = f.read()
-		# tagB
-	except Exception as e: # tagB
- #endexcept--------------
+	except Exception as e:
 		sys.exit(f"Error reading source file: {e}")
+
+	<def> [1]
 	# Use the language module's pretty_print() function to format the code.
-	formatted = lang.pretty_print(source) # tagB
+	formatted = lang.pretty_print(source)
 	# Convert any spaces to tabs.
 	formatted = convert_spaces_to_tabs(formatted, spaces_per_tab=4)
 	lines = formatted.splitlines()
+
 	# Reset the language module's tag stack.
 	lang.reset_tag_stack()
+
 	# Phase 1: Reindent and mark block headers/closers.
 	phase1_lines = phase1_reindent(lines, lang.comment_marker)
 	# Phase 2: Discriminate and map tags using the language module's tagMapper().
 	final_lines = phase2_map_tags(phase1_lines, lang.comment_marker, lang)
+
 	output_file = os.path.basename(args.file) + ".txt"
-	try: # tagA
+	try:
 		with open(output_file, "w", encoding="utf-8") as out:
-  #endwith--------------
 			out.write(f"{lang.comment_marker} TAGGED FOR VFC\n")
 			out.write(f"{lang.comment_marker} TAGGED FOR VFC\n")
 			for l in final_lines:
-   #endfor--------------
+			#endfor--------------
 				out.write(l + "\n")
-			# tagB
-		# tagB
-	except Exception as e: # tagB
- #endexcept--------------
+	except Exception as e:
 		sys.exit(f"Error writing output file: {e}")
-	print(f"Output written to: {output_file}") # tagB
-if __name__ == "__main__": # tagB
+
+	<for> [1]
+	print(f"Output written to: {output_file}")
+
+
+<if> [0]
+if __name__ == "__main__":
 #endif----------------
 	main()

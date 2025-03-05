@@ -17,16 +17,46 @@ def pretty_print(source):
 	
 		formatted = black.format_str(source, mode=mode)
 		formatted = re.sub(r"( {4})", "\t", formatted)
-		print(");   // pretty printed code:")                    # output ////
-		print(formatted)
+		
+		formatted = add_block_end_comments( formatted )
 		return formatted
 	except black.NothingChanged:
 		print(" black made no changes")
 		return source
 		
 	
+if __name__ == "__main__":
+
+	if len(sys.argv) > 1:
+	
+		from function import add_block_end_comments
+		with open(sys.argv[1], "r", encoding="utf-8") as f:
+		
+			source = f.read()
+			
+		pretty = pretty_print(source)
+		if   pretty == None  :
+		
+			print( "pretty was None " )
+		else:
+			with open( 'Output.py' , 'w' ) as write_file :
+			
+				write_file.write(pretty)
+				
+			
+		print(pretty)
+	else:
+		print("\nUsage: python python_lang.py <source_file>")
+		
+else:
+	from languages.function import add_block_end_comments
+	
+
+
 language = "python"
 comment_marker = "#"
+multiline_comment_start = '"""'
+multiline_comment_end = '"""'
 blockTypeRules = [
 	{"type": "input",  "regex": r"^def\s+\w+\s*\(.*\):"},
 	{"type": "branch", "regex": r"^if\s+.*:"},
@@ -108,19 +138,5 @@ def tagMapper(line, indentTag, lineNumber):
 			
 		
 	
-if __name__ == "__main__":
-	if len(sys.argv) > 1:
-	
-		with open(sys.argv[1], "r", encoding="utf-8") as f:
-		
-			source = f.read()
-			
-		pretty = pretty_print(source)
-		print(pretty)
-	else:
-		print("\nUsage: python python_lang.py <source_file>")
-		
-	
-	
-#  Export  Date: 02:06:58 PM - 04:Mar:2025.
+#  Export  Date: 07:08:37 PM - 04:Mar:2025.
 

@@ -5,12 +5,12 @@ def add_block_end_comments(code_str):
 	
 	# Define end comments for each block type
 	end_comments = {
+		"def": "#enddef-------------- ",
 		"if": "#endif----------------",
 		#"elif": "#endif----------------",
 		#"else": "#endif--------------",
 		"for": "#endfor--------------",
 		"while": "#endwhile--------------",
-		"def": "#enddef-------------- ",
 		"try": "#endtry--------------",
 		#"except": "#endexcept--------------",
 		#"finally": "#endfinally--------------",
@@ -19,6 +19,7 @@ def add_block_end_comments(code_str):
 	}
 	
 	paths = ["else", "elif", "except", "finally", "with"]
+	heads = [ "def", "if", "for", "while", "try", "class"]
 	
 	# Track previous indentation level
 	prev_indent = None
@@ -33,8 +34,12 @@ def add_block_end_comments(code_str):
 	
 	# Process each line
 	i = 0
+	prev_indent = 0
+	prevline = ''
 	while i < len(lines):
 		line = lines[i]
+		if len(lines)-1 > i : nextline = lines[i+1]
+		if i>0 : prevline = lines[i-1]
 		
 		# Calculate current indentation
 		stripped = line.strip()
@@ -42,14 +47,27 @@ def add_block_end_comments(code_str):
 			current_indent = len(line) - len(stripped)
 			
 			# Check if indentation decreased by one level (4 spaces or 1 tab)
-			if prev_indent is not None and current_indent < prev_indent:
-				# Add dash line when indentation decreases
-				indent_level=0
-				if i>0 : indent_level = len(line) - len(line.lstrip('\t')) 
-				if( not any(word in line for word in paths ) ) :  # not a path so we tag it
-					result.append('\t' * (current_indent) + '<' + pop() + f'> [{indent_level}]')
+			if current_indent < prev_indent:
+				# line indentation decreasing
 				
-			
+				prev_level=0
+				if i>0 : prev_level = len(lines[i-1]) - len(lines[i-1].lstrip('\t'))
+				this_level = len(line)- len(line.lstrip('\t'))	
+				diff_level = prev_level - this_level
+				
+					
+				for lev in range(0,diff_level) : #iterate over drop in indentation 
+					if( any(word in line for word in heads ) ) :  # head tag coming so lets prep a line for it.	 
+						result.append('\t' * (current_indent) + f'<------------------------------------h')
+					else:
+						if( not any(word in prevline for word in paths ) ) :  # not a path so we tag it
+							result.append('\t' * (current_indent+diff_level-lev) + '<----------------p') # + '#<' + pop() + f'> [{prev_level, this_level }]')
+						
+						
+					if( not any(word in line for word in paths ) ) :  # not a path so we tag it
+						result.append('\t' * (current_indent+diff_level-lev) + '<---------------n') # + '#<' + pop() + f'> [{prev_level, this_level }]')
+					 
+			 
 			# Update previous indentation for next iteration
 			prev_indent = current_indent
 		
@@ -79,7 +97,7 @@ def add_block_end_comments(code_str):
 					# If next non-empty line has same or less indentation, we found the end of block
 					if next_indent <= indent:
 						# Add end comment before this line
-						result.append('\t' * indent + end_comments[first_word])
+						#result.append('\t' * indent + end_comments[first_word])
 						push( first_word )
 						break
 					

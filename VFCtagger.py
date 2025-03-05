@@ -77,7 +77,8 @@ class VFCTagger:
 					InsideMultiLineComment = False 
 				
 			# Skip comment-only lines
-			if stripped.startswith(self.lang.comment_marker) or InsideMultiLineComment or stripped.startswith(self.lang.multiline_comment_end):
+			#if stripped.startswith(self.lang.comment_marker) or InsideMultiLineComment or stripped.startswith(self.lang.multiline_comment_end):
+			if InsideMultiLineComment or stripped.startswith(self.lang.multiline_comment_end):
 				new_lines.append(line.rstrip())
 				continue
 						
@@ -107,13 +108,13 @@ class VFCTagger:
 			# Apply tags based on precise indentation patterns
 			if indent_level < prev_indent and indent_level < next_indent:
 				# Line is both an exit and entry point - use TAG_BRIDGE (tagX)
-				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_BRIDGE}")
+				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_BRIDGE} |+++++++++++++ BRIDGE ")
 			elif indent_level < next_indent:
 				# Line before +1 indent gets TAG_OPEN (tagA)
-				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_OPEN}")
+				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_OPEN} |+++++++++++++ OPEN ")
 			elif indent_level < prev_indent:
 				# Line after -1 indent gets TAG_CLOSE (tagB)
-				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_CLOSE}")
+				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_CLOSE} |+++++++++++++ CLOSE ")
 			else:
 				# No indentation change
 				new_lines.append(line.rstrip())
@@ -132,9 +133,19 @@ class VFCTagger:
 			for tag in tags:
 				tag_marker = f"{self.lang.comment_marker} {tag}"
 				if tag_marker in line:
+					
 					cleaned = line.replace(tag_marker, "").strip()
 					refined = self.lang.tagMapper(cleaned, tag, i + 1)
-					new_lines.append(line.replace(tag_marker, f"{self.lang.comment_marker} {refined}"))
+					new_line = line.replace(tag_marker, f"{self.lang.comment_marker} {refined}")
+					indent_level = len(line)- len(line.lstrip('\t'))
+					tab = '\t';
+									
+					if tag == TAG_CLOSE and self.lang.comment_marker == "#" :  #<-------------------------lang dependent fix !!!!
+						new_lines.append(f"{ tab *indent_level }{self.lang.comment_marker} {refined}")
+						new_lines.append(f"{ tab *indent_level }{cleaned}")
+					else:
+						new_lines.append(new_line)
+						
 					mapped = True
 					break
 			

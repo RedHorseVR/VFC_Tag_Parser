@@ -1,156 +1,156 @@
-function showLineInfo(message = "") { // input
+function showLineInfo(message = "") { // input |+++++++++++++ OPEN 
 	const e = new Error();
 	const stack = e.stack.split("\n");
 	const lineInfo = stack[2].trim();
 	console.log(`${message} LINE Executing at: ${lineInfo}`);
-} // end
-async function getCredentials() { // input---
-	try { // branch
+} // end |+++++++++++++ CLOSE 
+async function getCredentials() { // input--- |+++++++++++++ OPEN 
+	try { // branch |+++++++++++++ OPEN 
 		const response = await fetch(addAPIKEY("/api/get-credentials"), { headers: { "Cache-Control": "no-cache" } });
-		if (!response.ok) { // branch
+		if (!response.ok) { // branch |+++++++++++++ OPEN 
 			throw new Error("Network response was not ok");
-		} // bend
+		} // bend |+++++++++++++ CLOSE 
 		const text = await response.text();
 		let data = JSON.parse(text);
 		let L = data.result.length;
-		if (data.result[L - 1].type === "BLANK") { // branch
+		if (data.result[L - 1].type === "BLANK") { // branch |+++++++++++++ OPEN 
 			return JSON.parse("[]");
-		} else { // path...
+		} else { // path... |+++++++++++++ BRIDGE 
 			return data.result;
-		} // bend
-	} catch (error) { // path...
+		} // bend |+++++++++++++ CLOSE 
+	} catch (error) { // path... |+++++++++++++ BRIDGE 
 		console.info("EMPTY WALLET ON SERVER :", error);
 		return JSON.parse("[]");
-	} // bend
-} // end
-async function Confirmation(prompt, callback) { // input---
+	} // bend |+++++++++++++ CLOSE 
+} // end |+++++++++++++ CLOSE 
+async function Confirmation(prompt, callback) { // input--- |+++++++++++++ OPEN 
 	var result = confirm(prompt);
-	if (result) { // branch
+	if (result) { // branch |+++++++++++++ OPEN 
 		return callback();
-	} else { // path...
+	} else { // path... |+++++++++++++ BRIDGE 
 		ReLoad();
 		return;
-	} // bend
-} // end
-async function SaveJSONdata(USER_ID, ITEMS) { // input---
+	} // bend |+++++++++++++ CLOSE 
+} // end |+++++++++++++ CLOSE 
+async function SaveJSONdata(USER_ID, ITEMS) { // input--- |+++++++++++++ OPEN 
 	const payload = { userId: USER_ID, files: ITEMS };
 	const saveResponse = await fetch(addAPIKEY("/api/save-credentials"), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-	if (!saveResponse.ok) { // branch
+	if (!saveResponse.ok) { // branch |+++++++++++++ OPEN 
 		throw new Error(`Save failed: ${saveResponse.status}`);
-	} // bend
+	} // bend |+++++++++++++ CLOSE 
 	const result = await saveResponse.json();
-	if (!result.success) { // branch
+	if (!result.success) { // branch |+++++++++++++ OPEN 
 		throw new Error(result.message || "Save operation failed");
-	} // bend
+	} // bend |+++++++++++++ CLOSE 
 	return result.result;
-} // end
-async function sendEmailData(userID, subject = "From AMW", reload = false) { // input---
+} // end |+++++++++++++ CLOSE 
+async function sendEmailData(userID, subject = "From AMW", reload = false) { // input--- |+++++++++++++ OPEN 
 	var URI = addAPIKEY("/api/send-checked-credentials");
 	URI += `&subject=${subject}`;
 	var prompt = `Confirm emailing ${numChecked()} selected documents to ${userID}.`;
 	var result = confirm(prompt);
 	if (result) {// branch
 		
-	} else { // path...
+	} else { // path... |+++++++++++++ OPEN 
 		return;
-	} // bend
-	try { // branch
+	} // bend |+++++++++++++ CLOSE 
+	try { // branch |+++++++++++++ OPEN 
 		const response = await fetch(URI, { method: "GET" });
 		const result = await response.json();
 		alert("Credentials email sent");
-		if (reload) { // branch
+		if (reload) { // branch |+++++++++++++ OPEN 
 			ReLoad();
-		} // bend
-	} catch (error) { // path...
+		} // bend |+++++++++++++ CLOSE 
+	} catch (error) { // path... |+++++++++++++ BRIDGE 
 		console.error("Error sending email :", error);
-	} // bend
-} // end
-function extractNumberAsText(inputString) { // input
-	if (!inputString) { // branch
+	} // bend |+++++++++++++ CLOSE 
+} // end |+++++++++++++ CLOSE 
+function extractNumberAsText(inputString) { // input |+++++++++++++ OPEN 
+	if (!inputString) { // branch |+++++++++++++ OPEN 
 		return "";
-	} // bend
+	} // bend |+++++++++++++ CLOSE 
 	const matches = inputString.match(/\d+(\.\d+)?/);
-	if (matches) { // branch
+	if (matches) { // branch |+++++++++++++ OPEN 
 		return Number(matches[0]).toString();
-	} else { // path...
+	} else { // path... |+++++++++++++ BRIDGE 
 		return "";
-	} // bend
-} // end
-function popPage(page) { // input
+	} // bend |+++++++++++++ CLOSE 
+} // end |+++++++++++++ CLOSE 
+function popPage(page) { // input |+++++++++++++ OPEN 
 	url = `${page}?userId=${USER_ID}&apikey=${APIKEY}`;
 	window.open(url, "_blank");
 	return false;
-} // end
-function generateFolderName(email) { // input
+} // end |+++++++++++++ CLOSE 
+function generateFolderName(email) { // input |+++++++++++++ OPEN 
 	const invalidChars = /[<>:"/\\|?*\s]+/g;
 	let sanitizedEmail = email.replace(invalidChars, "_");
 	const timestamp = new Date().getTime();
 	const uniqueFolderName = `${sanitizedEmail}`;
 	return uniqueFolderName;
-} // end
-function togglePopup(message) { // input
+} // end |+++++++++++++ CLOSE 
+function togglePopup(message) { // input |+++++++++++++ OPEN 
 	var popup = document.getElementById("myPopup");
 	popup.classList.toggle("show");
-} // end
-function toggleHelp(ID) { // input
+} // end |+++++++++++++ CLOSE 
+function toggleHelp(ID) { // input |+++++++++++++ OPEN 
 	alert("help toggle " + ID);
 	var popup = document.getElementById(ID);
 	popup.classList.toggle("show");
-} // end
+} // end |+++++++++++++ CLOSE 
 let userData;
-async function getUserData(user = "") { // input---
+async function getUserData(user = "") { // input--- |+++++++++++++ OPEN 
 	var response;
 	var url;
-	try { // branch
-		if (user != "") { // branch
+	try { // branch |+++++++++++++ OPEN 
+		if (user != "") { // branch |+++++++++++++ OPEN 
 			url = addAPIKEY(`/api/get-user?userId=${user}`);
-		} else { // path...
+		} else { // path... |+++++++++++++ BRIDGE 
 			url = addAPIKEY(`/api/get-user`);
-		} // bend
+		} // bend |+++++++++++++ CLOSE 
 		response = await fetch(url);
 		const data = await response.json();
 		userData = data.result;
-	} catch (error) { // path...
+	} catch (error) { // path... |+++++++++++++ BRIDGE 
 		console.error("Error getUser profile:", error);
-	} // bend
+	} // bend |+++++++++++++ CLOSE 
 	return userData;
-} // end
-function Load(url) { // input
+} // end |+++++++++++++ CLOSE 
+function Load(url) { // input |+++++++++++++ OPEN 
 	var start_page = addAPIKEY(url);
 	console.error("START PAGE SET TO ", start_page);
 	location.replace(start_page);
-} // end
-function ReLoad() { // input
+} // end |+++++++++++++ CLOSE 
+function ReLoad() { // input |+++++++++++++ OPEN 
 	var start_page = addAPIKEY(location.href);
 	console.error("START PAGE SET TO ", start_page);
-} // end
-async function deleteChecked(user) { // input---
+} // end |+++++++++++++ CLOSE 
+async function deleteChecked(user) { // input--- |+++++++++++++ OPEN 
 	hitEndPoint(addAPIKEY("/api/remove-checked-credentials"), USER_ID, [], true);
 	console.error("remove-checked-credentials FileStates:");
-} // end
-async function loadJsonFile() { // input---
-	try { // branch
+} // end |+++++++++++++ CLOSE 
+async function loadJsonFile() { // input--- |+++++++++++++ OPEN 
+	try { // branch |+++++++++++++ OPEN 
 		const response = await fetch(JSON_FILE);
 		if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 		data = await response.json();
 		window.credentials = data;
 		return true;
-	} catch (error) { // path...
+	} catch (error) { // path... |+++++++++++++ BRIDGE 
 		console.error(`INFO Error loading JSON:`, error);
 		showLineInfo();
 		sessionStorage.setItem("sessionAIprocessing", "false");
 		return false;
-	} // bend
-} // end
-function updateChecked(user) { // input
+	} // bend |+++++++++++++ CLOSE 
+} // end |+++++++++++++ CLOSE 
+function updateChecked(user) { // input |+++++++++++++ OPEN 
 	hitEndPoint("/api/update-checked-credentials", USER_ID, [], true);
 	console.error("update-checked-credentials FileStates:", FileStates);
 	AI_process_Data();
-	setTimeout(function () { // process
+	setTimeout(function () { // process |+++++++++++++ OPEN 
 		location.reload();
-	}, 1000); // tag
-} // end
-window.onload = async function init() { // input---
+	}, 1000); // tag |+++++++++++++ CLOSE 
+} // end |+++++++++++++ CLOSE 
+window.onload = async function init() { // input--- |+++++++++++++ OPEN 
 	return;
-}; // end
+}; // end |+++++++++++++ CLOSE 
 //  Export  Date: 12:44:54 PM - 22:Feb:2025...

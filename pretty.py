@@ -9,17 +9,13 @@ def load_language_module(lang_name):
 	lang_name = lang_name.lower()
 	if lang_name == "javascript":
 		import languages.javascript_lang as mod
-	<------------------------------------h
 	elif lang_name == "python":
 		import languages.python_lang as mod
-	<------------------------------------h
 	elif lang_name == "perl":
 		import languages.perl_lang as mod
-		<----------------p
 	else:
 		sys.exit("Unsupported language: " + lang_name)
-		<----------------p
-		<---------------n
+		 
 	return mod
 
 
@@ -50,52 +46,39 @@ def phase1_reindent(lines, comment_marker):
 				# Mark control statement with special header marker.
 				if comment_marker + " tag-header" not in line:
 					new_lines.append(new_indent + line.strip() + " " + comment_marker + " tag-header")
-					<----------------p
 				else:
 					new_lines.append(new_indent + line.strip())
-					<----------------p
-					<---------------n
+					 
 				indent_level += 1
 				new_indent = "\t" * indent_level
 				# Mark lone brace with special brace marker.
 				if comment_marker + " tag-brace" not in next_line:
 					new_lines.append(new_indent + next_line.strip() + " " + comment_marker + " tag-brace")
-					<----------------p
 				else:
 					new_lines.append(new_indent + next_line.strip())
-					<----------------p
-					<---------------n
+					 
 				i += 2
 				continue
-				<----------------p
-				<---------------n
-			<----------------p
-			<---------------n
+				 
+			 
 		# Normal processing.
 		stripped = line.strip()
 		if stripped.startswith("}"):
 			indent_level = max(0, indent_level - 1)
-			<----------------p
-			<---------------n
+			 
 		new_indent = "\t" * indent_level
 		if stripped.endswith("{") or stripped.startswith("}"):
 			if comment_marker + " tag" not in stripped:
 				new_lines.append(new_indent + stripped + " " + comment_marker + " tag")
-				<----------------p
 			else:
 				new_lines.append(new_indent + stripped)
-				<----------------p
-			<----------------p
 		else:
 			new_lines.append(new_indent + stripped)
-		<------------------------------------h
 		if stripped.endswith("{"):
 			indent_level += 1
-			<----------------p
-			<---------------n
+			 
 		i += 1
-		<----------------p
-		<---------------n
+		 
 	return new_lines
 
 
@@ -129,27 +112,23 @@ def phase2_map_tags(lines, comment_marker, lang):
 				r"\s*" + re.escape(comment_marker) + r"\s*tag-header",
 				" " + comment_marker + " " + refined,
 				header_line,
-				<----------------p
-				<---------------n
+				 
 			)
 			new_lines.append(new_header)
 			expected = lang.closureMapping.get(refined, refined)
 			stack.append(expected)
 			continue
-			<----------------p
-			<---------------n
+			 
 		# Process the following brace line marked "tag-brace".
 		if comment_marker + " tag-brace" in line:
 			new_brace = re.sub(
 				r"\s*" + re.escape(comment_marker) + r"\s*tag-brace",
 				" " + comment_marker + " path",
 				line,
-				<----------------p
-				<---------------n
+				 
 			)
 			new_lines.append(new_brace)
 			continue
-			<----------------p
 		# Process normal header lines with generic "tag".
 		if comment_marker + " tag" in line:
 			stripped = line.strip()
@@ -158,24 +137,20 @@ def phase2_map_tags(lines, comment_marker, lang):
 				cleaned = remove_marker(header_line, "tag").rstrip()
 				if cleaned.endswith("{"):
 					header_content = cleaned[:-1].strip()
-					<----------------p
 				else:
 					header_content = cleaned.strip()
-					<----------------p
-					<---------------n
+					 
 				refined = lang.tagMapper(header_content, True, line_num)
 				new_line = re.sub(
 					r"\s*" + re.escape(comment_marker) + r"\s*tag",
 					" " + comment_marker + " " + refined,
 					line,
-					<----------------p
-					<---------------n
+					 
 				)
 				new_lines.append(new_line)
 				expected = lang.closureMapping.get(refined, refined)
 				stack.append(expected)
 				continue
-				<----------------p
 			# Process closing lines marked with generic "tag".
 			if stripped.startswith("}") and (comment_marker + " tag") in stripped:
 				base_line = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag", "", line).rstrip()
@@ -183,12 +158,9 @@ def phase2_map_tags(lines, comment_marker, lang):
 				new_line = base_line + " " + comment_marker + " " + refined
 				new_lines.append(new_line)
 				continue
-				<----------------p
-			<----------------p
 		# Lines without any generic marker pass through.
 		new_lines.append(line)
-		<----------------p
-		<---------------n
+		 
 	return new_lines
 
 
@@ -202,15 +174,12 @@ def main():
 	lang = None
 	try:
 		lang = load_language_module(args.language.lower())
-		<----------------p
 	except Exception as e:
 		sys.exit("Error loading language module: " + str(e))
 
 	try:
 		with open(args.file, "r", encoding="utf-8") as f:
 			source = f.read()
-			<----------------p
-		<----------------p
 	except Exception as e:
 		sys.exit(f"Error reading source file: {e}")
 
@@ -235,9 +204,6 @@ def main():
 			out.write(f"{lang.comment_marker} TAGGED FOR VFC\n")
 			for l in final_lines:
 				out.write(l + "\n")
-				<----------------p
-			<----------------p
-		<----------------p
 	except Exception as e:
 		sys.exit(f"Error writing output file: {e}")
 

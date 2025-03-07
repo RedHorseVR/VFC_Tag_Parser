@@ -1,0 +1,156 @@
+input( function showLineInfo(message = "") {  );//    
+set(const e = new Error(););//
+set(const stack = e.stack.split("\n"););//
+set(const lineInfo = stack[2].trim(););//
+output(console.log(`${message} LINE Executing at: ${lineInfo}`););//
+end( }  );//    
+input( async function getCredentials() {  );//   --- 
+branch( try {  );//    
+set(const response = await fetch(addAPIKEY("/api/get-credentials"), { headers: { "Cache-Control": "no-cache" } }););//
+branch( if (!response.ok) {  );//    
+output(throw new Error("Network response was not ok"););//
+bend( }  );//    
+set(const text = await response.text(););//
+set(let data = JSON.parse(text););//
+set(let L = data.result.length;);//
+branch( if (data.result[L - 1].type === "BLANK") {  );//    
+end(return JSON.parse("[]"););//
+path( } else {  );//   ... 
+end(return data.result;);//
+bend( }  );//    
+path( } catch (error) {  );//   ... 
+output(console.info("EMPTY WALLET ON SERVER :", error););//
+end(return JSON.parse("[]"););//
+bend( }  );//    
+end( }  );//    
+input( async function Confirmation(prompt, callback) {  );//   --- 
+set(var result = confirm(prompt););//
+branch( if (result) {  );//    
+end(return callback(););//
+path( } else {  );//   ... 
+set(ReLoad(););//
+end(return;);//
+bend( }  );//    
+end( }  );//    
+input( async function SaveJSONdata(USER_ID, ITEMS) {  );//   --- 
+set(const payload = { userId: USER_ID, files: ITEMS };);//
+set(const saveResponse = await fetch(addAPIKEY("/api/save-credentials"), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }););//
+branch( if (!saveResponse.ok) {  );//    
+output(throw new Error(`Save failed: ${saveResponse.status}`););//
+bend( }  );//    
+set(const result = await saveResponse.json(););//
+branch( if (!result.success) {  );//    
+output(throw new Error(result.message || "Save operation failed"););//
+bend( }  );//    
+end(return result.result;);//
+end( }  );//    
+input( async function sendEmailData(userID, subject = "From AMW", reload = false) {  );//   --- 
+set(var URI = addAPIKEY("/api/send-checked-credentials"););//
+set(URI += `&subject=${subject}`;);//
+set(var prompt = `Confirm emailing ${numChecked()} selected documents to ${userID}.`;);//
+set(var result = confirm(prompt););//
+branch( if (result) { );//    
+set();//
+path( } else {  );//   ... 
+end(return;);//
+bend( }  );//    
+branch( try {  );//    
+set(const response = await fetch(URI, { method: "GET" }););//
+set(const result = await response.json(););//
+output(alert("Credentials email sent"););//
+branch( if (reload) {  );//    
+set(ReLoad(););//
+bend( }  );//    
+path( } catch (error) {  );//   ... 
+output(console.error("Error sending email :", error););//
+bend( }  );//    
+end( }  );//    
+input( function extractNumberAsText(inputString) {  );//    
+branch( if (!inputString) {  );//    
+end(return "";);//
+bend( }  );//    
+set(const matches = inputString.match(/\d+(\.\d+)?/););//
+branch( if (matches) {  );//    
+end(return Number(matches[0]).toString(););//
+path( } else {  );//   ... 
+end(return "";);//
+bend( }  );//    
+end( }  );//    
+input( function popPage(page) {  );//    
+set(url = `${page}?userId=${USER_ID}&apikey=${APIKEY}`;);//
+set(window.open(url, "_blank"););//
+end(return false;);//
+end( }  );//    
+input( function generateFolderName(email) {  );//    
+set(const invalidChars = /[<>:"/\\|?*\s]+/g;);//
+set(let sanitizedEmail = email.replace(invalidChars, "_"););//
+set(const timestamp = new Date().getTime(););//
+set(const uniqueFolderName = `${sanitizedEmail}`;);//
+end(return uniqueFolderName;);//
+end( }  );//    
+input( function togglePopup(message) {  );//    
+set(var popup = document.getElementById("myPopup"););//
+set(popup.classList.toggle("show"););//
+end( }  );//    
+input( function toggleHelp(ID) {  );//    
+output(alert("help toggle " + ID););//
+set(var popup = document.getElementById(ID););//
+set(popup.classList.toggle("show"););//
+end( }  );//    
+set(let userData;);//
+input( async function getUserData(user = "") {  );//   --- 
+set(var response;);//
+set(var url;);//
+branch( try {  );//    
+branch( if (user != "") {  );//    
+set(url = addAPIKEY(`/api/get-user?userId=${user}`););//
+path( } else {  );//   ... 
+set(url = addAPIKEY(`/api/get-user`););//
+bend( }  );//    
+set(response = await fetch(url););//
+set(const data = await response.json(););//
+set(userData = data.result;);//
+path( } catch (error) {  );//   ... 
+output(console.error("Error getUser profile:", error););//
+bend( }  );//    
+end(return userData;);//
+end( }  );//    
+input( function Load(url) {  );//    
+set(var start_page = addAPIKEY(url););//
+output(console.error("START PAGE SET TO ", start_page););//
+set(location.replace(start_page););//
+end( }  );//    
+input( function ReLoad() {  );//    
+set(var start_page = addAPIKEY(location.href););//
+output(console.error("START PAGE SET TO ", start_page););//
+end( }  );//    
+input( async function deleteChecked(user) {  );//   --- 
+set(hitEndPoint(addAPIKEY("/api/remove-checked-credentials"), USER_ID, [], true););//
+output(console.error("remove-checked-credentials FileStates:"););//
+end( }  );//    
+input( async function loadJsonFile() {  );//   --- 
+branch( try {  );//    
+set(const response = await fetch(JSON_FILE););//
+set(if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`););//
+set(data = await response.json(););//
+set(window.credentials = data;);//
+end(return true;);//
+path( } catch (error) {  );//   ... 
+output(console.error(`INFO Error loading JSON:`, error););//
+set(showLineInfo(););//
+set(sessionStorage.setItem("sessionAIprocessing", "false"););//
+end(return false;);//
+bend( }  );//    
+end( }  );//    
+input( function updateChecked(user) {  );//    
+set(hitEndPoint("/api/update-checked-credentials", USER_ID, [], true););//
+output(console.error("update-checked-credentials FileStates:", FileStates););//
+set(AI_process_Data(););//
+process( setTimeout(function () {  );//    
+set(location.reload(););//
+process( }, 1000);  );//   tag 
+end( }  );//    
+input( window.onload = async function init() {  );//   --- 
+end(return;);//
+end( };  );//    
+process(  );//   Export  Date: 12:44:54 PM - 22:Feb:2025... 

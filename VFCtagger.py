@@ -89,7 +89,7 @@ class VFCTagger:
 				if next_line and not next_line.startswith(self.lang.comment_marker):
 					next_indent = len(lines[i + 1]) - len(next_line)
 			
-			# Handle multi-level indentation increases (enforce speed limit)
+			# Handle multi-level indentation changes (enforce speed limit)
 			if indent_level > prev_indent + 1:
 				# Insert bridge lines for jumps >1 level
 				for bridge_level in range(prev_indent + 1, indent_level):
@@ -108,13 +108,13 @@ class VFCTagger:
 			# Apply tags based on precise indentation patterns
 			if indent_level < prev_indent and indent_level < next_indent:
 				# Line is both an exit and entry point - use TAG_BRIDGE (tagX)
-				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_BRIDGE} |+++++++++++++ BRIDGE ")
+				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_BRIDGE} ")#|+++++++++++++ BRIDGE ")#
 			elif indent_level < next_indent:
 				# Line before +1 indent gets TAG_OPEN (tagA)
-				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_OPEN} |+++++++++++++ OPEN ")
+				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_OPEN} ")#|+++++++++++++ OPEN ")
 			elif indent_level < prev_indent:
 				# Line after -1 indent gets TAG_CLOSE (tagB)
-				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_CLOSE} |+++++++++++++ CLOSE ")
+				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_CLOSE} ")#|+++++++++++++ CLOSE ")
 			else:
 				# No indentation change
 				new_lines.append(line.rstrip())
@@ -175,7 +175,7 @@ def main():
 		result = tagger.process_file(args.file, args.skip)
 		
 		# Determine output file
-		output_file = args.output if args.output else os.path.basename(args.file) + "_indented.txt"
+		output_file = args.output if args.output else os.path.basename(args.file) + "_tagged.txt"
 		
 		# Write the output
 		with open(output_file, "w", encoding="utf-8") as out:

@@ -1,3 +1,7 @@
+def match_tok( tok , string  ):
+	pattern = r'^[^\w]*' + re.escape(tok)
+	match = re.match(pattern, string)
+	return match is not None
 def  postProcess( filename , comment_marker ):
 	try:
 	
@@ -17,28 +21,38 @@ def  postProcess( filename , comment_marker ):
 						if 'input' in comment   :
 						
 							VFCobj = 'input' ;
-						elif  'branch' in comment  :
+						elif  match_tok( 'branch' , comment )  :
 							VFCobj = 'branch' ;
-						elif   'loop' in comment :
+						elif  match_tok(  'loop' , comment ) :
 							VFCobj = 'loop' ;
-						elif  'output' in comment  :
+						elif  match_tok( 'output' , comment )  :
 							VFCobj = 'output' ;
-						elif  'path' in comment  :
+						elif  match_tok( 'event' , comment )  :
+							VFCobj = 'event' ;
+						elif  match_tok( 'path' , comment )  :
 							VFCobj = 'path' ;
-						elif  'lend' in comment  :
+						elif  match_tok( 'lend' , comment )  :
 							VFCobj = 'lend' ;
-						elif 'bend' in comment  :
+						elif  match_tok( 'bend' , comment )  :
 							VFCobj = 'bend' ;
-						elif  'end' in comment  :
+						elif  match_tok( 'end' , comment )  :
 							VFCobj = 'end' ;
 						else:
 							VFCobj = 'process' ;
 							
+						
+						pattern = r'\b' + re.escape( VFCobj ) + r'\b'
+						comment = re.sub(pattern, '', comment, count=1).strip()
 						VFCline =  f'{VFCobj}( {code} );{VFCsplitter}   {comment.strip()} '
 						
 						
 					else:
-						VFCline =f'{ match_GENERIC_type(code.strip()) }({ code.strip() });  {VFCsplitter }   ----->>>> {comment.strip()} '
+						if  len(comment.strip()) > 0  :
+						
+							VFCline =f'{ match_GENERIC_type(code.strip()) }({ code.strip() });{VFCsplitter }  {comment_marker} -----> {comment.strip()} '
+						else:
+							VFCline =f'{ match_GENERIC_type(code.strip()) }({ code.strip() });{VFCsplitter}'
+							
 						
 					print( VFCline  )
 					write_file.write(VFCline + '\n')  # generic:168:
@@ -52,13 +66,15 @@ def  postProcess( filename , comment_marker ):
 		
 		
 	return
+import re
 def match_GENERIC_type(  search_str ):
-	genericTypes = { "end" : "return end continue;" , "output" : "alert throw console print echo" ,  "set" : "= var const" }
+	genericTypes = { "end" : [ "return", "end" , "continue" , "break" ] , "output" : ["alert", "throw", "console", "print", "echo"] ,  "set" : ["=", "var const"] ,  "event": ["import", "include",  "module"]    }
 	
 	for key, value in genericTypes.items():
-		value_words = set(value.split())
-		for tok  in  value_words:
-			if tok in  search_str :
+		for tok  in  value:
+			pattern = r'^[^\w]*' + re.escape(tok)
+			match = re.match(pattern, search_str )
+			if match  :
 			
 				return key
 				
@@ -68,13 +84,14 @@ def match_GENERIC_type(  search_str ):
 
 if __name__ == '__main__':
 
-	postProcess(  'testo.js_indented.txt'  , '//' )
-	postProcess(  'testo.py_indented.txt' , '#'  )
+	postProcess(  'testo.js_tagged.txt'  , '//' )
+	postProcess(  'testo.py_tagged.txt' , '#'  )
+	postProcess(  'function.py_tagged.txt' , '#'  )
 	
 
 
 
 
 
-#  Export  Date: 01:30:20 PM - 04:Mar:2025.
+#  Export  Date: 12:23:03 AM - 07:Mar:2025.
 

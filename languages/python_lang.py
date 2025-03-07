@@ -19,7 +19,7 @@ def pretty_print(source):
 		formatted = re.sub(r"( {4})", "\t", formatted)
 		
 		formatted = add_block_end_comments( formatted )
-		with open( 'Output.py' , 'w' ) as write_file :
+		with open( 'pretty.py' , 'w' ) as write_file :
 		
 			write_file.write( formatted )
 			
@@ -43,7 +43,7 @@ if __name__ == "__main__":
 		
 			print( "pretty was None " )
 		else:
-			with open( 'Output.py' , 'w' ) as write_file :
+			with open( 'pretty.py' , 'w' ) as write_file :
 			
 				write_file.write(pretty)
 				
@@ -142,5 +142,5 @@ def tagMapper(line, indentTag, lineNumber):
 			
 		
 	
-#  Export  Date: 10:08:32 PM - 04:Mar:2025.
+#  Export  Date: 10:42:14 PM - 06:Mar:2025.
 

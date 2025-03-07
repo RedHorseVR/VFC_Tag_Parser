@@ -1,112 +1,132 @@
-def add_block_end_comments(code_str):
+import sys
 
-	lines = code_str.split('\n')
-	result = []
+stack = []
+def pop():
+	if len(stack) == 0:
 	
-	# Define end comments for each block type
+		return "Stack is empty"
+		
+	return stack.pop()
+
+def push(item):
+	stack.append(item)
+	
+def add_block_end_comments(code_str):
+	lines = code_str.split("\n")
+	result = []
 	end_comments = {
+	
 		"def": "#enddef-------------- ",
 		"if": "#endif----------------",
-		#"elif": "#endif----------------",
-		#"else": "#endif--------------",
 		"for": "#endfor--------------",
 		"while": "#endwhile--------------",
 		"try": "#endtry--------------",
-		#"except": "#endexcept--------------",
-		#"finally": "#endfinally--------------",
-		#"with": "#endwith--------------",
 		"class": "#endclass--------------"
-	}
+		}
 	
 	paths = ["else", "elif", "except", "finally", "with"]
-	heads = [ "def", "if", "for", "while", "try", "class"]
+	heads = ["def", "if", "for", "while", "try", "class"]
 	
-	# Track previous indentation level
 	prev_indent = None
 	
-	stack = []
-	def pop():
-		if len(stack) == 0:
-			return "Stack is empty"
-		return stack.pop()
-	def push( item ):
-		stack.append(item)
-	
-	# Process each line
 	i = 0
 	prev_indent = 0
-	prevline = ''
+	prevline = ""
 	while i < len(lines):
 		line = lines[i]
-		if len(lines)-1 > i : nextline = lines[i+1]
-		if i>0 : prevline = lines[i-1]
+		if len(lines) - 1 > i:
 		
-		# Calculate current indentation
+			nextline = lines[i + 1]
+			
+		if i > 0:
+		
+			prevline = lines[i - 1]
+			
+		
 		stripped = line.strip()
-		if stripped:  # Only process non-empty lines
+		if stripped:
+		
 			current_indent = len(line) - len(stripped)
 			
-			# Check if indentation decreased by one level (4 spaces or 1 tab)
 			if current_indent < prev_indent:
-				# line indentation decreasing
+			
 				
-				prev_level=0
-				if i>0 : prev_level = len(lines[i-1]) - len(lines[i-1].lstrip('\t'))
-				this_level = len(line)- len(line.lstrip('\t'))	
-				diff_level = prev_level - this_level
+				prev_level = 0
+				if i > 0:
 				
+					prev_level = len(lines[i - 1]) - len(lines[i - 1].lstrip("\t"))
 					
-				for lev in range(0,diff_level) : #iterate over drop in indentation 
-					if( any(word in line for word in heads ) ) :  # head tag coming so lets prep a line for it.	 
-						result.append('\t' * (current_indent) + f'<------------------------------------h')
+				
+				this_level = len(line) - len(line.lstrip("\t"))
+				diff_level = prev_level - this_level
+				for lev in range(0, diff_level):
+					if any(word in line for word in heads) and not any(tok in line for tok in paths):
+					
+						
+						result.append("\t" * (current_indent) + f" ")
 					else:
-						if( not any(word in prevline for word in paths ) ) :  # not a path so we tag it
-							result.append('\t' * (current_indent+diff_level-lev) + '<----------------p') # + '#<' + pop() + f'> [{prev_level, this_level }]')
+						if not any(word in prevline for word in paths):
 						
+							pass
+							
 						
-					if( not any(word in line for word in paths ) ) :  # not a path so we tag it
-						result.append('\t' * (current_indent+diff_level-lev) + '<---------------n') # + '#<' + pop() + f'> [{prev_level, this_level }]')
-					 
-			 
-			# Update previous indentation for next iteration
+					
+					if not any(word in line for word in paths):
+					
+						result.append("\t" * (current_indent + diff_level - lev) + " ")
+						
+									
+				
+			
+			
+			
 			prev_indent = current_indent
+			
 		
-		# Add the current line
 		result.append(line)
 		
-		# Check if this is a block start
-		if stripped.endswith(':'):
+		if stripped.endswith(":"):
+		
 			first_word = stripped.split()[0]
 			
-			# If this is a recognized block type
 			if first_word in end_comments:
-				# Find where this block ends
+			
+				
 				indent = len(line) - len(stripped)
 				j = i + 1
 				while j < len(lines):
 					next_line = lines[j]
 					next_stripped = next_line.strip()
 					
-					# Skip empty lines
 					if not next_stripped:
+					
 						j += 1
 						continue
-					
+						
 					next_indent = len(next_line) - len(next_stripped)
 					
-					# If next non-empty line has same or less indentation, we found the end of block
 					if next_indent <= indent:
-						# Add end comment before this line
-						#result.append('\t' * indent + end_comments[first_word])
-						push( first_word )
-						break
 					
+						
+						
+						push(first_word)
+						break
+						
 					j += 1
+									
 				
-				# If we reached the end of the file
 				if j == len(lines):
-					result.append('/t.' * indent + end_comments[first_word])
+				
+					result.append("/t." * indent + end_comments[first_word])
+					
+				
+				
+			
+		
 		
 		i += 1
+			
 	
-	return '\n'.join(result)
+	return "\n".join(result)
+#  Export  Date: 12:20:59 AM - 07:Mar:2025.
+

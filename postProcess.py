@@ -55,7 +55,13 @@ def  postProcess( filename , comment_marker ):
 							
 						
 					print( VFCline  )
-					write_file.write(VFCline + '\n')  # generic:168:
+					if  "def " in VFCline and VFCobj == 'input' :
+					
+						write_file.write( f'end();{VFCsplitter}   <-- inserted by postProcess.py'  + '\n' )
+						write_file.write(VFCline + '\n')
+					else:
+						write_file.write(VFCline + '\n')
+						
 									
 				
 			
@@ -68,7 +74,7 @@ def  postProcess( filename , comment_marker ):
 	return
 import re
 def match_GENERIC_type(  search_str ):
-	genericTypes = { "end" : [ "return", "end" , "continue" , "break" ] , "output" : ["alert", "throw", "console", "print", "echo"] ,  "set" : ["=", "var const"] ,  "event": ["import", "include",  "module"]    }
+	genericTypes = { "end" : [ "return", "end" , "continue" , "break" ] , "output" : ["alert", "throw", "console", "print", "echo" , "write" ] ,  "set" : ["=", "var const"] ,  "event": ["import", "include",  "module"]    }
 	
 	for key, value in genericTypes.items():
 		for tok  in  value:
@@ -93,5 +99,5 @@ if __name__ == '__main__':
 
 
 
-#  Export  Date: 12:23:03 AM - 07:Mar:2025.
+#  Export  Date: 10:45:59 PM - 07:Mar:2025.
 

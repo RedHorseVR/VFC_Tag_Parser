@@ -1,11 +1,20 @@
+;  IRL FlowCode Version: Version 10.0
+;  c1995-2015: Visual Flow Coder by 2LResearch
+;
+;  File Name : testo.py_tagged.txt.vfc
+;  File Date : 10:48:13 PM - 07:Mar:2025
+
 event( import argparse   );//    
 event( import os   );//    
 event( import re   );//    
 event( import sys   );//    
 process(  );//   Helper to load a language module based on command line argument. 
+end();//   <-- inserted by postProcess.py
+
 input( def load_language_module(lang_name):  );//    
 set(lang_name = lang_name.lower());//
 branch( if lang_name == "javascript":  );//    
+path();//
 event(import languages.javascript_lang as mod);//
 path( elif lang_name == "python":  );//    
 event(import languages.python_lang as mod);//
@@ -18,10 +27,14 @@ bend(  );//
 end(return mod);//
 end(  );//    
 process(  );//   Convert groups of spaces to tabs (assuming 4 spaces per tab).  # event 
+end();//   <-- inserted by postProcess.py
+
 input( def convert_spaces_to_tabs(text, spaces_per_tab=4):  );//    
 end(return re.sub(" {" + str(spaces_per_tab) + r"}", "\t", text));//
 end(  );//    
 process(  );//   ----- Phase 1: Pretty Print, Reindent & Mark Block Lines ----- 
+end();//   <-- inserted by postProcess.py
+
 input( def phase1_reindent(lines, comment_marker):  );//    
 set(""");//
 set(Assumes the source has been pretty printed.);//
@@ -37,11 +50,14 @@ loop( while i < len(lines):  );//
 set(line = lines[i].rstrip());//
 process(  );//   Look ahead for a header pair. 
 branch( if i < len(lines) - 1 and not line.rstrip().endswith("{"):  );//    
+path();//
 set(next_line = lines[i + 1].rstrip());//
 branch( if next_line.strip() == "{" or next_line.strip().startswith("{" + " " + comment_marker + " tag"):  );//    
+path();//
 set(new_indent = "\t" * indent_level);//
 process(  );//   Mark control statement with special header marker. 
 branch( if comment_marker + " tag-header" not in line:  );//    
+path();//
 set(new_lines.append(new_indent + line.strip() + " " + comment_marker + " tag-header"));//
 path( else:  );//    
 set(new_lines.append(new_indent + line.strip()));//
@@ -51,6 +67,7 @@ set(indent_level += 1);//
 set(new_indent = "\t" * indent_level);//
 process(  );//   Mark lone brace with special brace marker. 
 branch( if comment_marker + " tag-brace" not in next_line:  );//    
+path();//
 set(new_lines.append(new_indent + next_line.strip() + " " + comment_marker + " tag-brace"));//
 path( else:  );//    
 set(new_lines.append(new_indent + next_line.strip()));//
@@ -66,12 +83,15 @@ bend(  );//
 process(  );//   Normal processing. 
 set(stripped = line.strip());//
 branch( if stripped.startswith("}"):  );//    
+path();//
 set(indent_level = max(0, indent_level - 1));//
 set();//
 bend(  );//    
 set(new_indent = "\t" * indent_level);//
 branch( if stripped.endswith("{") or stripped.startswith("}"):  );//    
+path();//
 branch( if comment_marker + " tag" not in stripped:  );//    
+path();//
 set(new_lines.append(new_indent + stripped + " " + comment_marker + " tag"));//
 path( else:  );//    
 set(new_lines.append(new_indent + stripped));//
@@ -80,6 +100,7 @@ set();//
 path( else:  );//    
 set(new_lines.append(new_indent + stripped));//
 branch( if stripped.endswith("{"):  );//    
+path();//
 set(indent_level += 1);//
 set();//
 bend(  );//    
@@ -89,26 +110,34 @@ bend(  );//
 end(return new_lines);//
 lend(  );//    
 process(  );//   ----- Phase 2: Discriminate & Map Tags Using tagMapper() and a Stack ----- 
+end();//   <-- inserted by postProcess.py
+
 input( def phase2_map_tags(lines, comment_marker, lang):  );//    
 set(""");//
-set(Process lines marked with a generic tag.);//
-set(For header lines:);//
-set(- If a line contains "tag-header", remove that marker and call lang.tagMapper() with isIndent=True);//
-set(on the header's content. Replace the marker with the refined tag and push the expected closure (via lang.closureMapping));//
-set(onto a local stack.);//
-set(- For the following line marked "tag-brace", simply replace its marker with " path".);//
-set(- For normal header lines (ending with "{ tag"), process similarly.);//
-set(For closing lines (lines starting with "}" with " tag"), call lang.tagMapper() with isIndent=False to get the refined closing tag.);//
+set();//Process lines marked with a generic tag.
+set();//For header lines:
+set();//- If a line contains "tag-header", remove that marker and call lang.tagMapper() with isIndent=True
+set();//on the header's content. Replace the marker with the refined tag and push the expected closure (via lang.closureMapping)
+set();//onto a local stack.
+set();//- For the following line marked "tag-brace", simply replace its marker with " path".
+set();//- For normal header lines (ending with "{ tag"), process similarly.
+set();//For closing lines (lines starting with "}" with " tag"), call lang.tagMapper() with isIndent=False to get the refined closing tag.
 set(""");//
+branch();////   <-- inserted by postProcess.py//
+path();//
 set(new_lines = []);//
 process( stack = []   );//   local stack for expected closures 
 set(line_num = 0);//
+
 input( def remove_marker(line, marker):  );//    
 end(return re.sub(r"\s*" + re.escape(comment_marker) + r"\s*" + re.escape(marker), "", line));//
+set();//
+path();//
 loop( for line in lines:  );//    
 set(line_num += 1);//
 process(  );//   Process header line with "tag-header". 
 branch( if comment_marker + " tag-header" in line:  );//    
+path();//
 set(header_line = line);//
 set(cleaned = remove_marker(header_line, "tag-header").rstrip());//
 set(refined = lang.tagMapper(cleaned, True, line_num));//
@@ -127,6 +156,7 @@ set();//
 bend(  );//    
 process(  );//   Process the following brace line marked "tag-brace". 
 branch( if comment_marker + " tag-brace" in line:  );//    
+path();//
 process( new_brace = re.sub(  );//   tag-----<<< 
 set(r"\s*" + re.escape(comment_marker) + r"\s*tag-brace",);//
 set(" " + comment_marker + " path",);//
@@ -139,11 +169,14 @@ end(continue);//
 bend(  );//    
 process(  );//   Process normal header lines with generic "tag". 
 branch( if comment_marker + " tag" in line:  );//    
+path();//
 set(stripped = line.strip());//
 branch( if stripped.endswith("{ " + comment_marker + " tag"):  );//    
+path();//
 set(header_line = line);//
 set(cleaned = remove_marker(header_line, "tag").rstrip());//
 branch( if cleaned.endswith("{"):  );//    
+path();//
 set(header_content = cleaned[:-1].strip());//
 path( else:  );//    
 set(header_content = cleaned.strip());//
@@ -164,6 +197,7 @@ end(continue);//
 bend(  );//    
 process(  );//   Process closing lines marked with generic "tag". 
 branch( if stripped.startswith("}") and (comment_marker + " tag") in stripped:  );//    
+path();//
 set(base_line = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag", "", line).rstrip());//
 set(refined = lang.tagMapper(base_line, False, line_num));//
 set(new_line = base_line + " " + comment_marker + " " + refined);//
@@ -177,8 +211,11 @@ set(new_lines.append(line));//
 set();//
 lend(  );//    
 end(return new_lines);//
+bend();//
 end(  );//    
 set();//
+end();//   <-- inserted by postProcess.py
+
 input( def main():  );//    
 set(parser = argparse.ArgumentParser(description="VFCtagger: Pretty print and tag code with structure."));//
 set(parser.add_argument("language", help="Language (e.g., javascript, python, perl)"));//
@@ -187,11 +224,14 @@ set(args = parser.parse_args());//
 process(  );//   Load language module. 
 set(lang = None);//
 branch( try:  );//    
+path();//
 set(lang = load_language_module(args.language.lower()));//
 path( except Exception as e:  );//    
 set(sys.exit("Error loading language module: " + str(e)));//
 branch( try:  );//    
+path();//
 branch( with open(args.file, "r", encoding="utf-8") as f:  );//    
+path();//
 set(source = f.read());//
 bend(  );//    
 set();//
@@ -211,7 +251,9 @@ process(  );//   Phase 2: Discriminate and map tags using the language module's 
 set(final_lines = phase2_map_tags(phase1_lines, lang.comment_marker, lang));//
 set(output_file = os.path.basename(args.file) + ".txt");//
 branch( try:  );//    
+path();//
 branch( with open(output_file, "w", encoding="utf-8") as out:  );//    
+path();//
 set(out.write(f"{lang.comment_marker} TAGGED FOR VFC\n"));//
 set(out.write(f"{lang.comment_marker} TAGGED FOR VFC\n"));//
 loop( for l in final_lines:  );//    
@@ -228,3 +270,12 @@ bend(  );//
 set(if __name__ == "__main__":);//
 end(  );//   endif---------------- # tag-----<<< 
 set(main());//
+
+
+
+;INSECTA EMBEDDED SESSION INFORMATION
+; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 3289650
+;       //   ...
+; notepad.exe
+;INSECTA EMBEDDED ALTSESSION INFORMATION
+; 4294965435 4294966108 1459 3610 0 150   660   4294963607    default.key  0

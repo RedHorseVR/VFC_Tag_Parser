@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : postProcess.py.vfc
-;  File Date : 12:23:03 AM - 07:Mar:2025
+;  File Date : 10:45:59 PM - 07:Mar:2025
 
 
 input(def match_tok( tok , string  ):);// 
@@ -58,12 +58,18 @@ path(else:);//<----- use generic mappings for now for outputs and ends
 branch(if  len(comment.strip()) > 0  :);//
 path( );//
 output(VFCline =f'{ match_GENERIC_type(code.strip()) }({ code.strip() });{VFCsplitter }  {comment_marker} -----> {comment.strip()} ');//VFCline =f'set({code.strip()});{VFCsplitter }>>>> {comment.strip()} '
-path(else:);//
+path(else: );//
 output(VFCline =f'{ match_GENERIC_type(code.strip()) }({ code.strip() });{VFCsplitter}');//VFCline =f'set({code.strip()});{VFCsplitter }>>>> {comment.strip()} '
 bend( );//
 bend();//
 output(print( VFCline  ));//
-generic( write_file.write(VFCline + '\n')  # generic:168:);// 
+branch(if  "def " in VFCline and VFCobj == 'input' :);//
+path( );//
+output(write_file.write( f'end();{VFCsplitter}   <-- inserted by postProcess.py'  + '\n' ));//
+output( write_file.write(VFCline + '\n'));//// //
+path(else: );//
+generic( write_file.write(VFCline + '\n'));// 
+bend( );//
 lend();//
 bend( );//
 bend();//
@@ -74,10 +80,10 @@ output(print(f"An error occurred: {e}"));//// //////
 set();//////
 bend();//
 end(return);//
-event(import re);//
+event(import re );//
 
 input(def match_GENERIC_type(  search_str ):);//
-output(genericTypes = { "end" : [ "return", "end" , "continue" , "break" ] , "output" : ["alert", "throw", "console", "print", "echo"] ,  "set" : ["=", "var const"] ,  "event": ["import", "include",  "module);//////
+output(genericTypes = { "end" : [ "return", "end" , "continue" , "break" ] , "output" : ["alert", "throw", "console", "print", "echo" , "write" ] ,  "set" : ["=", "var const"] ,  "event": ["import", "include);//
 generic();//search_words = set(search_str.split())
 loop(for key, value in genericTypes.items():);// 
 loop(for tok  in  value:);//
@@ -110,4 +116,4 @@ end();//
 ;    postProcess.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 361 161 3156 1247 1 130   1064   4294965898    python.key  0
+; 361 161 1835 1415 1 130   1046   4294966024    python.key  0

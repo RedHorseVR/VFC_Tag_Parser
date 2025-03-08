@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : testo.py_tagged.txt.vfc
-;  File Date : 10:48:13 PM - 07:Mar:2025
+;  File Date : 03:04:59 PM - 08:Mar:2025
 
 event( import argparse   );//    
 event( import os   );//    
@@ -114,20 +114,20 @@ end();//   <-- inserted by postProcess.py
 
 input( def phase2_map_tags(lines, comment_marker, lang):  );//    
 set(""");//
-set();//Process lines marked with a generic tag.
-set();//For header lines:
-set();//- If a line contains "tag-header", remove that marker and call lang.tagMapper() with isIndent=True
-set();//on the header's content. Replace the marker with the refined tag and push the expected closure (via lang.closureMapping)
-set();//onto a local stack.
-set();//- For the following line marked "tag-brace", simply replace its marker with " path".
-set();//- For normal header lines (ending with "{ tag"), process similarly.
-set();//For closing lines (lines starting with "}" with " tag"), call lang.tagMapper() with isIndent=False to get the refined closing tag.
+set(Process lines marked with a generic tag.);//
+set(For header lines:);//
+set(- If a line contains "tag-header", remove that marker and call lang.tagMapper() with isIndent=True);//
+set(on the header's content. Replace the marker with the refined tag and push the expected closure (via lang.closureMapping));//
+set(onto a local stack.);//
+set(- For the following line marked "tag-brace", simply replace its marker with " path".);//
+set(- For normal header lines (ending with "{ tag"), process similarly.);//
+set(For closing lines (lines starting with "}" with " tag"), call lang.tagMapper() with isIndent=False to get the refined closing tag.);//
 set(""");//
-branch();////   <-- inserted by postProcess.py//
-path();//
 set(new_lines = []);//
 process( stack = []   );//   local stack for expected closures 
 set(line_num = 0);//
+branch();////   <-- inserted by postProcess.py//
+path();//
 
 input( def remove_marker(line, marker):  );//    
 end(return re.sub(r"\s*" + re.escape(comment_marker) + r"\s*" + re.escape(marker), "", line));//
@@ -211,8 +211,7 @@ set(new_lines.append(line));//
 set();//
 lend(  );//    
 end(return new_lines);//
-bend();//
-end(  );//    
+bend(  );////    //
 set();//
 end();//   <-- inserted by postProcess.py
 
@@ -267,15 +266,17 @@ set(sys.exit(f"Error writing output file: {e}"));//
 bend(  );//    
 output(print(f"Output written to: {output_file}"));//
 bend(  );//    
-set(if __name__ == "__main__":);//
-end(  );//   endif---------------- # tag-----<<< 
+end();//
+branch(if __name__ == "__main__":);//////
+path();//
 set(main());//
+bend();//
 
 
 
 ;INSECTA EMBEDDED SESSION INFORMATION
 ; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 3289650
-;       //   ...
+;    _testo.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 4294965435 4294966108 1459 3610 0 150   660   4294963607    default.key  0
+; 1429 281 2163 1507 0 89   384   4294963295    python.key  0

@@ -74,7 +74,7 @@ def  postProcess( filename , comment_marker ):
 	return
 import re
 def match_GENERIC_type(  search_str ):
-	genericTypes = { "end" : [ "return", "end" , "continue" , "break" ] , "output" : ["alert", "throw", "console", "print", "echo" , "write" ] ,  "set" : ["=", "var const"] ,  "event": ["import", "include",  "module"]    }
+	genericTypes = {  "output" : ["alert", "throw", "console", "print", "echo" , "write" ] ,  "set" : ["=", "var const"] , "end" : [ "return", "end" , "continue" , "break" ] , "event": ["import", "include",  "module"]    }
 	
 	for key, value in genericTypes.items():
 		for tok  in  value:
@@ -92,12 +92,12 @@ if __name__ == '__main__':
 
 	postProcess(  'testo.js_tagged.txt'  , '//' )
 	postProcess(  'testo.py_tagged.txt' , '#'  )
-	postProcess(  'function.py_tagged.txt' , '#'  )
+	
 	
 
 
 
 
 
-#  Export  Date: 10:51:15 PM - 07:Mar:2025.
+#  Export  Date: 02:54:36 PM - 08:Mar:2025.
 

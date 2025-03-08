@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : postProcess.py.vfc
-;  File Date : 10:51:15 PM - 07:Mar:2025
+;  File Date : 02:54:36 PM - 08:Mar:2025
 
 
 input(def match_tok( tok , string  ):);// 
@@ -58,7 +58,7 @@ path(else:);//<----- use generic mappings for now for outputs and ends
 branch(if  len(comment.strip()) > 0  :);//
 path( );//
 output(VFCline =f'{ match_GENERIC_type(code.strip()) }({ code.strip() });{VFCsplitter }  {comment_marker} -----> {comment.strip()} ');//VFCline =f'set({code.strip()});{VFCsplitter }>>>> {comment.strip()} '
-path(else:);//
+path(else: );//
 output(VFCline =f'{ match_GENERIC_type(code.strip()) }({ code.strip() });{VFCsplitter}');//VFCline =f'set({code.strip()});{VFCsplitter }>>>> {comment.strip()} '
 bend( );//
 bend();//
@@ -67,7 +67,7 @@ branch(if  "def " in VFCline and VFCobj == 'input' :);//
 path( );//
 output(write_file.write( f'end();{VFCsplitter}   <-- inserted by postProcess.py'  + '\n' ));//
 output( write_file.write(VFCline + '\n'));//// //
-path(else:);//
+path(else: );//
 generic( write_file.write(VFCline + '\n'));// 
 bend( );//
 lend();//
@@ -80,10 +80,10 @@ output(print(f"An error occurred: {e}"));//// //////
 set();//////
 bend();//
 end(return);//
-event(import re);//
+event(import re );//
 
 input(def match_GENERIC_type(  search_str ):);//
-output(genericTypes = { "end" : [ "return", "end" , "continue" , "break" ] , "output" : ["alert", "throw", "console", "print", "echo" , "write" ] ,  "set" : ["=", "var const"] ,  "event": ["import", "include);//
+output(genericTypes = {  "output" : ["alert", "throw", "console", "print", "echo" , "write" ] ,  "set" : ["=", "var const"] , "end" : [ "return", "end" , "continue" , "break" ] , "event": ["import", "include);//
 generic();//search_words = set(search_str.split())
 loop(for key, value in genericTypes.items():);// 
 loop(for tok  in  value:);//
@@ -101,7 +101,7 @@ branch(if __name__ == '__main__':);//
 path();//
 process( postProcess(  'testo.js_tagged.txt'  , '//' ));//
 process( postProcess(  'testo.py_tagged.txt' , '#'  ));//
-process( postProcess(  'function.py_tagged.txt' , '#'  ));//
+process();// postProcess(  'function.py_tagged.txt' , '#'  )
 bend( );//
 end();//
 end();//
@@ -116,4 +116,4 @@ end();//
 ;    postProcess.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 361 161 1835 1415 1 130   1046   4294966024    python.key  0
+; 361 161 1835 1415 1 140   918   4294964853    python.key  0

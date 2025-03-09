@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : postProcess.py.vfc
-;  File Date : 02:54:36 PM - 08:Mar:2025
+;  File Date : 04:59:50 PM - 09:Mar:2025
 
 
 input(def match_tok( tok , string  ):);// 
@@ -81,9 +81,11 @@ set();//////
 bend();//
 end(return);//
 event(import re );//
+event(import sys );//
 
 input(def match_GENERIC_type(  search_str ):);//
-output(genericTypes = {  "output" : ["alert", "throw", "console", "print", "echo" , "write" ] ,  "set" : ["=", "var const"] , "end" : [ "return", "end" , "continue" , "break" ] , "event": ["import", "include);//
+output(genericTypes = {  "output" : ["alert", "throw", "console", "print", "echo" , "write" ] ,  "set" : ["=", "var const"] , "end" : [ "return", "end" , "continue" , "break" ] ,);//
+output( "event": ["import", "include" ] });//
 generic();//search_words = set(search_str.split())
 loop(for key, value in genericTypes.items():);// 
 loop(for tok  in  value:);//
@@ -99,8 +101,14 @@ end(return 'set');//
 end();//
 branch(if __name__ == '__main__':);//
 path();//
-process( postProcess(  'testo.js_tagged.txt'  , '//' ));//
-process( postProcess(  'testo.py_tagged.txt' , '#'  ));//
+branch(if   len( sys.argv ) < 3  :);//
+path();//
+output(print( 'usage:\n\tpostProcess VFC_tag_file  , inline_comment_token ' ));//
+path(else: );//
+process(postProcess( sys.argv[1] , sys.argv[2] ));//////
+bend( );//
+process();// postProcess(  'testo.js_tagged.txt'  , '//' )
+process();// postProcess(  'testo.py_tagged.txt' , '#'  )
 process();// postProcess(  'function.py_tagged.txt' , '#'  )
 bend( );//
 end();//
@@ -116,4 +124,4 @@ end();//
 ;    postProcess.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 361 161 1835 1415 1 140   918   4294964853    python.key  0
+; 846 101 1501 995 1 140   822   4294964727    python.key  0

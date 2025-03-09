@@ -175,7 +175,7 @@ def main():
 		result = tagger.process_file(args.file, args.skip)
 		
 		# Determine output file
-		output_file = args.output if args.output else os.path.basename(args.file) + "_tagged.txt"
+		output_file = args.output if args.output else os.path.basename(args.file) + ".tag"
 		
 		# Write the output
 		with open(output_file, "w", encoding="utf-8") as out:

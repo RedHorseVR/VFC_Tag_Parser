@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : python_lang.vfc
-;  File Date : 02:57:58 PM - 08:Mar:2025
+;  File Date : 05:11:30 PM - 09:Mar:2025
 
 event(import sys);// ////
 event(import black);// ////
@@ -183,10 +183,13 @@ branch(if   pretty == None  :);//
 path();//
 output(print( "pretty was None " ));// 
 path(else:);//
+set(''' -------------------------------------------- );//
 branch(with open( 'pretty.py' , 'w' ) as write_file :);//
 path();//
+output(pass );//
 output(write_file.write(pretty));// 
 bend( );//
+set(-------------------------------------------- ''' );//
 bend( );//
 output(#  // output //);//print(pretty)
 path(else:);// ////
@@ -286,6 +289,21 @@ bend();// ////
 bend();// // //
 end();// // end //
 
+input(if __name__ == "__main__":);// // input //
+branch(if len(sys.argv) > 1:);// ////
+path();//
+branch(with open(sys.argv[1], "r", encoding="utf-8") as f:);//// //////
+path();//
+generic(source = f.read());// ////
+bend();//
+generic(pretty = pretty_print(source));// ////
+output(print(");   // === Final Pretty Printed Code ===")   # output ////);//
+output(print(pretty));// // output //
+path(else:);//// //////
+output(print("Usage: python python_lang.py <source_file>"));//// //
+bend();//// // end////
+end();//
+
 
 
 ;INSECTA EMBEDDED SESSION INFORMATION
@@ -293,4 +311,4 @@ end();// // end //
 ;    python_lang.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 380 359 2164 908 125 138   963   4294960646    python.key  0
+; 1308 372 2332 1023 290 180   914   4294954620    python.key  0

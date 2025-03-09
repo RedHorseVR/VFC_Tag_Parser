@@ -173,10 +173,13 @@ if __name__ == "__main__":
 		
 			print( "pretty was None " )
 		else:
+			''' --------------------------------------------
 			with open( 'pretty.py' , 'w' ) as write_file :
 			
+				pass
 				write_file.write(pretty)
 				
+			-------------------------------------------- '''
 			
 		#  // output //
 	else:
@@ -272,5 +275,19 @@ def tagMapper(line, indentTag, lineNumber):
 			
 		
 	
-#  Export  Date: 02:57:58 PM - 08:Mar:2025.
+if __name__ == "__main__":
+	if len(sys.argv) > 1:
+	
+		with open(sys.argv[1], "r", encoding="utf-8") as f:
+		
+			source = f.read()
+			
+		pretty = pretty_print(source)
+		print(");   // === Final Pretty Printed Code ===")   # output ////
+		print(pretty)
+	else:
+		print("Usage: python python_lang.py <source_file>")
+		
+	
+#  Export  Date: 05:11:30 PM - 09:Mar:2025.
 

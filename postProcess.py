@@ -73,8 +73,10 @@ def  postProcess( filename , comment_marker ):
 		
 	return
 import re
+import sys
 def match_GENERIC_type(  search_str ):
-	genericTypes = {  "output" : ["alert", "throw", "console", "print", "echo" , "write" ] ,  "set" : ["=", "var const"] , "end" : [ "return", "end" , "continue" , "break" ] , "event": ["import", "include",  "module"]    }
+	genericTypes = {  "output" : ["alert", "throw", "console", "print", "echo" , "write" ] ,  "set" : ["=", "var const"] , "end" : [ "return", "end" , "continue" , "break" ] ,
+	"event": ["import", "include" ] }
 	
 	for key, value in genericTypes.items():
 		for tok  in  value:
@@ -90,8 +92,14 @@ def match_GENERIC_type(  search_str ):
 
 if __name__ == '__main__':
 
-	postProcess(  'testo.js_tagged.txt'  , '//' )
-	postProcess(  'testo.py_tagged.txt' , '#'  )
+	if   len( sys.argv ) < 3  :
+	
+		print( 'usage:\n\tpostProcess VFC_tag_file  , inline_comment_token ' )
+	else:
+		postProcess( sys.argv[1] , sys.argv[2] )
+		
+	
+	
 	
 	
 
@@ -99,5 +107,5 @@ if __name__ == '__main__':
 
 
 
-#  Export  Date: 02:54:36 PM - 08:Mar:2025.
+#  Export  Date: 04:59:50 PM - 09:Mar:2025.
 

@@ -19,10 +19,6 @@ def pretty_print(source):
 		formatted = re.sub(r"( {4})", "\t", formatted)
 		
 		formatted = add_block_end_comments( formatted )
-		with open( 'pretty.py' , 'w' ) as write_file :
-		
-			write_file.write( formatted )
-			
 		return formatted
 	except black.NothingChanged:
 		print(" black made no changes")
@@ -163,7 +159,6 @@ if __name__ == "__main__":
 
 	if len(sys.argv) > 1:
 	
-		
 		with open(sys.argv[1], "r", encoding="utf-8") as f:
 		
 			source = f.read()
@@ -185,8 +180,6 @@ if __name__ == "__main__":
 	else:
 		print("\nUsage: python python_lang.py <source_file>")
 		
-else:
-	from languages.function import add_block_end_comments
 	
 
 
@@ -240,8 +233,11 @@ def tagMapper(line, indentTag, lineNumber):
 	print(f"DEBUG: Line {lineNumber} {i} ({ indentTag  }): {line} ")
 	if indentTag == 'tagA'  or indentTag == 'tagX'    :
 	
-		if re.match(r"^if\s+", cleaned, re.IGNORECASE):
+		if re.match(r"^(if)\b", cleaned, re.IGNORECASE):
 		
+			_tag_stack.append("bend")
+			return "branch"
+		elif re.match(r"^try\s*:", cleaned):
 			_tag_stack.append("bend")
 			return "branch"
 		elif re.match(r"^(for|while)\s+", cleaned, re.IGNORECASE):
@@ -252,9 +248,6 @@ def tagMapper(line, indentTag, lineNumber):
 			return "input"
 		elif re.match(r"^(elif|else)\b", cleaned, re.IGNORECASE):
 			return "path"
-		elif re.match(r"^try\s*:", cleaned):
-			_tag_stack.append("bend")
-			return "branch"
 		elif re.match(r"^except\b", cleaned, re.IGNORECASE):
 			return "path"
 		elif re.match(r"^finally\s*:", cleaned, re.IGNORECASE):
@@ -289,5 +282,5 @@ if __name__ == "__main__":
 		print("Usage: python python_lang.py <source_file>")
 		
 	
-#  Export  Date: 05:11:30 PM - 09:Mar:2025.
+#  Export  Date: 05:34:40 PM - 09:Mar:2025.
 

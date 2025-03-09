@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : python_lang.vfc
-;  File Date : 05:11:30 PM - 09:Mar:2025
+;  File Date : 05:34:40 PM - 09:Mar:2025
 
 event(import sys);// ////
 event(import black);// ////
@@ -26,17 +26,13 @@ process(formatted = black.format_str(source, mode=mode));// // process //
 process(formatted = re.sub(r"( {4})", "\t", formatted));// // process //
 generic();//print(");   // pretty printed code:")                    # output ////
 generic(formatted = add_block_end_comments( formatted ));// ////
-branch(with open( 'pretty.py' , 'w' ) as write_file :);//
-path();//
-output(write_file.write( formatted ));// 
-bend( );//
 output(return formatted);//
 path(except black.NothingChanged:);// // path //
 generic(print(" black made no changes"));//
 end(return source);// // fallback output //
 bend();// ////
 end();// //     //
-event( import sys);//    
+event(import sys);//    
 end();//
 set(stack = []);//
 
@@ -173,7 +169,6 @@ branch(if __name__ == "__main__":);//// // input ////
 path();//
 branch(if len(sys.argv) > 1:);// ////
 path();//
-event();//from function import add_block_end_comments
 branch(with open(sys.argv[1], "r", encoding="utf-8") as f:);//// //////
 path();//
 generic(source = f.read());// ////
@@ -195,8 +190,6 @@ output(#  // output //);//print(pretty)
 path(else:);// ////
 output(print("\nUsage: python python_lang.py <source_file>"));// 
 bend();// // //
-path(else:);//
-event(from languages.function import add_block_end_comments);//
 bend();// // //
 generic();// // END //
 end();//// // -------------------- global stack for tagMapper -------------------- ////
@@ -253,9 +246,12 @@ set();//status = "indent" if isIndent else "outdent"
 output(print(f"DEBUG: Line {lineNumber} {i} ({ indentTag  }): {line} "));// // output //
 branch( if indentTag == 'tagA'  or indentTag == 'tagX'    :);// 
 path();//
-branch(if re.match(r"^if\s+", cleaned, re.IGNORECASE):);// ////
+branch(if re.match(r"^(if)\b", cleaned, re.IGNORECASE):);//
 path();//
 set(_tag_stack.append("bend"));//// // push closure for if ////
+output(return "branch");//
+path(elif re.match(r"^try\s*:", cleaned):);// ////
+set(_tag_stack.append("bend"));//// // push closure for try ////
 output(return "branch");//
 path(elif re.match(r"^(for|while)\s+", cleaned, re.IGNORECASE):);// ////
 set(_tag_stack.append("lend"));//// // push closure for loop ////
@@ -265,9 +261,6 @@ set(_tag_stack.append("end"));//// // push closure for function ////
 output(return "input");//
 path(elif re.match(r"^(elif|else)\b", cleaned, re.IGNORECASE):);// ////
 output(return "path");//
-path(elif re.match(r"^try\s*:", cleaned):);// ////
-set(_tag_stack.append("bend"));//// // push closure for try ////
-output(return "branch");//
 path(elif re.match(r"^except\b", cleaned, re.IGNORECASE):);// ////
 output(return "path");//
 path(elif re.match(r"^finally\s*:", cleaned, re.IGNORECASE):);// ////
@@ -311,4 +304,4 @@ end();//
 ;    python_lang.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 1308 372 2332 1023 290 180   914   4294954620    python.key  0
+; 1357 202 2637 1394 187 140   822   4294958392    python.key  0

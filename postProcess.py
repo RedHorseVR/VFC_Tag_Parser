@@ -38,7 +38,7 @@ def  postProcess( filename , comment_marker ):
 						elif  match_tok( 'end' , comment )  :
 							VFCobj = 'end' ;
 						else:
-							VFCobj = 'process' ;
+							VFCobj = 'generic' ;
 							
 						
 						pattern = r'\b' + re.escape( VFCobj ) + r'\b'
@@ -107,5 +107,5 @@ if __name__ == '__main__':
 
 
 
-#  Export  Date: 04:59:50 PM - 09:Mar:2025.
+#  Export  Date: 05:37:03 PM - 09:Mar:2025.
 

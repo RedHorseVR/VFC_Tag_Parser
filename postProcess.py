@@ -38,7 +38,7 @@ def  postProcess( filename , comment_marker ):
 						elif  match_tok( 'end' , comment )  :
 							VFCobj = 'end' ;
 						else:
-							VFCobj = 'process' ;
+							VFCobj = f'{ match_GENERIC_type( code.strip()) }'
 							
 						
 						pattern = r'\b' + re.escape( VFCobj ) + r'\b'
@@ -76,11 +76,11 @@ import re
 import sys
 def match_GENERIC_type(  search_str ):
 	genericTypes = {   "output" : ["alert", "throw", "console", "print", "echo" , "write" ] ,  "set" : ["=", "var const"] , "end" : [ "return", "end" , "continue" , "break" ] ,
-	"input": [ "def" ] ,  "event": ["import", "include" , "@"  ] }
+	"input": [ "def" ] ,  "event": ["import", "include" , "@"  ]    }
 	
 	for key, value in genericTypes.items():
 		for tok  in  value:
-			pattern = r'^[^\w]*' + re.escape(tok)
+			pattern = r'^[^\w]*\s*' +  re.escape(tok)  +r'\b'
 			match = re.match(pattern, search_str )
 			if match  :
 			
@@ -88,7 +88,7 @@ def match_GENERIC_type(  search_str ):
 				
 					
 			
-	return 'set'
+	return 'process'
 
 if __name__ == '__main__':
 
@@ -107,5 +107,5 @@ if __name__ == '__main__':
 
 
 
-#  Export  Date: 11:48:39 PM - 09:Mar:2025.
+#  Export  Date: 01:32:01 AM - 10:Mar:2025.
 

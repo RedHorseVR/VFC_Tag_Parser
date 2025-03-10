@@ -262,15 +262,15 @@ def tagMapper(line, indentTag, lineNumber):
 		elif re.match(r"^finally\s*:", cleaned, re.IGNORECASE):
 			return "path"
 		else:
-			_tag_stack.append("tag")
-			return "tag-----<<<"
+			
+			return indentTag
 			
 	else:
 		if _tag_stack:
 		
 			return _tag_stack.pop()
 		else:
-			return "tag"
+			return indentTag
 			
 		
 	
@@ -288,5 +288,5 @@ if __name__ == "__main__":
 		print("Usage: python python_lang.py <source_file>")
 		
 	
-#  Export  Date: 11:37:53 PM - 09:Mar:2025.
+#  Export  Date: 01:31:02 AM - 10:Mar:2025.
 

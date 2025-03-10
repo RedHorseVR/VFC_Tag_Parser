@@ -41,8 +41,8 @@ if "!EXTEN!"==".js" (  REM JAVASCRIPT
 	ECHO PARSING ...
 	python %SCRIPT_DIR%VFCtagger.py  javascript %1
 	ECHO POST PROCESSING ...
-	python %SCRIPT_DIR%postProcess.py %1.tag "#"
-	del %1.tag
+	python %SCRIPT_DIR%postProcess.py %1.tag "//"
+	rem del %1.tag
 	
 	echo ----------------------------------------
 	echo ----------------------------------------
@@ -52,7 +52,7 @@ if "!EXTEN!"==".js" (  REM JAVASCRIPT
 
 echo ----------------------------------------
 echo ----------------------------------------
-echo No language module aviaalable for parsing %1
+echo No language module for parsing %1
 echo ----------------------------------------
 echo ----------------------------------------
 

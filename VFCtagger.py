@@ -173,7 +173,8 @@ class VFCTagger:
 				
 			elif indent_level < prev_indent:
 				
-				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_CLOSE} ")
+				new_lines.append(  f" {self.lang.comment_marker} {TAG_CLOSE} ")
+				new_lines.append(  line.rstrip()  )
 				
 			else:
 				
@@ -219,5 +220,5 @@ if __name__ == "__main__":
 	main()
 	
 
-#  Export  Date: 12:49:28 AM - 10:Mar:2025.
+#  Export  Date: 01:41:21 AM - 10:Mar:2025.
 

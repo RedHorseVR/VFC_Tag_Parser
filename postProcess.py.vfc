@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : postProcess.py.vfc
-;  File Date : 11:48:39 PM - 09:Mar:2025
+;  File Date : 01:32:01 AM - 10:Mar:2025
 
 
 input(def match_tok( tok , string  ):);// 
@@ -46,7 +46,7 @@ set(VFCobj = 'bend' ;);//
 path(elif  match_tok( 'end' , comment )  :);//
 set(VFCobj = 'end' ;);//
 path(else:);//
-set(VFCobj = 'process' ;);//
+set(VFCobj = f'{ match_GENERIC_type( code.strip()) }');//VFCobj = 'process' ;
 bend( );//
 set();//
 generic(pattern = r'\b' + re.escape( VFCobj ) + r'\b');// remove the tag commant type
@@ -58,7 +58,7 @@ path(else:);//<----- use generic mappings for now for outputs and ends
 branch(if  len(comment.strip()) > 0  :);//
 path( );//
 output(VFCline =f'{ match_GENERIC_type(code.strip()) }({ code.strip() });{VFCsplitter }  {comment_marker} -----> {comment.strip()} ');//VFCline =f'set({code.strip()});{VFCsplitter }>>>> {comment.strip()} '
-path(else:);//
+path(else: );//
 output(VFCline =f'{ match_GENERIC_type(code.strip()) }({ code.strip() });{VFCsplitter}');//VFCline =f'set({code.strip()});{VFCsplitter }>>>> {comment.strip()} '
 bend( );//
 bend();//
@@ -67,7 +67,7 @@ branch(if  "def " in VFCline and VFCobj == 'input' :);//
 path( );//
 output(write_file.write( f'end();{VFCsplitter}   <-- inserted by postProcess.py'  + '\n' ));//
 output( write_file.write(VFCline + '\n'));//// //
-path(else:);//
+path(else: );//
 generic( write_file.write(VFCline + '\n'));// 
 bend( );//
 lend();//
@@ -80,16 +80,16 @@ output(print(f"An error occurred: {e}"));//// //////
 set();//////
 bend();//
 end(return);//
-event(import re);//
-event(import sys);//
+event(import re );//
+event(import sys );//
 
 input(def match_GENERIC_type(  search_str ):);//
 output(genericTypes = {   "output" : ["alert", "throw", "console", "print", "echo" , "write" ] ,  "set" : ["=", "var const"] , "end" : [ "return", "end" , "continue" , "break" ] ,);//
-output( "input": [ "def" ] ,  "event": ["import", "include" , "@"  ] });//
+output( "input": [ "def" ] ,  "event": ["import", "include" , "@"  ]    });// "input": [ "def" ] ,  "event": ["import", "include" , "@"  ] , "loop": [ "for" ,  "while" ]  , "branch" : [ "if" ]     }
 generic();//search_words = set(search_str.split())
 loop(for key, value in genericTypes.items():);// 
 loop(for tok  in  value:);//
-generic(pattern = r'^[^\w]*' + re.escape(tok));// ////
+generic(pattern = r'^[^\w]*\s*' +  re.escape(tok)  +r'\b');// ////
 generic(match = re.match(pattern, search_str ));// 
 branch(if match  :);//if search_str == tok :
 path();//
@@ -97,14 +97,14 @@ end(return key);//// //////
 bend();//////
 lend( );//
 lend();//
-end(return 'set');//
+end(return 'process');//return 'set'
 end();//
 branch(if __name__ == '__main__':);//
 path();//
 branch(if   len( sys.argv ) < 3  :);//
 path();//
 output(print( 'usage:\n\tpostProcess VFC_tag_file  , inline_comment_token ' ));//
-path(else:);//
+path(else: );//
 process(postProcess( sys.argv[1] , sys.argv[2] ));//////
 bend( );//
 process();// postProcess(  'testo.js_tagged.txt'  , '//' )
@@ -124,4 +124,4 @@ end();//
 ;    postProcess.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 4294965546 819 1361 1485 1 140   664   4294965482    python.key  0
+; 4294965261 4294966279 1672 1485 1 140   772   4294965731    python.key  0

@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : python_lang.vfc
-;  File Date : 11:48:18 PM - 09:Mar:2025
+;  File Date : 01:31:02 AM - 10:Mar:2025
 
 event(import sys);// ////
 event(import black);// ////
@@ -178,13 +178,13 @@ branch(if   pretty == None  :);//
 path();//
 output(print( "pretty was None " ));// 
 path(else:);//
-set(''' -------------------------------------------- );//
+set(''' --------------------------------------------);//
 branch(with open( 'pretty.py' , 'w' ) as write_file :);//
 path();//
-output(pass );//
+output(pass);//
 output(write_file.write(pretty));// 
 bend( );//
-set(-------------------------------------------- ''' );//
+set(-------------------------------------------- ''');//
 bend( );//
 output(#  // output //);//print(pretty)
 path(else:);// ////
@@ -275,15 +275,15 @@ output(return "path");//
 path(elif re.match(r"^finally\s*:", cleaned, re.IGNORECASE):);// ////
 output(return "path");//
 path(else:);// ////
-generic(_tag_stack.append("tag"));// // push default closure //
-output(return "tag-----<<<");//
+generic();//_tag_stack.append("tag")
+output(return indentTag);//
 bend();// //   //
 path(else:);// ////
 branch(if _tag_stack:);// ////
 path();//
 output(return _tag_stack.pop());// // output closure tag from stack //
 path(else:);// ////
-end(return "tag");//
+end(return indentTag);//
 bend();// ////
 bend();// // //
 end();// // end //
@@ -310,4 +310,4 @@ end();//
 ;    python_lang.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 120 993 3275 707 227 89   510   4294961679    python.key  0
+; 273 840 3239 993 187 150   894   4294957600    python.key  0

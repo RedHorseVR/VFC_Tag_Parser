@@ -12,7 +12,8 @@ TAG_BRIDGE = "tagX"  # Bridge/intermediate tag
 class VFCTagger: # event 
 	def __init__(self, language_module): # input 
 		self.lang = language_module
-	# end
+# end
+
 	def process_file(self, source_file: str, skip_mapping: bool = False) -> str:
 		# """Process a source file and add structure tags."""
 		try: # branch 
@@ -22,7 +23,8 @@ class VFCTagger: # event
 			
 		except Exception as e: # path 
 			raise IOError(f"Error reading source file: {e}")
-		# bend
+# bend
+
 		# Format the source code consistently for both modes
 		formatted = self.lang.pretty_print(source)
 		formatted = self.convert_spaces_to_tabs(formatted)
@@ -32,15 +34,18 @@ class VFCTagger: # event
 		# Only map tags if not in skip mode
 		if not skip_mapping: # branch 
 			tagged_lines = self.map_language_tags(tagged_lines)
-		# bend
+# bend
+
 		return "\n".join(tagged_lines)
-	# end
+# end
+
 	@staticmethod
-	def convert_spaces_to_tabs(text: str, spaces_per_tab: int = 4) -> str: # tag-----<<< 
+	def convert_spaces_to_tabs(text: str, spaces_per_tab: int = 4) -> str: # tagA 
 		text = re.sub(f"( {{{spaces_per_tab}}})", "\t", text)
 		# Then remove empty lines
 		return re.sub(r"(?m)^[\n]+", "", text)
-	# tag
+# tagB
+
 	def insert_indentation_tags(self, lines: List[str]) -> List[str]:
 		# """
 		# Add tags based on strict indentation rules:
@@ -57,7 +62,8 @@ class VFCTagger: # event
 			if not stripped:  # Skip empty lines # branch 
 				new_lines.append(line)
 				continue
-			# bend
+# bend
+
 			indent_level = len(line) - len(stripped)
 			# skip the multi line comments
 			if stripped.startswith(self.lang.multiline_comment_start) and not InsideMultiLineComment:
@@ -69,13 +75,15 @@ class VFCTagger: # event
 					InsideMultiLineComment = False
 				# lend
 				
-			# tag
+# tagB
+
 			# Skip comment-only lines
 			# if stripped.startswith(self.lang.comment_marker) or InsideMultiLineComment or stripped.startswith(self.lang.multiline_comment_end):
 			if InsideMultiLineComment or stripped.startswith(self.lang.multiline_comment_end): # branch 
 				new_lines.append(line.rstrip())
 				continue
-			# bend
+# bend
+
 			# Get next indentation level
 			next_indent = 0
 			if i + 1 < len(lines): # branch 
@@ -84,7 +92,8 @@ class VFCTagger: # event
 					next_indent = len(lines[i + 1]) - len(next_line)
 				# bend
 				
-			# bend
+# bend
+
 			# Handle multi-level indentation changes (enforce speed limit)
 			if indent_level > prev_indent + 1:
 				# Insert bridge lines for jumps >1 level
@@ -92,7 +101,8 @@ class VFCTagger: # event
 					new_lines.append("\t" * bridge_level + f"{self.lang.comment_marker} {TAG_BRIDGE}")
 				# lend
 				
-			# tag
+# tagB
+
 			# Handle multi-level indentation decreases
 			if prev_indent > indent_level + 1:
 				# Process decrease in steps
@@ -100,32 +110,39 @@ class VFCTagger: # event
 					new_lines.append("\t" * step + f"{self.lang.comment_marker} {TAG_CLOSE}")
 				# lend
 				
-			# tag
+# tagB
+
 			# Insert blank line when going from level 1 to 0 if next line would indent
 			if prev_indent == 1 and indent_level == 0 and next_indent > 0: # branch 
 				new_lines.append(f"{self.lang.comment_marker} {TAG_CLOSE}")
-			# bend
+# bend
+
 			# Apply tags based on precise indentation patterns
 			if indent_level < prev_indent and indent_level < next_indent:
 				# Line is both an exit and entry point - use TAG_BRIDGE (tagX)
 				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_BRIDGE} ")  # |+++++++++++++ BRIDGE ")#
-			# tag
+# tagB
+
 			elif indent_level < next_indent:
 				# Line before +1 indent gets TAG_OPEN (tagA)
 				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_OPEN} ")  # |+++++++++++++ OPEN ")
-			# tag
+# tagB
+
 			elif indent_level < prev_indent:
 				# Line after -1 indent gets TAG_CLOSE (tagB)
 				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_CLOSE} ")  # |+++++++++++++ CLOSE ")
-			# tag
+# tagB
+
 			else:
 				# No indentation change
 				new_lines.append(line.rstrip())
-			# tag
+# tagB
+
 			prev_indent = indent_level
-		# tag
+# tagB
+
 		return new_lines
-	def map_language_tags(self, lines: List[str]) -> List[str]: # tag-----<<< 
+	def map_language_tags(self, lines: List[str]) -> List[str]: # tagX 
 		new_lines = []
 		tags = [TAG_OPEN, TAG_CLOSE, TAG_BRIDGE]
 		for i, line in enumerate(lines): # loop 
@@ -143,7 +160,8 @@ class VFCTagger: # event
 						new_lines.append(f"{ tab *indent_level }{cleaned}")
 					else: # path 
 						new_lines.append(new_line)
-					# bend
+# bend
+
 					mapped = True
 					break
 				# bend
@@ -152,7 +170,8 @@ class VFCTagger: # event
 				new_lines.append(line)
 			# bend
 			
-		# lend
+# lend
+
 		return new_lines
 	# lend
 	
@@ -173,13 +192,15 @@ def main(): # input
 		output_file = args.output if args.output else os.path.basename(args.file) + ".tag"
 		with open(output_file, "w", encoding="utf-8") as out: # branch 
 			out.write(result)
-		# bend
+# bend
+
 		print(f"Output written to: {output_file}")
 	except Exception as e: # path 
 		sys.exit(f"Error: {e}")
 	# bend
 	
 # bend
+
 if __name__ == "__main__":
-#endif---------------- # tag-----<<< 
+#endif---------------- # tagA 
 	main()

@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : VFCtagger.py.vfc
-;  File Date : 12:49:28 AM - 10:Mar:2025
+;  File Date : 01:41:21 AM - 10:Mar:2025
 
 event(import argparse);//
 event(import os);//
@@ -181,7 +181,8 @@ process( new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_OPE
 process(  );//   tag 
 path(elif indent_level < prev_indent:);//////
 process(  );//   Line after -1 indent gets TAG_CLOSE (tagB) 
-process( new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_CLOSE} "));//   |+++++++++++++ CLOSE ") 
+process( new_lines.append(  f" {self.lang.comment_marker} {TAG_CLOSE} "));//   |+++++++++++++ CLOSE ") 
+process( new_lines.append(  line.rstrip()  ));//  new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_CLOSE} ")
 process(  );//   tag 
 path(else:);//////
 process(  );//   No indentation change 
@@ -236,4 +237,4 @@ end();//
 ;    VFCtagger.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 84 391 1640 1303 0 130   1012   4294965122    python.key  0
+; 68 318 2060 1303 0 99   4294966801   4294965206    python.key  0

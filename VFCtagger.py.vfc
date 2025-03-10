@@ -1,8 +1,8 @@
 ;  IRL FlowCode Version: Version 10.0
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
-;  File Name : VFCtagger.py.tag.vfc
-;  File Date : 11:41:47 PM - 09:Mar:2025
+;  File Name : VFCtagger.py.vfc
+;  File Date : 12:49:28 AM - 10:Mar:2025
 
 event(import argparse);//
 event(import os);//
@@ -16,12 +16,7 @@ process( TAG_OPEN = "tagA");//
 process( TAG_CLOSE = "tagB");//
 process( TAG_BRIDGE = "tagX");//
 end();//
-event(@staticmethod);//
-
-input(def convert_spaces_to_tabs(text: str, spaces_per_tab: int = 4) -> str:);//
-set(text = re.sub(f"( {{{spaces_per_tab}}})", "\t", text));//
-process(  );//   Then remove empty lines 
-end(return re.sub(r"(?m)^[\n]+", "", text));//
+event();//@staticmethod
 
 input( class VFCTagger:);////    //
 branch();////   <-- inserted by postProcess.py//
@@ -30,6 +25,11 @@ path();//
 input( def __init__(self, language_module):);//    
 set(self.lang = language_module);//
 end(  );//    
+
+input(def convert_spaces_to_tabs(self, text: str, spaces_per_tab: int = 4) -> str:);//
+set(text = re.sub(f"( {{{spaces_per_tab}}})", "\t", text));//
+process(  );//   Then remove empty lines 
+end(return re.sub(r"(?m)^[\n]+", "", text));//
 
 input(def process_file(self, source_file: str, skip_mapping: bool = False) -> str:);//
 process(  );//   """Process a source file and add structure tags.""" 
@@ -82,12 +82,12 @@ set(mapped = True);//
 end(break);//
 bend(  );//    
 set();//
+set();//
+lend(  );//    
 branch( if not mapped:);//    
 path();//
 set(new_lines.append(line));//
 bend(  );//    
-set();//
-lend(  );//    
 lend(  );//    
 end(return new_lines);//
 end();//   <-- inserted by postProcess.py
@@ -207,6 +207,7 @@ path();//
 set(lang_module = importlib.import_module(f"languages.{args.language.lower()}_lang"));//
 path( except ImportError as e:);//    
 set(sys.exit(f"Error loading language module: {e}"));//
+bend(  );//    
 branch( try:);//    
 path();//
 set(tagger = VFCTagger(lang_module));//
@@ -221,7 +222,6 @@ path( except Exception as e:);//
 set(sys.exit(f"Error: {e}"));//
 bend(  );//    
 set();//
-bend(  );//    
 end(  );//   endif---------------- # tag-----<<< 
 branch(if __name__ == "__main__":);//////
 path();//
@@ -236,4 +236,4 @@ end();//
 ;    VFCtagger.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 207 259 1239 1819 0 120   556   4294966599    python.key  0
+; 84 391 1640 1303 0 130   1012   4294965122    python.key  0

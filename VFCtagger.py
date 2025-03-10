@@ -10,17 +10,17 @@ TAG_OPEN = "tagA"
 TAG_CLOSE = "tagB"
 TAG_BRIDGE = "tagX"
 
-@staticmethod
-def convert_spaces_to_tabs(text: str, spaces_per_tab: int = 4) -> str:
-	text = re.sub(f"( {{{spaces_per_tab}}})", "\t", text)
-	
-	return re.sub(r"(?m)^[\n]+", "", text)
+
 class VFCTagger:
 	
 	
 	def __init__(self, language_module):
 		self.lang = language_module
 		
+	def convert_spaces_to_tabs(self, text: str, spaces_per_tab: int = 4) -> str:
+		text = re.sub(f"( {{{spaces_per_tab}}})", "\t", text)
+		
+		return re.sub(r"(?m)^[\n]+", "", text)
 	def process_file(self, source_file: str, skip_mapping: bool = False) -> str:
 		
 		try:
@@ -71,13 +71,13 @@ class VFCTagger:
 					break
 					
 				
-				if not mapped:
-				
-					new_lines.append(line)
-					
 				
 				
 			
+			if not mapped:
+			
+				new_lines.append(line)
+				
 			
 		
 		return new_lines
@@ -198,26 +198,26 @@ def main():
 		lang_module = importlib.import_module(f"languages.{args.language.lower()}_lang")
 	except ImportError as e:
 		sys.exit(f"Error loading language module: {e}")
-		try:
 		
-			tagger = VFCTagger(lang_module)
-			result = tagger.process_file(args.file, args.skip)
-			output_file = args.output if args.output else os.path.basename(args.file) + ".tag"
-			with open(output_file, "w", encoding="utf-8") as out:
+	try:
+	
+		tagger = VFCTagger(lang_module)
+		result = tagger.process_file(args.file, args.skip)
+		output_file = args.output if args.output else os.path.basename(args.file) + ".tag"
+		with open(output_file, "w", encoding="utf-8") as out:
+		
+			out.write(result)
 			
-				out.write(result)
-				
-			print(f"Output written to: {output_file}")
-		except Exception as e:
-			sys.exit(f"Error: {e}")
-			
+		print(f"Output written to: {output_file}")
+	except Exception as e:
+		sys.exit(f"Error: {e}")
 		
-		
+	
 	
 if __name__ == "__main__":
 
 	main()
 	
 
-#  Export  Date: 11:41:47 PM - 09:Mar:2025.
+#  Export  Date: 12:49:28 AM - 10:Mar:2025.
 

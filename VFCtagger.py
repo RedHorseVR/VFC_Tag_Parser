@@ -60,7 +60,7 @@ class VFCTagger:
 					new_line = line.replace(tag_marker, f"{self.lang.comment_marker} {refined}")
 					indent_level = len(line) - len(line.lstrip("\t"))
 					tab = "\t"
-					if tag == TAG_CLOSE and self.lang.comment_marker == "#" :
+					if tag == TAG_CLOSE and self.lang.language == "python" :
 					
 						new_lines.append(f"{ tab *indent_level }{self.lang.comment_marker} {refined}")
 						new_lines.append(f"{ tab *indent_level }{cleaned}")
@@ -84,6 +84,14 @@ class VFCTagger:
 		
 		
 	
+	def count_tabs(self, line):
+		#try-catch-exception
+		try:
+			match = re.match(r'^(\t*)', line)
+			return len(match.group(1))
+		except :
+			return 0
+			
 		
 	def insert_indentation_tags(self, lines: List[str]) -> List[str]:
 		
@@ -103,7 +111,7 @@ class VFCTagger:
 				new_lines.append(line)
 				continue
 				
-			indent_level = len(line) - len(stripped)
+			indent_level = self.count_tabs(line)
 			
 			if stripped.startswith(self.lang.multiline_comment_start) and not InsideMultiLineComment:
 			
@@ -126,16 +134,12 @@ class VFCTagger:
 				continue
 				
 			
+			print( i , len(lines) )
 			next_indent = 0
-			if i + 1 < len(lines):
+			indent_level = thisLevel = self.count_tabs( line )
+			prev_indent = prevLevel = 0  if i == 0 else self.count_tabs( lines[ i-1] )
+			next_indent = nextLevel = 0 if i >= len(lines)-1 else  self.count_tabs( lines[ i+1] )
 			
-				next_line = lines[i + 1].lstrip()
-				if next_line and not next_line.startswith(self.lang.comment_marker):
-				
-					next_indent = len(lines[i + 1]) - len(next_line)
-					
-				
-				
 			
 			if indent_level > prev_indent + 1:
 			
@@ -173,8 +177,7 @@ class VFCTagger:
 				
 			elif indent_level < prev_indent:
 				
-				new_lines.append(  f" {self.lang.comment_marker} {TAG_CLOSE} ")
-				new_lines.append(  line.rstrip()  )
+				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_CLOSE} ")
 				
 			else:
 				
@@ -200,19 +203,14 @@ def main():
 	except ImportError as e:
 		sys.exit(f"Error loading language module: {e}")
 		
-	try:
+	tagger = VFCTagger(lang_module)
+	result = tagger.process_file(args.file, args.skip)
+	output_file = args.output if args.output else os.path.basename(args.file) + ".tag"
+	with open(output_file, "w", encoding="utf-8") as out:
 	
-		tagger = VFCTagger(lang_module)
-		result = tagger.process_file(args.file, args.skip)
-		output_file = args.output if args.output else os.path.basename(args.file) + ".tag"
-		with open(output_file, "w", encoding="utf-8") as out:
+		out.write(result)
 		
-			out.write(result)
-			
-		print(f"Output written to: {output_file}")
-	except Exception as e:
-		sys.exit(f"Error: {e}")
-		
+	print(f"Output written to: {output_file}")
 	
 	
 if __name__ == "__main__":
@@ -220,5 +218,5 @@ if __name__ == "__main__":
 	main()
 	
 
-#  Export  Date: 01:41:21 AM - 10:Mar:2025.
+#  Export  Date: 12:12:57 PM - 10:Mar:2025.
 

@@ -38,6 +38,9 @@ def pop():
 def push(item):
 	stack.append(item)
 	
+def count_tabs(line):
+	match = re.match(r'^(\t*)', line)
+	return len(match.group(1))
 def add_block_end_comments(code_str):
 	lines = code_str.split("\n")
 	result = []
@@ -54,7 +57,7 @@ def add_block_end_comments(code_str):
 	paths = ["else", "elif", "except", "finally", "with"]
 	heads = ["def", "if", "for", "while", "try", "class"]
 	
-	prev_indent = None
+	
 	
 	i = 0
 	prev_indent = 0
@@ -69,11 +72,15 @@ def add_block_end_comments(code_str):
 		
 			prevline = lines[i - 1]
 			
+		current_indent = count_tabs( line )
+		this_level = count_tabs( line )
+		prev_level = count_tabs( prevline )
+		next_level = count_tabs( nextline )
 		
 		stripped = line.strip()
 		if stripped:
 		
-			current_indent = len(line) - len(stripped)
+			
 			
 			if current_indent < prev_indent:
 			
@@ -81,16 +88,16 @@ def add_block_end_comments(code_str):
 				prev_level = 0
 				if i > 0:
 				
-					prev_level = len(lines[i - 1]) - len(lines[i - 1].lstrip("\t"))
+					pass
 					
 				
-				this_level = len(line) - len(line.lstrip("\t"))
+				
 				diff_level = prev_level - this_level
 				for lev in range(0, diff_level):
 					if any(word in line for word in heads) and not any(tok in line for tok in paths):
 					
 						
-						result.append("\t" * (current_indent) + f" ")
+						result.append("\t" * (current_indent) + f" AAA")
 					else:
 						if not any(word in prevline for word in paths):
 						
@@ -100,7 +107,7 @@ def add_block_end_comments(code_str):
 					
 					if not any(word in line for word in paths):
 					
-						result.append("\t" * (current_indent + diff_level - lev) + " ")
+						result.append("\t" * (current_indent + diff_level - lev) + " BBB")
 						
 									
 				
@@ -229,9 +236,9 @@ def tagMapper(line, indentTag, lineNumber):
 	
 	
 	
-	cleaned = re.sub(r"\s*"+re.escape(comment_marker)+r"\s*tag.*", "", line).strip()
+	cleaned = line
 	
-	print(f"DEBUG: Line {lineNumber} {i} ({ indentTag  }): {line} ")
+	
 	if indentTag == 'tagA'  or indentTag == 'tagX'    :
 	
 		if re.match(r"^(if)\b", cleaned, re.IGNORECASE):
@@ -288,5 +295,5 @@ if __name__ == "__main__":
 		print("Usage: python python_lang.py <source_file>")
 		
 	
-#  Export  Date: 01:31:02 AM - 10:Mar:2025.
+#  Export  Date: 12:03:08 PM - 10:Mar:2025.
 

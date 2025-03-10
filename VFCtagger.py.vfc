@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : VFCtagger.py.vfc
-;  File Date : 01:41:21 AM - 10:Mar:2025
+;  File Date : 12:12:57 PM - 10:Mar:2025
 
 event(import argparse);//
 event(import os);//
@@ -63,7 +63,7 @@ set(tags = [TAG_OPEN, TAG_CLOSE, TAG_BRIDGE]);//
 loop( for i, line in enumerate(lines):);//    
 set(mapped = False);//
 loop( for tag in tags:);//    
-set(tag_marker = f"{self.lang.comment_marker} {tag}");//
+set(tag_marker = f"{self.lang.comment_marker} {tag}");//tag_marker = f"{tag}"
 branch( if tag_marker in line:);//    
 path();//
 set(cleaned = line.replace(tag_marker, "").strip());//
@@ -71,7 +71,7 @@ set(refined = self.lang.tagMapper(cleaned, tag, i + 1));//
 set(new_line = line.replace(tag_marker, f"{self.lang.comment_marker} {refined}"));//
 set(indent_level = len(line) - len(line.lstrip("\t")));//
 set(tab = "\t");//
-branch( if tag == TAG_CLOSE and self.lang.comment_marker == "#" :);// #<-------------------------lang dependent fix !!!!
+branch( if tag == TAG_CLOSE and self.lang.language == "python" :);// #<-------------------------lang dependent fix !!!!
 path();//
 set(new_lines.append(f"{ tab *indent_level }{self.lang.comment_marker} {refined}"));//
 set(new_lines.append(f"{ tab *indent_level }{cleaned}"));//
@@ -93,6 +93,15 @@ end(return new_lines);//
 end();//   <-- inserted by postProcess.py
 set();//
 path();//
+
+input(def count_tabs(self, line):);// ////
+branch(#try-catch-exception);//
+path(try:);//
+generic(match = re.match(r'^(\t*)', line));// ////
+end(return len(match.group(1)));// ////
+path(except :);//
+end(return 0);//
+bend( );//
 process(  );//   tag 
 
 input(def insert_indentation_tags(self, lines: List[str]) -> List[str]:);//
@@ -113,7 +122,7 @@ path();//
 set(new_lines.append(line));//
 end(continue);//
 bend(  );//    
-set(indent_level = len(line) - len(stripped));//
+set(indent_level = self.count_tabs(line));//indent_level = len(line) - len(stripped)
 process(  );//   skip the multi line comments 
 branch(if stripped.startswith(self.lang.multiline_comment_start) and not InsideMultiLineComment:);//////
 path();//
@@ -136,16 +145,12 @@ set(new_lines.append(line.rstrip()));//
 end(continue);//
 bend(  );//    
 process(  );//   Get next indentation level 
+output(print( i , len(lines) ));//
 set(next_indent = 0);//
-branch( if i + 1 < len(lines):);//    
-path();//
-set(next_line = lines[i + 1].lstrip());//
-branch( if next_line and not next_line.startswith(self.lang.comment_marker):);//    
-path();//
-set(next_indent = len(lines[i + 1]) - len(next_line));//
-bend(  );//    
-set();//
-bend(  );//    
+set(indent_level = thisLevel = self.count_tabs( line ));//
+set(prev_indent = prevLevel = 0  if i == 0 else self.count_tabs( lines[ i-1] ));//
+set(next_indent = nextLevel = 0 if i >= len(lines)-1 else  self.count_tabs( lines[ i+1] ));//
+set();//next_indent =nextLevel
 process(  );//   Handle multi-level indentation changes (enforce speed limit) 
 branch(if indent_level > prev_indent + 1:);//////
 path();//
@@ -181,8 +186,7 @@ process( new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_OPE
 process(  );//   tag 
 path(elif indent_level < prev_indent:);//////
 process(  );//   Line after -1 indent gets TAG_CLOSE (tagB) 
-process( new_lines.append(  f" {self.lang.comment_marker} {TAG_CLOSE} "));//   |+++++++++++++ CLOSE ") 
-process( new_lines.append(  line.rstrip()  ));//  new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_CLOSE} ")
+process(  new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_CLOSE} "));// new_lines.append(  line.rstrip()+'XXX' )
 process(  );//   tag 
 path(else:);//////
 process(  );//   No indentation change 
@@ -209,8 +213,6 @@ set(lang_module = importlib.import_module(f"languages.{args.language.lower()}_la
 path( except ImportError as e:);//    
 set(sys.exit(f"Error loading language module: {e}"));//
 bend(  );//    
-branch( try:);//    
-path();//
 set(tagger = VFCTagger(lang_module));//
 set(result = tagger.process_file(args.file, args.skip));//
 set(output_file = args.output if args.output else os.path.basename(args.file) + ".tag");//
@@ -219,9 +221,6 @@ path();//
 set(out.write(result));//
 bend(  );//    
 output(print(f"Output written to: {output_file}"));//
-path( except Exception as e:);//    
-set(sys.exit(f"Error: {e}"));//
-bend(  );//    
 set();//
 end(  );//   endif---------------- # tag-----<<< 
 branch(if __name__ == "__main__":);//////
@@ -237,4 +236,4 @@ end();//
 ;    VFCtagger.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 68 318 2060 1303 0 99   4294966801   4294965206    python.key  0
+; 55 257 2704 1470 69 109   1409   4294965554    python.key  0

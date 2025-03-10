@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : python_lang.vfc
-;  File Date : 01:31:02 AM - 10:Mar:2025
+;  File Date : 12:03:08 PM - 10:Mar:2025
 
 event(import sys);// ////
 event(import black);// ////
@@ -48,6 +48,10 @@ input( def push(item):);//
 set(stack.append(item));//
 end(  );//    
 
+input(def count_tabs(line):);// ////
+generic(match = re.match(r'^(\t*)', line));// ////
+end(return len(match.group(1)));// ////
+
 input(def add_block_end_comments(code_str):);//////
 set(lines = code_str.split("\n"));//
 set(result = []);//
@@ -64,7 +68,7 @@ process(  );//   Define end comments for each block type
 set(paths = ["else", "elif", "except", "finally", "with"]);//
 set(heads = ["def", "if", "for", "while", "try", "class"]);//
 process(  );//   Track previous indentation level 
-set(prev_indent = None);//
+set();//prev_indent = None
 process(  );//   Process each line 
 set(i = 0);//
 set(prev_indent = 0);//
@@ -79,11 +83,15 @@ branch( if i > 0:);//
 path();//
 set(prevline = lines[i - 1]);//
 bend(  );//    
+generic(current_indent = count_tabs( line ));// 
+generic(this_level = count_tabs( line ));// 
+generic(prev_level = count_tabs( prevline ));// 
+generic(next_level = count_tabs( nextline ));// 
 process(  );//   Calculate current indentation 
 set(stripped = line.strip());//
 branch( if stripped:);////   Only  non-empty lines # branch //
 path();//
-set(current_indent = len(line) - len(stripped));//
+set();//current_indent = len(line) - len(stripped)
 process(  );//   Check if indentation decreased by one level (4 spaces or 1 tab) 
 branch(if current_indent < prev_indent:);//////
 path();//
@@ -91,16 +99,16 @@ process(  );//   line indentation decreasing
 set(prev_level = 0);//
 branch( if i > 0:);//    
 path();//
-set(prev_level = len(lines[i - 1]) - len(lines[i - 1].lstrip("\t")));//
+set(pass);//prev_level = len(lines[i - 1]) - len(lines[i - 1].lstrip("\t"))
 bend();//
 set();//
-set(this_level = len(line) - len(line.lstrip("\t")));//
+set();//this_level = len(line) - len(line.lstrip("\t"))
 set(diff_level = prev_level - this_level);//
 loop( for lev in range(0, diff_level):);////   iterate over drop in indentation # loop //
 branch(if any(word in line for word in heads) and not any(tok in line for tok in paths):);//////
 path();//
 process(  );//   head tag coming so lets prep a line for it unless a bridge coming. 
-process( result.append("\t" * (current_indent) + f" "));//   <-function.py-h')# 
+process( result.append("\t" * (current_indent) + f" AAA"));//   <-function.py-h')# 
 path( else:);//    
 branch( if not any(word in prevline for word in paths):);////   not a path so we tag it # branch //
 path();//
@@ -110,7 +118,7 @@ bend();//
 set();//
 branch( if not any(word in line for word in paths):);////   not a path so we tag it # branch //
 path();//
-process( result.append("\t" * (current_indent + diff_level - lev) + " "));//   <--function.py-n') # + '#<' + pop() + f'> [{prev_level, this_level }]') 
+process( result.append("\t" * (current_indent + diff_level - lev) + " BBB"));//   <--function.py-n') # + '#<' + pop() + f'> [{prev_level, this_level }]') 
 bend(  );//    
 lend();//
 bend(  );//    
@@ -242,9 +250,9 @@ set(global _tag_stack);// // set //
 set();//
 set();//
 set();//
-process(cleaned = re.sub(r"\s*"+re.escape(comment_marker)+r"\s*tag.*", "", line).strip());// // process //
+process(cleaned = line);//cleaned = re.sub(r"\s*"+re.escape(comment_marker)+r"\s*tag.*", "", line).strip()
 set();//status = "indent" if isIndent else "outdent"
-output(print(f"DEBUG: Line {lineNumber} {i} ({ indentTag  }): {line} "));// // output //
+output( );//print(f"DEBUG: Line {lineNumber} {i} ({ indentTag  }): {line} ")
 branch( if indentTag == 'tagA'  or indentTag == 'tagX'    :);// 
 path();//
 branch(if re.match(r"^(if)\b", cleaned, re.IGNORECASE):);//
@@ -310,4 +318,4 @@ end();//
 ;    python_lang.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 273 840 3239 993 187 150   894   4294957600    python.key  0
+; 276 951 2893 705 259 89   553   4294961427    python.key  0

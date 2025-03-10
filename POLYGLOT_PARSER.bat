@@ -22,10 +22,12 @@ if "!EXTEN!"==".py" (  REM PYTHON
 
     echo Using Python ...
 	ECHO TAG PARSING ...
-	python %SCRIPT_DIR%VFCtagger.py python %1
+	
+	python %SCRIPT_DIR%VFCtagger.py   python %1
 	ECHO POST PROCESSING ...
 	python %SCRIPT_DIR%postProcess.py %1.tag "#"
-	del %1.tag
+	
+	rem del %1.tag
 	
 	echo ----------------------------------------
 	echo ----------------------------------------

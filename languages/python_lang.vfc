@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : python_lang.vfc
-;  File Date : 05:34:40 PM - 09:Mar:2025
+;  File Date : 11:37:53 PM - 09:Mar:2025
 
 event(import sys);// ////
 event(import black);// ////
@@ -200,23 +200,24 @@ generic(multiline_comment_end = '"""');//
 branch();//
 path(blockTypeRules = [);//// //////
 generic({"type": "input",  "regex": r"^def\s+\w+\s*\(.*\):"},);// // : function definition //
+generic({"type": "event",  "regex": r"^@"},);// 
 set({"type": "branch", "regex": r"^if\s+.*:"},);//// // : if statement ////
-set({"type": "path",   "regex": r"^(elif|else)\b.*:"},);//// // : elif/else clause ////
+set();//{"type": "path",   "regex": r"^(elif|else)\b.*:"},
 set({"type": "loop",   "regex": r"^(for|while)\s+.*:"},);//// // : for/while loops ////
-generic({"type": "try",    "regex": r"^try\s*:"},);// // try block //
-generic({"type": "except", "regex": r"^except\b.*:"},);// // except clause //
-generic({"type": "finally","regex": r"^finally\s*:"},);// // finally clause //
-generic({"type": "with",   "regex": r"^with\s+.*:"});// // with block //
+generic({"type": "try",    "regex": r"^try\s*:"},);// 
+generic();//{"type": "except", "regex": r"^except\b.*:"},
+generic();//{"type": "finally","regex": r"^finally\s*:"},
+generic({"type": "with",   "regex": r"^with\s+.*:"});// 
 set(]);//// //                             ////
 path(closureMapping = {);//// //////
 generic("input": "end",);// // function closes with "end" //
 set("branch": "bend",);//// // if block closes with "bend" ////
-set("path": "bend",);//// // elif/else block closes with "bend" ////
+set();//"path": "bend",
 set("loop": "lend",);//// // loops close with "lend" ////
-generic("try": "end",);// // try block closes with "end" //
-generic("except": "end",);// // except block closes with "end" //
-generic("finally": "end",);// // finally block closes with "end" //
-generic("with": "end");//
+generic("try": "bend",);// // try block closes with "end" //
+generic();//"except": "bend",
+generic();//"finally": "bend",
+generic("with": "bend");//
 set(});//// //                                     # set ////
 path(outputRules = [);//// //////
 set({"regex": r"print\s*\(", "tag": "output"},);//// // tag for print() calls ////
@@ -250,8 +251,11 @@ branch(if re.match(r"^(if)\b", cleaned, re.IGNORECASE):);//
 path();//
 set(_tag_stack.append("bend"));//// // push closure for if ////
 output(return "branch");//
-path(elif re.match(r"^try\s*:", cleaned):);// ////
-set(_tag_stack.append("bend"));//// // push closure for try ////
+path(elif re.match(r"^try\s*:", cleaned, re.IGNORECASE):);// 
+set(_tag_stack.append("bend"));//// // push closure for with ////
+output(return "branch");//
+path(elif re.match(r"^with\s+", cleaned, re.IGNORECASE):);// ////
+set(_tag_stack.append("bend"));//// // push closure for with ////
 output(return "branch");//
 path(elif re.match(r"^(for|while)\s+", cleaned, re.IGNORECASE):);// ////
 set(_tag_stack.append("lend"));//// // push closure for loop ////
@@ -259,15 +263,17 @@ output(return "loop");//
 path(elif re.match(r"^def\s+\w+\s*\(.*\):", cleaned):);// ////
 set(_tag_stack.append("end"));//// // push closure for function ////
 output(return "input");//
+path(elif re.match(r"^class\s+.*:", cleaned):);// ////
+set(_tag_stack.append("end"));//// // push closure for function ////
+output(return "event");//
+path(elif  "@" in  cleaned :);// 
+output(return "event");//
 path(elif re.match(r"^(elif|else)\b", cleaned, re.IGNORECASE):);// ////
 output(return "path");//
 path(elif re.match(r"^except\b", cleaned, re.IGNORECASE):);// ////
 output(return "path");//
 path(elif re.match(r"^finally\s*:", cleaned, re.IGNORECASE):);// ////
 output(return "path");//
-path(elif re.match(r"^with\s+", cleaned, re.IGNORECASE):);// ////
-set(_tag_stack.append("bend"));//// // push closure for with ////
-output(return "branch");//
 path(else:);// ////
 generic(_tag_stack.append("tag"));// // push default closure //
 output(return "tag-----<<<");//
@@ -304,4 +310,4 @@ end();//
 ;    python_lang.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 1357 202 2637 1394 187 140   822   4294958392    python.key  0
+; 996 388 2691 891 187 150   4294965532   4294957645    python.key  0

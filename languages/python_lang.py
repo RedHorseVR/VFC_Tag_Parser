@@ -189,23 +189,24 @@ multiline_comment_start = '"""'
 multiline_comment_end = '"""'
 blockTypeRules = [
 	{"type": "input",  "regex": r"^def\s+\w+\s*\(.*\):"},
+	{"type": "event",  "regex": r"^@"},
 	{"type": "branch", "regex": r"^if\s+.*:"},
-	{"type": "path",   "regex": r"^(elif|else)\b.*:"},
+	
 	{"type": "loop",   "regex": r"^(for|while)\s+.*:"},
 	{"type": "try",    "regex": r"^try\s*:"},
-	{"type": "except", "regex": r"^except\b.*:"},
-	{"type": "finally","regex": r"^finally\s*:"},
+	
+	
 	{"type": "with",   "regex": r"^with\s+.*:"}
 	]
 closureMapping = {
 	"input": "end",
 	"branch": "bend",
-	"path": "bend",
+	
 	"loop": "lend",
-	"try": "end",
-	"except": "end",
-	"finally": "end",
-	"with": "end"
+	"try": "bend",
+	
+	
+	"with": "bend"
 	}
 outputRules = [
 	{"regex": r"print\s*\(", "tag": "output"},
@@ -237,7 +238,10 @@ def tagMapper(line, indentTag, lineNumber):
 		
 			_tag_stack.append("bend")
 			return "branch"
-		elif re.match(r"^try\s*:", cleaned):
+		elif re.match(r"^try\s*:", cleaned, re.IGNORECASE):
+			_tag_stack.append("bend")
+			return "branch"
+		elif re.match(r"^with\s+", cleaned, re.IGNORECASE):
 			_tag_stack.append("bend")
 			return "branch"
 		elif re.match(r"^(for|while)\s+", cleaned, re.IGNORECASE):
@@ -246,15 +250,17 @@ def tagMapper(line, indentTag, lineNumber):
 		elif re.match(r"^def\s+\w+\s*\(.*\):", cleaned):
 			_tag_stack.append("end")
 			return "input"
+		elif re.match(r"^class\s+.*:", cleaned):
+			_tag_stack.append("end")
+			return "event"
+		elif  "@" in  cleaned :
+			return "event"
 		elif re.match(r"^(elif|else)\b", cleaned, re.IGNORECASE):
 			return "path"
 		elif re.match(r"^except\b", cleaned, re.IGNORECASE):
 			return "path"
 		elif re.match(r"^finally\s*:", cleaned, re.IGNORECASE):
 			return "path"
-		elif re.match(r"^with\s+", cleaned, re.IGNORECASE):
-			_tag_stack.append("bend")
-			return "branch"
 		else:
 			_tag_stack.append("tag")
 			return "tag-----<<<"
@@ -282,5 +288,5 @@ if __name__ == "__main__":
 		print("Usage: python python_lang.py <source_file>")
 		
 	
-#  Export  Date: 05:34:40 PM - 09:Mar:2025.
+#  Export  Date: 11:37:53 PM - 09:Mar:2025.
 

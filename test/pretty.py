@@ -87,8 +87,8 @@ def phase2_map_tags(lines, comment_marker, lang):
 	Process lines marked with a generic tag.
 	For header lines:
 	  - If a line contains "tag-header", remove that marker and call lang.tagMapper() with isIndent=True
-			on the header's content. Replace the marker with the refined tag and push the expected closure (via lang.closureMapping)
-			onto a local stack.
+					on the header's content. Replace the marker with the refined tag and push the expected closure (via lang.closureMapping)
+					onto a local stack.
 	  - For the following line marked "tag-brace", simply replace its marker with " path".
 	  - For normal header lines (ending with "{ tag"), process similarly.
 	For closing lines (lines starting with "}" with " tag"), call lang.tagMapper() with isIndent=False to get the refined closing tag.
@@ -211,5 +211,6 @@ def main():
 
 if __name__ == "__main__":
 #endif----------------
+	# endif----------------
 	# endif----------------
 	main()

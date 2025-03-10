@@ -1,174 +1,239 @@
+;  IRL FlowCode Version: Version 10.0
+;  c1995-2015: Visual Flow Coder by 2LResearch
+;
+;  File Name : VFCtagger.py.tag.vfc
+;  File Date : 11:41:47 PM - 09:Mar:2025
+
 event(import argparse);//
 event(import os);//
 event(import re);//
 event(import sys);//
 event(import importlib);//
 set(from typing import List, Dict, Any, Optional);//
-generic(  );//   import postProcess 
-generic(  );//   Constants for tag types 
-generic( TAG_OPEN = "tagA"   );//   Opening block tag 
-generic( TAG_CLOSE = "tagB"   );//   Closing block tag 
-generic( TAG_BRIDGE = "tagX"   );//   Bridge/intermediate tag 
-generic( class VFCTagger:  );//   tag-----<<< 
-end();//   <-- inserted by postProcess.py
-input( def __init__(self, language_module):  );//    
+process(  );//   import postProcess 
+process(  );//   Constants for tag types 
+process( TAG_OPEN = "tagA");//
+process( TAG_CLOSE = "tagB");//
+process( TAG_BRIDGE = "tagX");//
+end();//
+event(@staticmethod);//
+
+input(def convert_spaces_to_tabs(text: str, spaces_per_tab: int = 4) -> str:);//
+set(text = re.sub(f"( {{{spaces_per_tab}}})", "\t", text));//
+process(  );//   Then remove empty lines 
+end(return re.sub(r"(?m)^[\n]+", "", text));//
+
+input( class VFCTagger:);////    //
+branch();////   <-- inserted by postProcess.py//
+path();//
+
+input( def __init__(self, language_module):);//    
 set(self.lang = language_module);//
-generic( def process_file(self, source_file: str, skip_mapping: bool = False) -> str:  );//   tag-----<<< 
-set("""Process a source file and add structure tags.""");//
-set(try:);//
-set(with open(source_file, "r", encoding="utf-8") as f:);//
+end(  );//    
+
+input(def process_file(self, source_file: str, skip_mapping: bool = False) -> str:);//
+process(  );//   """Process a source file and add structure tags.""" 
+branch( try:);//    
+path();//
+branch( with open(source_file, "r", encoding="utf-8") as f:);//    
+path();//
 set(source = f.read());//
-set(except Exception as e:);//
+bend(  );//    
+set();//
+path( except Exception as e:);//    
 set(raise IOError(f"Error reading source file: {e}"));//
-generic(  );//   Format the source code consistently for both modes 
+bend(  );//    
+process(  );//   Format the source code consistently for both modes 
 set(formatted = self.lang.pretty_print(source));//
 set(formatted = self.convert_spaces_to_tabs(formatted));//
-generic(  );//   Process the source with the same tagging rules for both modes 
+process(  );//   Process the source with the same tagging rules for both modes 
 set(lines = formatted.splitlines());//
 set(tagged_lines = self.insert_indentation_tags(lines));//
-generic(  );//   Only map tags if not in skip mode 
-set(if not skip_mapping:);//
+process(  );//   Only map tags if not in skip mode 
+branch( if not skip_mapping:);//    
+path();//
 set(tagged_lines = self.map_language_tags(tagged_lines));//
+bend(  );//    
 end(return "\n".join(tagged_lines));//
-set(@staticmethod);//
-set(def convert_spaces_to_tabs(text: str, spaces_per_tab: int = 4) -> str:);//
-set("""Convert groups of spaces to tabs and clean empty lines.""");//
-generic(  );//   First convert spaces to tabs 
-set(text = re.sub(f"( {{{spaces_per_tab}}})", "\t", text));//
-generic(  );//   Then remove empty lines 
-end(return re.sub(r"(?m)^[\n]+", "", text));//
-generic( def insert_indentation_tags(self, lines: List[str]) -> List[str]:  );//   tag-----<<< 
-set(""");//
-set(Add tags based on strict indentation rules:);//
-set(- TAG_OPEN (tagA): Added to line before +1 indent);//
-set(- TAG_CLOSE (tagB): Added to line after -1 indent);//
-set(- TAG_BRIDGE (tagX): Added when a line is both an entry and exit point);//
-set(- Enforce indentation "speed limit" of +1, 0, -1 per line);//
-set(""");//
-set(new_lines = []);//
-set(prev_indent = 0);//
-set(InsideMultiLineComment = False);//
-loop( for i, line in enumerate(lines):  );//    
-set(stripped = line.lstrip());//
-generic( if not stripped:   );//   Skip empty lines # branch 
-set(new_lines.append(line));//
-end(continue);//
-bend(  );//    
-set(indent_level = len(line) - len(stripped));//
-generic(  );//   skip the multi line comments 
-set(if stripped.startswith(self.lang.multiline_comment_start) and not InsideMultiLineComment:);//
-input(  );//   ( f"break {i} on start : {stripped}" ) 
-set(InsideMultiLineComment = True);//
-path( else:  );//    
-set(if stripped.endswith(self.lang.multiline_comment_end):);//
-input(  );//   ( f"break {i} on end : {stripped}" ) 
-set(InsideMultiLineComment = False);//
-lend(  );//    
-set();//
-generic(  );//   tag 
-generic(  );//   Skip comment-only lines 
-generic(  );//   if stripped.startswith(self.lang.comment_marker) or InsideMultiLineComment or stripped.startswith(self.lang.multiline_comment_end): 
-branch( if InsideMultiLineComment or stripped.startswith(self.lang.multiline_comment_end):  );//    
-set(new_lines.append(line.rstrip()));//
-end(continue);//
-bend(  );//    
-generic(  );//   Get next indentation level 
-set(next_indent = 0);//
-branch( if i + 1 < len(lines):  );//    
-set(next_line = lines[i + 1].lstrip());//
-branch( if next_line and not next_line.startswith(self.lang.comment_marker):  );//    
-set(next_indent = len(lines[i + 1]) - len(next_line));//
-bend(  );//    
-set();//
-bend(  );//    
-generic(  );//   Handle multi-level indentation changes (enforce speed limit) 
-set(if indent_level > prev_indent + 1:);//
-generic(  );//   Insert bridge lines for jumps >1 level 
-loop( for bridge_level in range(prev_indent + 1, indent_level):  );//    
-set(new_lines.append("\t" * bridge_level + f"{self.lang.comment_marker} {TAG_BRIDGE}"));//
-lend(  );//    
-set();//
-generic(  );//   tag 
-generic(  );//   Handle multi-level indentation decreases 
-set(if prev_indent > indent_level + 1:);//
-generic(  );//   Process decrease in steps 
-loop( for step in range(prev_indent - 1, indent_level, -1):  );//    
-set(new_lines.append("\t" * step + f"{self.lang.comment_marker} {TAG_CLOSE}"));//
-lend(  );//    
-set();//
 end(  );//    
-generic(  );//   Insert blank line when going from level 1 to 0 if next line would indent 
-branch( if prev_indent == 1 and indent_level == 0 and next_indent > 0:  );//    
-set(new_lines.append(f"{self.lang.comment_marker} {TAG_CLOSE}"));//
-bend(  );//    
-generic(  );//   Apply tags based on precise indentation patterns 
-set(if indent_level < prev_indent and indent_level < next_indent:);//
-generic(  );//   Line is both an exit and entry point - use TAG_BRIDGE (tagX) 
-generic( new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_BRIDGE} ")   );//   |+++++++++++++ BRIDGE ")# 
-generic(  );//   tag 
-set(elif indent_level < next_indent:);//
-generic(  );//   Line before +1 indent gets TAG_OPEN (tagA) 
-generic( new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_OPEN} ")   );//   |+++++++++++++ OPEN ") 
-generic(  );//   tag 
-set(elif indent_level < prev_indent:);//
-generic(  );//   Line after -1 indent gets TAG_CLOSE (tagB) 
-generic( new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_CLOSE} ")   );//   |+++++++++++++ CLOSE ") 
-generic(  );//   tag 
-set(else:);//
-generic(  );//   No indentation change 
-set(new_lines.append(line.rstrip()));//
-generic(  );//   tag 
-set(prev_indent = indent_level);//
-generic(  );//   tag 
-end(return new_lines);//
-generic( def map_language_tags(self, lines: List[str]) -> List[str]:  );//   tag-----<<< 
-set("""Map generic tags to language-specific tags using the language module.""");//
+
+input( def map_language_tags(self, lines: List[str]) -> List[str]:);////   tag-----<<< //
 set(new_lines = []);//
 set(tags = [TAG_OPEN, TAG_CLOSE, TAG_BRIDGE]);//
-set(for i, line in enumerate(lines):);//
+loop( for i, line in enumerate(lines):);//    
 set(mapped = False);//
-set(for tag in tags:);//
+loop( for tag in tags:);//    
 set(tag_marker = f"{self.lang.comment_marker} {tag}");//
-set(if tag_marker in line:);//
+branch( if tag_marker in line:);//    
+path();//
 set(cleaned = line.replace(tag_marker, "").strip());//
 set(refined = self.lang.tagMapper(cleaned, tag, i + 1));//
 set(new_line = line.replace(tag_marker, f"{self.lang.comment_marker} {refined}"));//
 set(indent_level = len(line) - len(line.lstrip("\t")));//
 set(tab = "\t");//
-generic( if tag == TAG_CLOSE and self.lang.comment_marker == " );//   ":  # <-------------------------lang dependent fix !!!! 
+branch( if tag == TAG_CLOSE and self.lang.comment_marker == "#" :);// #<-------------------------lang dependent fix !!!!
+path();//
 set(new_lines.append(f"{ tab *indent_level }{self.lang.comment_marker} {refined}"));//
 set(new_lines.append(f"{ tab *indent_level }{cleaned}"));//
-set(else:);//
+path( else:);//    
 set(new_lines.append(new_line));//
+bend(  );//    
 set(mapped = True);//
 end(break);//
-set(if not mapped:);//
+bend(  );//    
+set();//
+branch( if not mapped:);//    
+path();//
 set(new_lines.append(line));//
+bend(  );//    
+set();//
+lend(  );//    
+lend(  );//    
 end(return new_lines);//
-set(def main():);//
+end();//   <-- inserted by postProcess.py
+set();//
+path();//
+process(  );//   tag 
+
+input(def insert_indentation_tags(self, lines: List[str]) -> List[str]:);//
+process(  );//   """ 
+process(  );//   Add tags based on strict indentation rules: 
+process(  );//   - TAG_OPEN (tagA): Added to line before +1 indent 
+process(  );//   - TAG_CLOSE (tagB): Added to line after -1 indent 
+process(  );//   - TAG_BRIDGE (tagX): Added when a line is both an entry and exit point 
+process(  );//   - Enforce indentation "speed limit" of +1, 0, -1 per line 
+process(  );//   """ 
+set(new_lines = []);//
+set(prev_indent = 0);//
+set(InsideMultiLineComment = False);//
+loop( for i, line in enumerate(lines):);//    
+set(stripped = line.lstrip());//
+branch( if not stripped:);////   Skip empty lines # branch //
+path();//
+set(new_lines.append(line));//
+end(continue);//
+bend(  );//    
+set(indent_level = len(line) - len(stripped));//
+process(  );//   skip the multi line comments 
+branch(if stripped.startswith(self.lang.multiline_comment_start) and not InsideMultiLineComment:);//////
+path();//
+set(  );////   ( f"break {i} on start : {stripped}" ) //
+set(InsideMultiLineComment = True);//
+path( else:);//    
+branch(if stripped.endswith(self.lang.multiline_comment_end):);//////
+path();//
+set(  );////   ( f"break {i} on end : {stripped}" ) //
+set(InsideMultiLineComment = False);//
+bend();//
+bend();//
+set();//
+process(  );//   tag 
+process(  );//   Skip comment-only lines 
+process(  );//   if stripped.startswith(self.lang.comment_marker) or InsideMultiLineComment or stripped.startswith(self.lang.multiline_comment_end): 
+branch( if InsideMultiLineComment or stripped.startswith(self.lang.multiline_comment_end):);//    
+path();//
+set(new_lines.append(line.rstrip()));//
+end(continue);//
+bend(  );//    
+process(  );//   Get next indentation level 
+set(next_indent = 0);//
+branch( if i + 1 < len(lines):);//    
+path();//
+set(next_line = lines[i + 1].lstrip());//
+branch( if next_line and not next_line.startswith(self.lang.comment_marker):);//    
+path();//
+set(next_indent = len(lines[i + 1]) - len(next_line));//
+bend(  );//    
+set();//
+bend(  );//    
+process(  );//   Handle multi-level indentation changes (enforce speed limit) 
+branch(if indent_level > prev_indent + 1:);//////
+path();//
+process(  );//   Insert bridge lines for jumps >1 level 
+loop( for bridge_level in range(prev_indent + 1, indent_level):);//    
+set(new_lines.append("\t" * bridge_level + f"{self.lang.comment_marker} {TAG_BRIDGE}"));//
+lend(  );//    
+bend();//////
+process(  );//   tag 
+process(  );//   Handle multi-level indentation decreases 
+branch(if prev_indent > indent_level + 1:);//////
+path();//
+process(  );//   Process decrease in steps 
+loop( for step in range(prev_indent - 1, indent_level, -1):);//    
+set(new_lines.append("\t" * step + f"{self.lang.comment_marker} {TAG_CLOSE}"));//
+lend(  );//    
+bend();//////
+process(  );//   tag 
+process(  );//   Insert blank line when going from level 1 to 0 if next line would indent 
+branch( if prev_indent == 1 and indent_level == 0 and next_indent > 0:);//    
+path();//
+set(new_lines.append(f"{self.lang.comment_marker} {TAG_CLOSE}"));//
+bend(  );//    
+process(  );//   Apply tags based on precise indentation patterns 
+branch(if indent_level < prev_indent and indent_level < next_indent:);//////
+path();//
+process(  );//   Line is both an exit and entry point - use TAG_BRIDGE (tagX) 
+process( new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_BRIDGE} "));//   |+++++++++++++ BRIDGE ")# 
+process(  );//   tag 
+path(elif indent_level < next_indent:);//////
+process(  );//   Line before +1 indent gets TAG_OPEN (tagA) 
+process( new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_OPEN} "));//   |+++++++++++++ OPEN ") 
+process(  );//   tag 
+path(elif indent_level < prev_indent:);//////
+process(  );//   Line after -1 indent gets TAG_CLOSE (tagB) 
+process( new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_CLOSE} "));//   |+++++++++++++ CLOSE ") 
+process(  );//   tag 
+path(else:);//////
+process(  );//   No indentation change 
+set(new_lines.append(line.rstrip()));//
+process(  );//   tag 
+bend();//
+set(prev_indent = indent_level);//
+process(  );//   tag 
+lend();//
+end(return new_lines);//
+bend();//
+end();//
+
+input( def main():);//    
 set(parser = argparse.ArgumentParser(description="Indentation Validator and Marker"));//
 set(parser.add_argument("language", help="Language (e.g., javascript, python, perl)"));//
 set(parser.add_argument("file", help="Source file to process"));//
 set(parser.add_argument("--skip", action="store_true", help="Skip language processing and only perform indentation tagging"));//
 set(parser.add_argument("--output", help="Output file (default: {input}_indented.txt)"));//
 set(args = parser.parse_args());//
-generic(  );//   Import language module 
-set(try:);//
+branch( try:);//    
+path();//
 set(lang_module = importlib.import_module(f"languages.{args.language.lower()}_lang"));//
-set(except ImportError as e:);//
+path( except ImportError as e:);//    
 set(sys.exit(f"Error loading language module: {e}"));//
-generic(  );//   Process the file 
-set(try:);//
+branch( try:);//    
+path();//
 set(tagger = VFCTagger(lang_module));//
 set(result = tagger.process_file(args.file, args.skip));//
-generic(  );//   Determine output file 
 set(output_file = args.output if args.output else os.path.basename(args.file) + ".tag");//
-generic(  );//   Write the output 
-set(with open(output_file, "w", encoding="utf-8") as out:);//
+branch( with open(output_file, "w", encoding="utf-8") as out:);//    
+path();//
 set(out.write(result));//
+bend(  );//    
 output(print(f"Output written to: {output_file}"));//
-set(except Exception as e:);//
+path( except Exception as e:);//    
 set(sys.exit(f"Error: {e}"));//
-set(if __name__ == "__main__":);//
-end(  );//   endif---------------- 
+bend(  );//    
+set();//
+bend(  );//    
+end(  );//   endif---------------- # tag-----<<< 
+branch(if __name__ == "__main__":);//////
+path();//
 set(main());//
+bend();//
+end();//
+
+
+
+;INSECTA EMBEDDED SESSION INFORMATION
+; 255 16777215 65280 16777088 16711680 13158600 16744703 0 255 255 65535 6946660 0
+;    VFCtagger.py   #   .
+; notepad.exe
+;INSECTA EMBEDDED ALTSESSION INFORMATION
+; 207 259 1239 1819 0 120   556   4294966599    python.key  0

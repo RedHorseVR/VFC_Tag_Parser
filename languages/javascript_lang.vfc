@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : javascript_lang.vfc
-;  File Date : 11:48:19 PM - 09:Mar:2025
+;  File Date : 12:18:39 PM - 10:Mar:2025
 
 event(import sys);// ////
 event(import re);//
@@ -203,4 +203,4 @@ end();//
 ;    javascript_lang.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 200 185 3189 678 118 76   483   4294965487    python.key  0
+; 1059 542 2480 608 118 56   405   4294966073    python.key  0

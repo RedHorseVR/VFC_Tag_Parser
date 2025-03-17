@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : VFCtagger.py.vfc
-;  File Date : 12:12:57 PM - 10:Mar:2025
+;  File Date : 12:16:32 PM - 10:Mar:2025
 
 event(import argparse);//
 event(import os);//
@@ -236,4 +236,4 @@ end();//
 ;    VFCtagger.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 55 257 2704 1470 69 109   1409   4294965554    python.key  0
+; 55 257 1352 1244 0 109   974   4294965571    python.key  0

@@ -23,11 +23,11 @@ if "!EXTEN!"==".py" (  REM PYTHON
     echo Using Python ...
 	ECHO TAG PARSING ...
 	
-	python %SCRIPT_DIR%VFCtagger.py   python %1
+	python %SCRIPT_DIR%VFCtagger.py   python %1   rem add --skip flag to see the raw tags
 	ECHO POST PROCESSING ...
-	python %SCRIPT_DIR%postProcess.py %1.tag "#"
+	python %SCRIPT_DIR%postProcess.py %1.tag "#"  rem skip this step if using the --skip flag above
 	
-	rem del %1.tag
+	del %1.tag  rem comment this to see more intermediate tags when debugging using --skip flag
 	
 	echo ----------------------------------------
 	echo ----------------------------------------
@@ -42,7 +42,8 @@ if "!EXTEN!"==".js" (  REM JAVASCRIPT
 	python %SCRIPT_DIR%VFCtagger.py  javascript %1
 	ECHO POST PROCESSING ...
 	python %SCRIPT_DIR%postProcess.py %1.tag "//"
-	rem del %1.tag
+	
+	del %1.tag  rem comment this to see more intermediate tags
 	
 	echo ----------------------------------------
 	echo ----------------------------------------

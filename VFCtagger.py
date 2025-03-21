@@ -190,33 +190,93 @@ class VFCTagger:
 		return new_lines
 		
 	
-def main():
+def get_main_args():
 	parser = argparse.ArgumentParser(description="Indentation Validator and Marker")
 	parser.add_argument("language", help="Language (e.g., javascript, python, perl)")
 	parser.add_argument("file", help="Source file to process")
 	parser.add_argument("--skip", action="store_true", help="Skip language processing and only perform indentation tagging")
 	parser.add_argument("--output", help="Output file (default: {input}_indented.txt)")
 	args = parser.parse_args()
+	return args
+def print_file(filename):
+	filename = filename.strip()
+	print( '------------------------------------------------')
+	print( filename )
 	try:
 	
-		lang_module = importlib.import_module(f"languages.{args.language.lower()}_lang")
+		LINE = ' '
+		TABS =0
+		with open(filename, 'r') as file:
+		
+			IN_COMMENT_BLOCK = False;
+			for line in file:
+				if  not IN_COMMENT_BLOCK   :
+				
+					IN_COMMENT_BLOCK = line.startswith(('"""', "'''"))
+					if IN_COMMENT_BLOCK   :
+					
+						print( f' ... { '#' }  { LINE  }' )
+					else:
+						linet = line.replace('    ', '\t').strip( "\n" )
+						TABS = len( linet ) - len( linet.lstrip('\t') )
+						LINE = line.replace('    ', '\t.').strip( "\n" )
+						print( f' ... { TABS }  { LINE  }' )
+						
+				else:
+					if line.endswith(('"""', "'''"))  :
+					
+						IN_COMMENT_BLOCK = False;
+						print( f' ... { '#' }  { LINE  }' )
+					else:
+						linet = line.replace('    ', '\t').strip( "\n" )
+						TABS = len( linet ) - len( linet.lstrip('\t') )
+						LINE = line.replace('    ', '\t.').strip( "\n" )
+						print( f' ... { TABS }  { LINE  }' )
+						
+					
+				
+			
+			
+	except FileNotFoundError:
+		print(f"The file '{filename}' was not found.")
+	except Exception as e:
+		print(f"An error occurred: {e}")
+		
+	
+def import_language( LANGUAGE ):
+	try:
+	
+		FORMATTER  = importlib.import_module(f"languages.{  LANGUAGE  }_lang")
 	except ImportError as e:
-		sys.exit(f"Error loading language module: {e}")
+		sys.exit(f"Error loading FORMATTER module: {e}")
 		
-	tagger = VFCTagger(lang_module)
-	result = tagger.process_file(args.file, args.skip)
-	output_file = args.output if args.output else os.path.basename(args.file) + ".tag"
-	with open(output_file, "w", encoding="utf-8") as out:
+	return FORMATTER
+def main():
 	
-		out.write(result)
-		
-	print(f"Output written to: {output_file}")
+	LANGUAGE = "python"
+	FORMATTER = import_language( LANGUAGE  )
+	CODEFILE = "TEST2\python1.py"
+	print( CODEFILE )
 	
+	print_file( CODEFILE )
 	
+	print( '----------DONE----------')
+	exit
+''' --------------------------------------------
+tagger = VFCTagger( FORMATTER )
+result = tagger.process_file(args.file, args.skip)
+output_file = args.output if args.output else os.path.basename(args.file) + ".tag"
+with open(output_file, "w", encoding="utf-8") as out:
+
+	out.write(result)
+	
+print(f"Output written to: {output_file}")
+-------------------------------------------- '''
+
 if __name__ == "__main__":
 
 	main()
 	
 
-#  Export  Date: 12:16:32 PM - 10:Mar:2025.
+#  Export  Date: 08:59:58 PM - 20:Mar:2025.
 

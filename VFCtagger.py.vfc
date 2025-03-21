@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : VFCtagger.py.vfc
-;  File Date : 12:16:32 PM - 10:Mar:2025
+;  File Date : 08:59:58 PM - 20:Mar:2025
 
 event(import argparse);//
 event(import os);//
@@ -200,20 +200,82 @@ end(return new_lines);//
 bend();//
 end();//
 
-input( def main():);//    
+input( def get_main_args():);//    
 set(parser = argparse.ArgumentParser(description="Indentation Validator and Marker"));//
 set(parser.add_argument("language", help="Language (e.g., javascript, python, perl)"));//
 set(parser.add_argument("file", help="Source file to process"));//
 set(parser.add_argument("--skip", action="store_true", help="Skip language processing and only perform indentation tagging"));//
 set(parser.add_argument("--output", help="Output file (default: {input}_indented.txt)"));//
 set(args = parser.parse_args());//
+end(return args);//
+
+input(def print_file(filename):);// 
+set(filename = filename.strip());//
+output(print( '------------------------------------------------'));//
+output(print( filename ));//
+branch(try:);// // branch //
+path();//
+generic(LINE = ' ');// ////
+set(TABS =0);//
+branch(with open(filename, 'r') as file:);// // branch //
+path();//
+set(IN_COMMENT_BLOCK = False;);//
+loop(for line in file:);// // loop //
+branch(if  not IN_COMMENT_BLOCK   :);//
+path( );//
+generic(IN_COMMENT_BLOCK = line.startswith(('"""', "'''")));//
+branch(if IN_COMMENT_BLOCK   :);//
+path( );//
+output(print( f' ... { '#' }  { LINE  }' ));// 
+path(else:);//
+generic(linet = line.replace('    ', '\t').strip( "\n" ));//
+set(TABS = len( linet ) - len( linet.lstrip('\t') ));//
+generic(LINE = line.replace('    ', '\t.').strip( "\n" ));//
+output(print( f' ... { TABS }  { LINE  }' ));// 
+bend( );//
+path(else:);//
+branch(if line.endswith(('"""', "'''"))  :);//
+path( );//
+set(IN_COMMENT_BLOCK = False;);//
+output(print( f' ... { '#' }  { LINE  }' ));// 
+path(else:);//
+generic(linet = line.replace('    ', '\t').strip( "\n" ));//
+set(TABS = len( linet ) - len( linet.lstrip('\t') ));//
+generic(LINE = line.replace('    ', '\t.').strip( "\n" ));//
+output(print( f' ... { TABS }  { LINE  }' ));// 
+bend( );//
+bend( );//
+lend();// // lend //
+bend();// // bend //
+path(except FileNotFoundError:);//
+output(print(f"The file '{filename}' was not found."));//
+path(except Exception as e:);//// // branch ////
+output(print(f"An error occurred: {e}"));//// // General error handling ////
+bend();// // bend //
+end();//
+
+input(def import_language( LANGUAGE ):);//
 branch( try:);//    
 path();//
-set(lang_module = importlib.import_module(f"languages.{args.language.lower()}_lang"));//
+set(FORMATTER  = importlib.import_module(f"languages.{  LANGUAGE  }_lang"));//
 path( except ImportError as e:);//    
-set(sys.exit(f"Error loading language module: {e}"));//
+output(sys.exit(f"Error loading FORMATTER module: {e}"));//////
 bend(  );//    
-set(tagger = VFCTagger(lang_module));//
+end(return FORMATTER);//
+
+input( def main():);//    
+process(    );//args =  get_main_args() ;
+generic(LANGUAGE = "python");//LANGUAGE = args.language.lower( )
+event(FORMATTER = import_language( LANGUAGE  ));//
+generic(CODEFILE = "TEST2\python1.py");//LANGUAGE = args.language.lower( )
+output(print( CODEFILE ));//
+generic();//SKIP = args.skip
+output(print_file( CODEFILE ));//
+output();//print_file( FORMATTER.pretty_print( CODEFILE ) )
+output(print( '----------DONE----------'));//
+end(exit);//////////
+set(''' --------------------------------------------);//
+set(tagger = VFCTagger( FORMATTER ));//
 set(result = tagger.process_file(args.file, args.skip));//
 set(output_file = args.output if args.output else os.path.basename(args.file) + ".tag");//
 branch( with open(output_file, "w", encoding="utf-8") as out:);//    
@@ -221,7 +283,7 @@ path();//
 set(out.write(result));//
 bend(  );//    
 output(print(f"Output written to: {output_file}"));//
-set();//
+set(-------------------------------------------- ''');//
 end(  );//   endif---------------- # tag-----<<< 
 branch(if __name__ == "__main__":);//////
 path();//
@@ -234,6 +296,6 @@ end();//
 ;INSECTA EMBEDDED SESSION INFORMATION
 ; 255 16777215 65280 16777088 16711680 13158600 16744703 0 255 255 65535 6946660 0
 ;    VFCtagger.py   #   .
-; notepad.exe
+; notepad++.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 55 257 1352 1244 0 109   974   4294965571    python.key  0
+; 697 248 2301 1645 0 159   1277   4294961604    python.key  0

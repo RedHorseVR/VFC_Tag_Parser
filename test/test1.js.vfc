@@ -1,14 +1,19 @@
 ;  IRL FlowCode Version: Version 10.0
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
-;  File Name : test.vfc
-;  File Date : 07:36:17 PM - 24:Feb:2025
+;  File Name : test1.js.vfc
+;  File Date : 01:03:35 PM - 18:Mar:2025
 
 
 input(function showLineInfo(message = '') { );// ////
 set(const e = new Error(); );// ////
 set(const stack = e.stack.split('\n'); );// ////
 set(const lineInfo = stack[2].trim(); );// ////
+branch(switch(  ){ );//
+path( case Event.WINDOW_DESTROY: );//
+path(} finally { );//
+path( default: );//
+bend( } );//
 output(console.log(`${message} LINE Executing at: ${lineInfo}`); );// ////
 end(} );// ////
 end();// ////
@@ -214,7 +219,7 @@ event();// ////
 
 ;INSECTA EMBEDDED SESSION INFORMATION
 ; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 3289650
-;    //   //   ...
+;    test1.js   //   ...
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 4294966288 4294965742 968 3655 0 130   448   4294962575    java.key  0
+; 4294965223 4294966417 968 3655 1 130   435   187    java.key  0

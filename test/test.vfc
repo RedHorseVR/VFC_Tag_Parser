@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : test.vfc
-;  File Date : 11:09:49 PM - 24:Feb:2025
+;  File Date : 03:08:53 PM - 17:Mar:2025
 
 
 input(function showLineInfo(message = '') { );// ////
@@ -217,4 +217,4 @@ event();// ////
 ;    //   //   ...
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 4294966288 4294965742 968 3655 0 130   448   4294962575    java.key  0
+; 4294966288 4294966058 968 3655 0 130   484   60    javascript.key  0

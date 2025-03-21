@@ -132,6 +132,9 @@ def tagMapper(line, indentTag, lineNumber):
 		elif re.match(r"^(for\s*\(|while\s*\()", cleaned, re.IGNORECASE):
 			_tag_stack.append("lend")
 			rtnval =  "loop"
+		elif "class" in line :
+			_tag_stack.append("end")
+			rtnval =  "input---"
 		elif "async" in line :
 			_tag_stack.append("end")
 			rtnval =  "input---"
@@ -147,8 +150,13 @@ def tagMapper(line, indentTag, lineNumber):
 		elif re.match(r"^(return|continue)", cleaned, re.IGNORECASE):
 			rtnval =  "end"
 		else:
-			_tag_stack.append("tag")
-			rtnval =  "process"
+			_tag_stack.append("tag - " + lineNumber  )
+			if   re.match(r"^}", cleaned )   :
+			
+				rtnval =  "end"
+			else:
+				rtnval =  "process"
+				
 			
 	else:
 		if _tag_stack  and  indentTag == 'tagB' :
@@ -183,5 +191,5 @@ if __name__ == "__main__":
 	
 
 
-#  Export  Date: 05:10:34 PM - 09:Mar:2025.
+#  Export  Date: 11:30:22 PM - 18:Mar:2025.
 

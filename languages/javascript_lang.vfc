@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : javascript_lang.vfc
-;  File Date : 12:18:39 PM - 10:Mar:2025
+;  File Date : 11:30:22 PM - 18:Mar:2025
 
 event(import sys);// ////
 event(import re);//
@@ -143,6 +143,9 @@ end(rtnval =  "branch");//
 path(elif re.match(r"^(for\s*\(|while\s*\()", cleaned, re.IGNORECASE):);//// //////
 set(_tag_stack.append("lend"));// ////
 end(rtnval =  "loop");//
+path(elif "class" in line :);// elif re.match(r"async", line , re.IGNORECASE):
+set(_tag_stack.append("end"));// ////
+end(rtnval =  "input---");//
 path(elif "async" in line :);// elif re.match(r"async", line , re.IGNORECASE):
 set(_tag_stack.append("end"));// ////
 end(rtnval =  "input---");//
@@ -158,8 +161,13 @@ end(rtnval =  "path...");//
 path(elif re.match(r"^(return|continue)", cleaned, re.IGNORECASE):);// 
 end(rtnval =  "end");//
 path(else:);//// //////
-generic(_tag_stack.append("tag"));// ////
+generic(_tag_stack.append("tag - " + lineNumber  ));// ////
+branch(if   re.match(r"^}", cleaned )   :);//
+path( );//
+end(rtnval =  "end");//
+path(else:);//
 end(rtnval =  "process");//
+bend( );//
 bend();//
 path(else:);//// //////
 branch(if _tag_stack  and  indentTag == 'tagB' :);//
@@ -203,4 +211,4 @@ end();//
 ;    javascript_lang.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 1059 542 2480 608 118 56   405   4294966073    python.key  0
+; 656 1381 3068 1065 118 146   4294964584   4294963361    python.key  0

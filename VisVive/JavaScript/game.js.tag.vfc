@@ -1,0 +1,166 @@
+process(  );//   Game constants 
+process(const WIDTH = 800;);//
+process(const HEIGHT = 600;);//
+process(const PADDLE_WIDTH = 20;);//
+process(const PADDLE_HEIGHT = 100;);//
+process(const BALL_SIZE = 15;);//
+process(const PADDLE_SPEED = 8;);//
+process(const INITIAL_BALL_SPEED = 7;);//
+process(  );//   Paddle class 
+input( class Paddle {  );//   --- 
+process( constructor(x, y, width, height) {  );//    
+process(this.x = x;);//
+process(this.y = y;);//
+process(this.width = width;);//
+process(this.height = height;);//
+process(this.speed = PADDLE_SPEED;);//
+process( }  );//   tag-constructor(x, y, width, height) { 
+process( draw(ctx) {  );//    
+process(ctx.fillStyle = "white";);//
+process(ctx.fillRect(this.x, this.y, this.width, this.height););//
+process( }  );//   tag-draw(ctx) { 
+process( moveUp() {  );//    
+branch( if (this.y > 0) {  );//    
+process(this.y -= this.speed;);//
+bend( }  );//    
+process( }  );//   tag-moveUp() { 
+process( moveDown() {  );//    
+branch( if (this.y + this.height < HEIGHT) {  );//    
+process(this.y += this.speed;);//
+bend( }  );//    
+process( }  );//   tag-moveDown() { 
+end( }  );//    
+process(  );//   Ball class 
+input( class Ball {  );//   --- 
+process( constructor(x, y, size) {  );//    
+process(this.x = x;);//
+process(this.y = y;);//
+process(this.width = size;);//
+process(this.height = size;);//
+process(this.speedX = 0;);//
+process(this.speedY = 0;);//
+process(this.resetSpeed(););//
+process( }  );//   tag-constructor(x, y, size) { 
+process( draw(ctx) {  );//    
+process(ctx.fillStyle = "white";);//
+process(ctx.beginPath(););//
+process(ctx.arc(this.x + this.width / 2, this.y + this.height / 2, this.width / 2, 0, Math.PI * 2););//
+process(ctx.fill(););//
+process( }  );//   tag-draw(ctx) { 
+process( update() {  );//    
+process(this.x += this.speedX;);//
+process(this.y += this.speedY;);//
+process(  );//   Top and bottom collision 
+branch( if (this.y <= 0 || this.y + this.height >= HEIGHT) {  );//    
+process(this.speedY *= -1;);//
+bend( }  );//    
+process( }  );//   tag-update() { 
+process( reset() {  );//    
+process(this.x = WIDTH / 2 - this.width / 2;);//
+process(this.y = HEIGHT / 2 - this.height / 2;);//
+process(this.resetSpeed(););//
+process( }  );//   tag-reset() { 
+process( resetSpeed() {  );//    
+process(this.speedX = INITIAL_BALL_SPEED * (Math.random() > 0.5 ? 1 : -1););//
+process(this.speedY = INITIAL_BALL_SPEED * (Math.random() > 0.5 ? 1 : -1););//
+process( }  );//   tag-resetSpeed() { 
+process( collidesWith(paddle) {  );//    
+end(return this.x < paddle.x + paddle.width && this.x + this.width > paddle.x && this.y < paddle.y + paddle.height && this.y + this.height > paddle.y;);//
+process( }  );//   tag-collidesWith(paddle) { 
+end( }  );//    
+process(  );//   Game class 
+input( class Game {  );//   --- 
+process( constructor() {  );//    
+process(this.canvas = document.getElementById("gameCanvas"););//
+process(this.ctx = this.canvas.getContext("2d"););//
+process(this.player1Score = 0;);//
+process(this.player2Score = 0;);//
+process(this.keys = {};);//
+process(  );//   Create paddles 
+process(this.player1 = new Paddle(50, HEIGHT / 2 - PADDLE_HEIGHT / 2, PADDLE_WIDTH, PADDLE_HEIGHT););//
+process(this.player2 = new Paddle(WIDTH - 50 - PADDLE_WIDTH, HEIGHT / 2 - PADDLE_HEIGHT / 2, PADDLE_WIDTH, PADDLE_HEIGHT););//
+process(  );//   Create ball 
+process(this.ball = new Ball(WIDTH / 2 - BALL_SIZE / 2, HEIGHT / 2 - BALL_SIZE / 2, BALL_SIZE););//
+process(  );//   Set up event listeners 
+process( window.addEventListener("keydown", (e) => {  );//    
+process(this.keys[e.key] = true;);//
+process( });  );//   tag-window.addEventListener("keydown", (e) => { 
+process( window.addEventListener("keyup", (e) => {  );//    
+process(this.keys[e.key] = false;);//
+process( });  );//   tag-window.addEventListener("keyup", (e) => { 
+process(  );//   Start game loop 
+process(this.gameLoop(););//
+process( }  );//   tag-constructor() { 
+process( update() {  );//    
+process(  );//   Player 1 controls (W & S) 
+branch( if (this.keys["w"] || this.keys["W"]) {  );//    
+process(this.player1.moveUp(););//
+bend( }  );//    
+branch( if (this.keys["s"] || this.keys["S"]) {  );//    
+process(this.player1.moveDown(););//
+bend( }  );//    
+process(  );//   Player 2 controls (Arrow Up & Down) 
+branch( if (this.keys["ArrowUp"]) {  );//    
+process(this.player2.moveUp(););//
+bend( }  );//    
+branch( if (this.keys["ArrowDown"]) {  );//    
+process(this.player2.moveDown(););//
+bend( }  );//    
+process(  );//   Update ball 
+process(this.ball.update(););//
+process(  );//   Ball collision with paddles 
+branch( if (this.ball.collidesWith(this.player1) || this.ball.collidesWith(this.player2)) {  );//    
+process(this.ball.speedX *= -1;);//
+process(  );//   Add a slight random angle for variety 
+process(this.ball.speedY += Math.random() * 2 - 1;);//
+process(  );//   Cap the Y speed to avoid extreme angles 
+process(const maxYSpeed = 10;);//
+branch( if (Math.abs(this.ball.speedY) > maxYSpeed) {  );//    
+process(this.ball.speedY = this.ball.speedY > 0 ? maxYSpeed : -maxYSpeed;);//
+bend( }  );//    
+bend( }  );//    
+process(  );//   Scoring 
+branch( if (this.ball.x <= 0) {  );//    
+process(  );//   Player 2 scores 
+process(this.player2Score++;);//
+process(this.ball.reset(););//
+bend( }  );//    
+branch( if (this.ball.x + this.ball.width >= WIDTH) {  );//    
+process(  );//   Player 1 scores 
+process(this.player1Score++;);//
+process(this.ball.reset(););//
+bend( }  );//    
+process( }  );//   tag-update() { 
+process( draw() {  );//    
+process(  );//   Clear canvas 
+process(this.ctx.fillStyle = "black";);//
+process(this.ctx.fillRect(0, 0, WIDTH, HEIGHT););//
+process(  );//   Draw center line 
+process(this.ctx.strokeStyle = "white";);//
+process(this.ctx.setLineDash([5, 5]););//
+process(this.ctx.beginPath(););//
+process(this.ctx.moveTo(WIDTH / 2, 0););//
+process(this.ctx.lineTo(WIDTH / 2, HEIGHT););//
+process(this.ctx.stroke(););//
+process(this.ctx.setLineDash([]););//
+process(  );//   Draw paddles and ball 
+process(this.player1.draw(this.ctx););//
+process(this.player2.draw(this.ctx););//
+process(this.ball.draw(this.ctx););//
+process(  );//   Draw scores 
+process(this.ctx.font = "32px Arial";);//
+process(this.ctx.fillStyle = "white";);//
+process(this.ctx.textAlign = "center";);//
+process(this.ctx.fillText(this.player1Score.toString(), WIDTH / 4, 50););//
+process(this.ctx.fillText(this.player2Score.toString(), (3 * WIDTH) / 4, 50););//
+process( }  );//   tag-draw() { 
+process( gameLoop() {  );//    
+process(this.update(););//
+process(this.draw(););//
+process(requestAnimationFrame(() => this.gameLoop()););//
+process( }  );//   tag-gameLoop() { 
+end( }  );//    
+process(  );//   Start the game when DOM is loaded 
+process( window.addEventListener("DOMContentLoaded", () => {  );//    
+process(new Game(););//
+process( });  );//   tag-window.addEventListener("DOMContentLoaded", () => { 

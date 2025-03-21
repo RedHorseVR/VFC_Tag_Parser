@@ -209,30 +209,37 @@ def print_file(filename):
 		with open(filename, 'r') as file:
 		
 			IN_COMMENT_BLOCK = False;
+			i = 0
+			last_TAB = 0
 			for line in file:
-				if  not IN_COMMENT_BLOCK   :
+				linet = line.replace('    ', '\t').strip( "\n" )
+				if  not IN_COMMENT_BLOCK and not line.startswith('\n')  :
 				
-					IN_COMMENT_BLOCK = line.startswith(('"""', "'''"))
+					i +=1
+					IN_COMMENT_BLOCK = line.strip().startswith( '"""'  )
 					if IN_COMMENT_BLOCK   :
 					
-						print( f' ... { '#' }  { LINE  }' )
+						print( f' { "##" }  { linet  }'  )
 					else:
-						linet = line.replace('    ', '\t').strip( "\n" )
+						last_TAB = TABS
 						TABS = len( linet ) - len( linet.lstrip('\t') )
 						LINE = line.replace('    ', '\t.').strip( "\n" )
-						print( f' ... { TABS }  { LINE  }' )
+						diff = TABS - last_TAB
+						if  diff < -1   :
+						
+							for tabs in range(  last_TAB-1 , TABS, -1 ) :
+								FillLINE = '\t.' * tabs
+								print( f'FillLINE---->  { FillLINE }' )
+															
+							
+						print( f'{ TABS } : { diff }   { LINE  }' )
 						
 				else:
-					if line.endswith(('"""', "'''"))  :
+					if line.strip().endswith( '"""'  )  :
 					
 						IN_COMMENT_BLOCK = False;
-						print( f' ... { '#' }  { LINE  }' )
-					else:
-						linet = line.replace('    ', '\t').strip( "\n" )
-						TABS = len( linet ) - len( linet.lstrip('\t') )
-						LINE = line.replace('    ', '\t.').strip( "\n" )
-						print( f' ... { TABS }  { LINE  }' )
 						
+					
 					
 				
 			
@@ -278,5 +285,5 @@ if __name__ == "__main__":
 	main()
 	
 
-#  Export  Date: 09:03:20 PM - 20:Mar:2025.
+#  Export  Date: 11:17:36 PM - 20:Mar:2025.
 

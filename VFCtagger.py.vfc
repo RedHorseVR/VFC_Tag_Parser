@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : VFCtagger.py.vfc
-;  File Date : 09:03:20 PM - 20:Mar:2025
+;  File Date : 11:17:36 PM - 20:Mar:2025
 
 event(import argparse);//
 event(import os);//
@@ -211,45 +211,52 @@ end(return args);//
 
 input(def print_file(filename):);// 
 set(filename = filename.strip());//
-output(print( '------------------------------------------------'));//
+output(print( '------------------------------------------------') );//
 output(print( filename ));//
-branch(try:);// // branch //
+branch(try:  );// // branch //
 path();//
 generic(LINE = ' ');// ////
 set(TABS =0);//
-branch(with open(filename, 'r') as file:);// // branch //
+branch(with open(filename, 'r') as file:  );// // branch //
 path();//
 set(IN_COMMENT_BLOCK = False;);//
-loop(for line in file:);// // loop //
-branch(if  not IN_COMMENT_BLOCK   :);//
+set(i = 0 );//
+set(last_TAB = 0);//
+loop(for line in file:  );// // loop //
+generic(linet = line.replace('    ', '\t').strip( "\n" ));//
+branch(if  not IN_COMMENT_BLOCK and not line.startswith('\n')  :);//
 path( );//
-generic(IN_COMMENT_BLOCK = line.startswith(('"""', "'''")));//
+set(i +=1 );//
+generic(IN_COMMENT_BLOCK = line.strip().startswith( '"""'  ));//
 branch(if IN_COMMENT_BLOCK   :);//
 path( );//
-output(print( f' ... { '#' }  { LINE  }' ));// 
-path(else:);//
-generic(linet = line.replace('    ', '\t').strip( "\n" ));//
+output(print( f' { "##" }  { linet  }'  ));// 
+path(else: );//
+set(last_TAB = TABS);//
 set(TABS = len( linet ) - len( linet.lstrip('\t') ));//
 generic(LINE = line.replace('    ', '\t.').strip( "\n" ));//
-output(print( f' ... { TABS }  { LINE  }' ));// 
+generic(diff = TABS - last_TAB);// 
+branch(if  diff < -1   :);//if  False   :
+path();//
+loop(for tabs in range(  last_TAB-1 , TABS, -1 ) :);//
+generic(FillLINE = '\t.' * tabs);// FillLINE = '\t.' * (last_TAB-1)
+output(print( f'FillLINE---->  { FillLINE }' ));// 
+lend( );//
 bend( );//
-path(else:);//
-branch(if line.endswith(('"""', "'''"))  :);//
+output(print( f'{ TABS } : { diff }   { LINE  }' ));// print( f'{i},{diff}..{ TABS }  { LINE  }' )
+bend( );//
+path(else: );//
+branch(if line.strip().endswith( '"""'  )  :);//
 path( );//
 set(IN_COMMENT_BLOCK = False;);//
-output(print( f' ... { '#' }  { LINE  }' ));// 
-path(else:);//
-generic(linet = line.replace('    ', '\t').strip( "\n" ));//
-set(TABS = len( linet ) - len( linet.lstrip('\t') ));//
-generic(LINE = line.replace('    ', '\t.').strip( "\n" ));//
-output(print( f' ... { TABS }  { LINE  }' ));// 
 bend( );//
+output( );//print( f'{ "##"  }  { linet }' )
 bend( );//
 lend();// // lend //
 bend();// // bend //
-path(except FileNotFoundError:);//
+path(except FileNotFoundError:  );//
 output(print(f"The file '{filename}' was not found."));//
-path(except Exception as e:);//// // branch ////
+path(except Exception as e:  );//// // branch ////
 output(print(f"An error occurred: {e}"));//// // General error handling ////
 bend();// // bend //
 end();//
@@ -272,9 +279,9 @@ output(print( CODEFILE ));//
 generic();//SKIP = args.skip
 output(print_file( CODEFILE ));//
 output();//print_file( FORMATTER.pretty_print( CODEFILE ) )
-output(print( '----------DONE----------'));//
+output(print( '----------DONE----------') );//
 end(exit);//////////
-set(''' --------------------------------------------);//
+set(''' -------------------------------------------- );//
 set(tagger = VFCTagger( FORMATTER ));//
 set(result = tagger.process_file(args.file, args.skip));//
 set(output_file = args.output if args.output else os.path.basename(args.file) + ".tag");//
@@ -298,4 +305,4 @@ end();//
 ;    VFCtagger.py   #   .
 ; notepad++.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 697 248 2301 1645 0 159   1277   4294961604    python.key  0
+; 697 248 2301 1645 226 119   1279   4294963049    python.key  0

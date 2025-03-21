@@ -41,15 +41,11 @@ def phase1_reindent(lines, comment_marker):
         # Look ahead for a header pair.
         if i < len(lines) - 1 and not line.rstrip().endswith("{"):
             next_line = lines[i + 1].rstrip()
-            if next_line.strip() == "{" or next_line.strip().startswith(
-                "{" + " " + comment_marker + " tag"
-            ):
+            if next_line.strip() == "{" or next_line.strip().startswith("{" + " " + comment_marker + " tag"):
                 new_indent = "\t" * indent_level
                 # Mark control statement with special header marker.
                 if comment_marker + " tag-header" not in line:
-                    new_lines.append(
-                        new_indent + line.strip() + " " + comment_marker + " tag-header"
-                    )
+                    new_lines.append(new_indent + line.strip() + " " + comment_marker + " tag-header")
                 else:
                     new_lines.append(new_indent + line.strip())
 
@@ -57,13 +53,7 @@ def phase1_reindent(lines, comment_marker):
                 new_indent = "\t" * indent_level
                 # Mark lone brace with special brace marker.
                 if comment_marker + " tag-brace" not in next_line:
-                    new_lines.append(
-                        new_indent
-                        + next_line.strip()
-                        + " "
-                        + comment_marker
-                        + " tag-brace"
-                    )
+                    new_lines.append(new_indent + next_line.strip() + " " + comment_marker + " tag-brace")
                 else:
                     new_lines.append(new_indent + next_line.strip())
 
@@ -97,8 +87,8 @@ def phase2_map_tags(lines, comment_marker, lang):
     Process lines marked with a generic tag.
     For header lines:
       - If a line contains "tag-header", remove that marker and call lang.tagMapper() with isIndent=True
-                                    on the header's content. Replace the marker with the refined tag and push the expected closure (via lang.closureMapping)
-                                    onto a local stack.
+        on the header's content. Replace the marker with the refined tag and push the expected closure (via lang.closureMapping)
+        onto a local stack.
       - For the following line marked "tag-brace", simply replace its marker with " path".
       - For normal header lines (ending with "{ tag"), process similarly.
     For closing lines (lines starting with "}" with " tag"), call lang.tagMapper() with isIndent=False to get the refined closing tag.
@@ -108,9 +98,7 @@ def phase2_map_tags(lines, comment_marker, lang):
     line_num = 0
 
     def remove_marker(line, marker):
-        return re.sub(
-            r"\s*" + re.escape(comment_marker) + r"\s*" + re.escape(marker), "", line
-        )
+        return re.sub(r"\s*" + re.escape(comment_marker) + r"\s*" + re.escape(marker), "", line)
 
     for line in lines:
         line_num += 1
@@ -119,11 +107,7 @@ def phase2_map_tags(lines, comment_marker, lang):
             header_line = line
             cleaned = remove_marker(header_line, "tag-header").rstrip()
             refined = lang.tagMapper(cleaned, True, line_num)
-            new_header = re.sub(
-                r"\s*" + re.escape(comment_marker) + r"\s*tag-header",
-                " " + comment_marker + " " + refined,
-                header_line,
-            )
+            new_header = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag-header", " " + comment_marker + " " + refined, header_line)
             new_lines.append(new_header)
             expected = lang.closureMapping.get(refined, refined)
             stack.append(expected)
@@ -131,11 +115,7 @@ def phase2_map_tags(lines, comment_marker, lang):
 
         # Process the following brace line marked "tag-brace".
         if comment_marker + " tag-brace" in line:
-            new_brace = re.sub(
-                r"\s*" + re.escape(comment_marker) + r"\s*tag-brace",
-                " " + comment_marker + " path",
-                line,
-            )
+            new_brace = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag-brace", " " + comment_marker + " path", line)
             new_lines.append(new_brace)
             continue
         # Process normal header lines with generic "tag".
@@ -150,20 +130,14 @@ def phase2_map_tags(lines, comment_marker, lang):
                     header_content = cleaned.strip()
 
                 refined = lang.tagMapper(header_content, True, line_num)
-                new_line = re.sub(
-                    r"\s*" + re.escape(comment_marker) + r"\s*tag",
-                    " " + comment_marker + " " + refined,
-                    line,
-                )
+                new_line = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag", " " + comment_marker + " " + refined, line)
                 new_lines.append(new_line)
                 expected = lang.closureMapping.get(refined, refined)
                 stack.append(expected)
                 continue
             # Process closing lines marked with generic "tag".
             if stripped.startswith("}") and (comment_marker + " tag") in stripped:
-                base_line = re.sub(
-                    r"\s*" + re.escape(comment_marker) + r"\s*tag", "", line
-                ).rstrip()
+                base_line = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag", "", line).rstrip()
                 refined = lang.tagMapper(base_line, False, line_num)
                 new_line = base_line + " " + comment_marker + " " + refined
                 new_lines.append(new_line)
@@ -175,9 +149,7 @@ def phase2_map_tags(lines, comment_marker, lang):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="VFCtagger: Pretty print and tag code with structure."
-    )
+
     parser.add_argument("language", help="Language (e.g., javascript, python, perl)")
     parser.add_argument("file", help="Source file to tag")
     args = parser.parse_args()

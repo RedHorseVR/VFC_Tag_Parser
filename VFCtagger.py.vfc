@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : VFCtagger.py.vfc
-;  File Date : 01:52:35 AM - 22:Mar:2025
+;  File Date : 12:42:37 PM - 22:Mar:2025
 
 event(import argparse);//
 event(import os);//
@@ -223,6 +223,7 @@ set(newline  =  '\t' + line + f'{ lang_commentmarker } path ');//
 path(elif   any(line.lstrip().startswith(word) for word in branch_types  )   :);// elif any(word in line for word in branch_types )  :
 generic(push( 'bend' ));// 
 set(newline  =  line + f'{ lang_commentmarker } branch  ');//
+set(newline  +=  '\n' + f'{ lang_commentmarker } path  ');//<--- add then path as default
 path(elif   any(line.lstrip().startswith(word) for word in loop_types  ) :);// 
 process(push( 'lend' ));//
 set(newline  =  line + f'{ lang_commentmarker } loop ');//
@@ -232,7 +233,8 @@ set(newline  =  line + f'{ lang_commentmarker } input ');//
 path(elif   any(line.lstrip().startswith(word) for word in event_types  ) :);// 
 set(newline  =  line + f'{ lang_commentmarker } event ');//
 path(else: );//
-set(newline  =   line);//
+set();//newline  =   line
+set(newline  =  line + f'{ lang_commentmarker } set ');//
 bend( );//
 end(return newline);//
 set(stack = []);//
@@ -268,6 +270,8 @@ end(return newline);//
 input(def  process_tabbed_file( tabfile ):);//
 set(TABS =0);//
 set(last_TAB = 0);//
+output(print(  f'{ lang_commentmarker } set '  ));//////
+output(print(  f'{ lang_commentmarker } set '  ));//////
 loop(for i in range ( 0 , len(tabfile) - 2 )  :);//for line  in tabfile :
 set(line = tabfile[ i ]);//
 process(line = lang_filter( line ));//
@@ -406,4 +410,4 @@ end();//
 ;    VFCtagger.py   #   .
 ; notepad++.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 449 38 1854 1999 0 208   1097   4294956908    python.key  0
+; 449 38 1854 1999 211 148   894   4294962447    python.key  0

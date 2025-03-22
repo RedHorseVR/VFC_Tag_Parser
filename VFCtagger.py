@@ -212,6 +212,7 @@ def  lang_filter( line  ):
 	elif   any(line.lstrip().startswith(word) for word in branch_types  )   :
 		push( 'bend' )
 		newline  =  line + f'{ lang_commentmarker } branch  '
+		newline  +=  '\n' + f'{ lang_commentmarker } path  '
 	elif   any(line.lstrip().startswith(word) for word in loop_types  ) :
 		push( 'lend' )
 		newline  =  line + f'{ lang_commentmarker } loop '
@@ -221,7 +222,8 @@ def  lang_filter( line  ):
 	elif   any(line.lstrip().startswith(word) for word in event_types  ) :
 		newline  =  line + f'{ lang_commentmarker } event '
 	else:
-		newline  =   line
+		
+		newline  =  line + f'{ lang_commentmarker } set '
 		
 	return newline
 stack = []
@@ -253,6 +255,8 @@ def  lang_check_path( line ):
 def  process_tabbed_file( tabfile ):
 	TABS =0
 	last_TAB = 0
+	print(  f'{ lang_commentmarker } set '  )
+	print(  f'{ lang_commentmarker } set '  )
 	for i in range ( 0 , len(tabfile) - 2 )  :
 		line = tabfile[ i ]
 		line = lang_filter( line )
@@ -381,5 +385,5 @@ if __name__ == "__main__":
 	main()
 	
 
-#  Export  Date: 01:52:35 AM - 22:Mar:2025.
+#  Export  Date: 12:42:37 PM - 22:Mar:2025.
 

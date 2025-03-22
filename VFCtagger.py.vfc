@@ -2,241 +2,61 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : VFCtagger.py.vfc
-;  File Date : 12:42:37 PM - 22:Mar:2025
+;  File Date : 03:48:30 PM - 22:Mar:2025
 
 event(import argparse);//
 event(import os);//
 event(import re);//
 event(import sys);//
 event(import importlib);//
-set(from typing import List, Dict, Any, Optional);//
-process(  );//   import postProcess 
-process(  );//   Constants for tag types 
-process( TAG_OPEN = "tagA");//
-process( TAG_CLOSE = "tagB");//
-process( TAG_BRIDGE = "tagX");//
 end();//
-event();//@staticmethod
-
-input( class VFCTagger:);////    //
-branch();////   <-- inserted by postProcess.py//
-path();//
-
-input( def __init__(self, language_module):);//    
-set(self.lang = language_module);//
-end(  );//    
-
-input(def convert_spaces_to_tabs(self, text: str, spaces_per_tab: int = 4) -> str:);//
-set(text = re.sub(f"( {{{spaces_per_tab}}})", "\t", text));//
-process(  );//   Then remove empty lines 
-end(return re.sub(r"(?m)^[\n]+", "", text));//
-
-input(def process_file(self, source_file: str, skip_mapping: bool = False) -> str:);//
-process(  );//   """Process a source file and add structure tags.""" 
-branch( try:);//    
-path();//
-branch( with open(source_file, "r", encoding="utf-8") as f:);//    
-path();//
-set(source = f.read());//
-bend(  );//    
-set();//
-path( except Exception as e:);//    
-set(raise IOError(f"Error reading source file: {e}"));//
-bend(  );//    
-process(  );//   Format the source code consistently for both modes 
-set(formatted = self.lang.pretty_print(source));//
-set(formatted = self.convert_spaces_to_tabs(formatted));//
-process(  );//   Process the source with the same tagging rules for both modes 
-set(lines = formatted.splitlines());//
-set(tagged_lines = self.insert_indentation_tags(lines));//
-process(  );//   Only map tags if not in skip mode 
-branch( if not skip_mapping:);//    
-path();//
-set(tagged_lines = self.map_language_tags(tagged_lines));//
-bend(  );//    
-end(return "\n".join(tagged_lines));//
-end(  );//    
-
-input( def map_language_tags(self, lines: List[str]) -> List[str]:);////   tag-----<<< //
-set(new_lines = []);//
-set(tags = [TAG_OPEN, TAG_CLOSE, TAG_BRIDGE]);//
-loop( for i, line in enumerate(lines):);//    
-set(mapped = False);//
-loop( for tag in tags:);//    
-set(tag_marker = f"{self.lang.comment_marker} {tag}");//tag_marker = f"{tag}"
-branch( if tag_marker in line:);//    
-path();//
-set(cleaned = line.replace(tag_marker, "").strip());//
-set(refined = self.lang.tagMapper(cleaned, tag, i + 1));//
-set(new_line = line.replace(tag_marker, f"{self.lang.comment_marker} {refined}"));//
-set(indent_level = len(line) - len(line.lstrip("\t")));//
-set(tab = "\t");//
-branch( if tag == TAG_CLOSE and self.lang.language == "python" :);// #<-------------------------lang dependent fix !!!!
-path();//
-set(new_lines.append(f"{ tab *indent_level }{self.lang.comment_marker} {refined}"));//
-set(new_lines.append(f"{ tab *indent_level }{cleaned}"));//
-path( else:);//    
-set(new_lines.append(new_line));//
-bend(  );//    
-set(mapped = True);//
-end(break);//
-bend(  );//    
-set();//
-set();//
-lend(  );//    
-branch( if not mapped:);//    
-path();//
-set(new_lines.append(line));//
-bend(  );//    
-lend(  );//    
-end(return new_lines);//
-end();//   <-- inserted by postProcess.py
-set();//
-path();//
-
-input(def count_tabs(self, line):);// ////
-branch(#try-catch-exception);//
-path(try:);//
-generic(match = re.match(r'^(\t*)', line));// ////
-end(return len(match.group(1)));// ////
-path(except :);//
-end(return 0);//
-bend( );//
-process(  );//   tag 
-
-input(def insert_indentation_tags(self, lines: List[str]) -> List[str]:);//
-process(  );//   """ 
-process(  );//   Add tags based on strict indentation rules: 
-process(  );//   - TAG_OPEN (tagA): Added to line before +1 indent 
-process(  );//   - TAG_CLOSE (tagB): Added to line after -1 indent 
-process(  );//   - TAG_BRIDGE (tagX): Added when a line is both an entry and exit point 
-process(  );//   - Enforce indentation "speed limit" of +1, 0, -1 per line 
-process(  );//   """ 
-set(new_lines = []);//
-set(prev_indent = 0);//
-set(InsideMultiLineComment = False);//
-loop( for i, line in enumerate(lines):);//    
-set(stripped = line.lstrip());//
-branch( if not stripped:);////   Skip empty lines # branch //
-path();//
-set(new_lines.append(line));//
-end(continue);//
-bend(  );//    
-set(indent_level = self.count_tabs(line));//indent_level = len(line) - len(stripped)
-process(  );//   skip the multi line comments 
-branch(if stripped.startswith(self.lang.multiline_comment_start) and not InsideMultiLineComment:);//////
-path();//
-set(  );////   ( f"break {i} on start : {stripped}" ) //
-set(InsideMultiLineComment = True);//
-path( else:);//    
-branch(if stripped.endswith(self.lang.multiline_comment_end):);//////
-path();//
-set(  );////   ( f"break {i} on end : {stripped}" ) //
-set(InsideMultiLineComment = False);//
-bend();//
-bend();//
-set();//
-process(  );//   tag 
-process(  );//   Skip comment-only lines 
-process(  );//   if stripped.startswith(self.lang.comment_marker) or InsideMultiLineComment or stripped.startswith(self.lang.multiline_comment_end): 
-branch( if InsideMultiLineComment or stripped.startswith(self.lang.multiline_comment_end):);//    
-path();//
-set(new_lines.append(line.rstrip()));//
-end(continue);//
-bend(  );//    
-process(  );//   Get next indentation level 
-output(print( i , len(lines) ));//
-set(next_indent = 0);//
-set(indent_level = thisLevel = self.count_tabs( line ));//
-set(prev_indent = prevLevel = 0  if i == 0 else self.count_tabs( lines[ i-1] ));//
-set(next_indent = nextLevel = 0 if i >= len(lines)-1 else  self.count_tabs( lines[ i+1] ));//
-set();//next_indent =nextLevel
-process(  );//   Handle multi-level indentation changes (enforce speed limit) 
-branch(if indent_level > prev_indent + 1:);//////
-path();//
-process(  );//   Insert bridge lines for jumps >1 level 
-loop( for bridge_level in range(prev_indent + 1, indent_level):);//    
-set(new_lines.append("\t" * bridge_level + f"{self.lang.comment_marker} {TAG_BRIDGE}"));//
-lend(  );//    
-bend();//////
-process(  );//   tag 
-process(  );//   Handle multi-level indentation decreases 
-branch(if prev_indent > indent_level + 1:);//////
-path();//
-process(  );//   Process decrease in steps 
-loop( for step in range(prev_indent - 1, indent_level, -1):);//    
-set(new_lines.append("\t" * step + f"{self.lang.comment_marker} {TAG_CLOSE}"));//
-lend(  );//    
-bend();//////
-process(  );//   tag 
-process(  );//   Insert blank line when going from level 1 to 0 if next line would indent 
-branch( if prev_indent == 1 and indent_level == 0 and next_indent > 0:);//    
-path();//
-set(new_lines.append(f"{self.lang.comment_marker} {TAG_CLOSE}"));//
-bend(  );//    
-process(  );//   Apply tags based on precise indentation patterns 
-branch(if indent_level < prev_indent and indent_level < next_indent:);//////
-path();//
-process(  );//   Line is both an exit and entry point - use TAG_BRIDGE (tagX) 
-process( new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_BRIDGE} "));//   |+++++++++++++ BRIDGE ")# 
-process(  );//   tag 
-path(elif indent_level < next_indent:);//////
-process(  );//   Line before +1 indent gets TAG_OPEN (tagA) 
-process( new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_OPEN} "));//   |+++++++++++++ OPEN ") 
-process(  );//   tag 
-path(elif indent_level < prev_indent:);//////
-process(  );//   Line after -1 indent gets TAG_CLOSE (tagB) 
-process(  new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_CLOSE} "));// new_lines.append(  line.rstrip()+'XXX' )
-process(  );//   tag 
-path(else:);//////
-process(  );//   No indentation change 
-set(new_lines.append(line.rstrip()));//
-process(  );//   tag 
-bend();//
-set(prev_indent = indent_level);//
-process(  );//   tag 
-lend();//
-end(return new_lines);//
-bend();//
-end();//
-
-input( def get_main_args():);//    
-set(parser = argparse.ArgumentParser(description="Indentation Validator and Marker"));//
-set(parser.add_argument("language", help="Language (e.g., javascript, python, perl)"));//
-set(parser.add_argument("file", help="Source file to process"));//
-set(parser.add_argument("--skip", action="store_true", help="Skip language processing and only perform indentation tagging"));//
-set(parser.add_argument("--output", help="Output file (default: {input}_indented.txt)"));//
-set(args = parser.parse_args());//
-end(return args);//
+set(#========================================================);//////
 set(lang_commentmarker = '#');// 
 set(path_types = [ 'else', 'except', 'catch', 'case' ]);//
-
-input(def  lang_filter( line  ):);//
 set(branch_types = [ 'if', 'with', 'try', 'switch'  ]);//
 set(loop_types = [ 'for ', 'while ', 'do ', 'until '  ]);//
 set(input_types = [ 'function', 'def', 'async', 'module'  ]);//
-set(event_types = [ 'from', 'include', 'import', 'use'  ]);//
+set(event_types = [ 'from ',  'import '  ]);//
+set(output_types = [ 'print(', 'continue', '.write' ]);//
+set(end_types = [ 'return ', 'return ' , 'exit(' ]);//
+end();//
+
+input(def  lang_filter( line  ):);//
 branch(if any(word in line for word in path_types )  :);//if line.strip() in path_types  :
 path( );//
 output();//print( '----------------> ' , line.strip() )
 set(newline  =  '\t' + line + f'{ lang_commentmarker } path ');//
-path(elif   any(line.lstrip().startswith(word) for word in branch_types  )   :);// elif any(word in line for word in branch_types )  :
+path(elif  scanTok( line,  branch_types  )   :);/// elif any(word in line for word in branch_types )  :elif   any(line.lstrip().startswith(word) for word in branch_types  )   ://
 generic(push( 'bend' ));// 
 set(newline  =  line + f'{ lang_commentmarker } branch  ');//
-set(newline  +=  '\n' + f'{ lang_commentmarker } path  ');//<--- add then path as default
-path(elif   any(line.lstrip().startswith(word) for word in loop_types  ) :);// 
+set(# <--- add then path as default);//newline  +=  '\n' + f'{ lang_commentmarker } path  '
+path(elif  scanTok( line, loop_types  ) :);//
 process(push( 'lend' ));//
 set(newline  =  line + f'{ lang_commentmarker } loop ');//
-path(elif   any(line.lstrip().startswith(word) for word in input_types  ) :);// 
+path(elif  scanTok( line, input_types  ) :);//
 process(push( 'end' ));//
 set(newline  =  line + f'{ lang_commentmarker } input ');//
-path(elif   any(line.lstrip().startswith(word) for word in event_types  ) :);// 
+path(elif  scanTok( line, event_types  ) :);//
 set(newline  =  line + f'{ lang_commentmarker } event ');//
+path(elif  scanTok( line, output_types  ) :);//
+set(newline  =  line + f'{ lang_commentmarker } output ');//
+path(elif  scanTok( line, end_types  ) :);//
+set(newline  =  line + f'{ lang_commentmarker } end ');//
 path(else: );//
 set();//newline  =   line
 set(newline  =  line + f'{ lang_commentmarker } set ');//
 bend( );//
 end(return newline);//
+end(#========================================================);//
+
+input(def  scanTok( line, toklist ):);//
+set(sub_list = [item for item in toklist if item.startswith('.')]);// ////
+set(subtok = any(f"{word}" in line for word in sub_list ));// 
+branch(if len(sub_list) > 0  and subtok  :);//
+path();//
+end(return True);//
+bend( );//
+end(return  any(line.lstrip().startswith(word) for word in toklist ));//
 set(stack = []);//
 
 input(def  pop( ):);//
@@ -255,7 +75,6 @@ end();//
 input(def  push(  item ):);//
 generic(global stack);// ////
 generic(stack.append( item ));// 
-output();//print( '\t'*8 +'...PUSH' , item , stack )
 end();//
 
 input(def  lang_check_path( line ):);//
@@ -270,10 +89,16 @@ end(return newline);//
 input(def  process_tabbed_file( tabfile ):);//
 set(TABS =0);//
 set(last_TAB = 0);//
-output(print(  f'{ lang_commentmarker } set '  ));//////
-output(print(  f'{ lang_commentmarker } set '  ));//////
+set(marked_file = []);//
+set(marked_line =  f'{ lang_commentmarker } set ');//////////
+output();//print(  marked_line  )
+process(marked_file.append( marked_line ););//////////
+process(marked_file.append( marked_line ););//////
 loop(for i in range ( 0 , len(tabfile) - 2 )  :);//for line  in tabfile :
 set(line = tabfile[ i ]);//
+output();//print( line  ) ; input('>')
+branch(if  not  line.strip().startswith( lang_commentmarker )  :);//
+path();//
 process(line = lang_filter( line ));//
 set(last_TAB = TABS);//
 set(TABS = len( line ) - len( line.lstrip('\t') ));//
@@ -283,23 +108,29 @@ set(tabrate = last_TAB-TABS);//
 set(next_tabrate = TABS - next_TABS);//
 branch(if   next_tabrate == 1  :);//
 path();//
-output(print(  f'\t' * (TABS) + f'{ lang_commentmarker } { pop() } -----'  ));//
+set(marked_line =  f'\t' * (TABS) + f'{ lang_commentmarker } { pop() } ');//
+process(marked_file.append( marked_line ););//////
 output();//print(  f'{TABS-1} {line}'  )
 path(else: );//
-output(print(  f'{line}'  ));//pass
+set(marked_line =  f'{line}');////pass//
+process(marked_file.append( marked_line ););//////
 bend( );//
-branch(if   next_tabrate == 2  :);//
-path();//
-output(print(  f'\t' * (TABS) + f'{ lang_commentmarker } { pop() } -----'  ));//
-output();//print(  f'{TABS-1} {line}'  )
+output();//print( '---->' , next_tabrate )
+loop(for rate in range( 2, next_tabrate ):);//<---- in case we hit some tabs that may be missing and need to close sevearl items on a single line tab
+set(marked_line =  f'\t' * (TABS) + f'{ lang_commentmarker } { pop() } ');//
+process(marked_file.append( marked_line ););//////
+lend( );//
+path(else: );//
+generic(newline = line.replace( "\t" , "" ));// ////
+set(marked_line =  f'{ newline  } {lang_commentmarker} set');// 
+process(marked_file.append( marked_line ););//////
+output();//print( marked_line  ) ; input('>')
 bend( );//
 lend( );//
 set();//line = tabfile[ len(tabfile) - 1 ]
-output();//print(  f'{TABS} {last_TAB} { last_TAB-TABS } {line}'  )
-output(print( '------------------------------------------------') );//
-end(   );//
+end(return marked_file);//
 
-input(def proc_file(filename):);// 
+input(def gettabbed_file(filename):);//
 set(filename = filename.strip());//
 output(print( '------------------------------------------------') );//
 output(print( filename ));//
@@ -325,7 +156,7 @@ generic(IN_COMMENT_BLOCK = line.strip().startswith( '"""'  ));//
 branch(if IN_COMMENT_BLOCK   :);//
 path( );//
 output(pass);//print( f'{ "##" }  { linet  }'  )
-set();//tabbed_file.append( '###' + LINE2  )
+set(tabbed_file.append( lang_commentmarker  + line ));//
 path(else: );//
 set(last_TAB = TABS);//
 set(TABS = len( linet ) - len( linet.lstrip('\t') ));//
@@ -347,12 +178,15 @@ output();//print( f'{ TABS } : { diff }   { LINE  }' )
 set(tabbed_file.append( LINE2  ));//
 bend( );//
 path(else: );//
+branch(if  IN_COMMENT_BLOCK   :);//
+path();//
+set(tabbed_file.append( lang_commentmarker  + line ));//
+bend( );//
 branch(if line.strip().endswith( '"""'  )  :);//
 path( );//
 set(IN_COMMENT_BLOCK = False;);//
 bend( );//
 output( );//print( f'{ "##"  }  { linet }' )
-set();//tabbed_file.append( '###' + LINE2  )
 bend( );//
 path(else: );//
 output(print( '------------------------------------------------') );//
@@ -367,27 +201,56 @@ bend();// // bend //
 end(return tabbed_file);//
 end();//
 
-input(def import_language( LANGUAGE ):);//
+input(def import_language( LANG ):);//
 branch( try:);//    
 path();//
-set(FORMATTER  = importlib.import_module(f"languages.{  LANGUAGE  }_lang"));//
+set(lang  = importlib.import_module(f"languages.{  LANG  }_lang"));//
 path( except ImportError as e:);//    
-output(sys.exit(f"Error loading FORMATTER module: {e}"));//////
+output(sys.exit(f"Error loading lang module: {e}"));/////////
 bend(  );//    
-end(return FORMATTER);//
+end(return lang);//
 
-input( def main():);//    
-process(    );//args =  get_main_args() ;
-generic(LANGUAGE = "python");//LANGUAGE = args.language.lower( )
-event(FORMATTER = import_language( LANGUAGE  ));//
-generic(CODEFILE = "TEST2\python1.py");//LANGUAGE = args.language.lower( )
-output(tabfile = proc_file( CODEFILE ));//
-process(tabbed = process_tabbed_file( tabfile ) ;);//
-output();//print_file( FORMATTER.pretty_print( CODEFILE ) )
-output(print( '----------DONE----------') );//
-end(exit);//////////
+input(def extract_rightmost_pattern(string, words, marker):);//// //////
+generic(patterns = [f"{marker} {word}" for word in words]);// ////
+generic(matches = [pattern for pattern in patterns if pattern in string]);// ////
+end(return max(matches, key=string.rfind) if matches else ' generic');//
+end();//
+
+input(def split_line_on_comment(line, comment_marker ) :);//// //'): ////
+generic(in_literal = None );// ////
+generic(codeline = [] );// ////
+generic(comment = [] );// ////
+loop(for i, char in enumerate(line): );//// //////
+generic();// // Check if we are entering or exiting a literal //
+branch(if char in ["'", '"', '`']:);//
+path();//
+branch(if in_literal is None:  );//// // Entering a literal ////
+path();//
+generic(in_literal = char );// ////
+path(elif in_literal == char:  );//// // Exiting the literal ////
+generic(in_literal = None );// ////
+bend();//// // Check for the comment marker if we're not inside a literal ////
+path(elif char == comment_marker and in_literal is None: );////// ////////
+generic();// // Switch to capturing the comment //
+generic(comment.append(line[i:])  );// // Add the rest of the line as the comment //
+end(return ''.join(codeline), ''.join(comment) );//// //////
+bend();//// // Add to the codeline if we're not inside a comment ////
+generic(codeline.append(char) );// ////
+generic();// // If no comment marker is found, return the entire line as code and an empty comment //
+lend();//////
+generic(return ''.join(codeline), '' );// ////
+end();//// // Example usage ////
+
+input(def  mark2flow( marked_line ):);//
+generic(codeline , comment  =  split_line_on_comment( marked_line ,  lang_commentmarker ));//
+generic(VFC_DIVIDER = '//');// 
+set(keytoks = [ 'input' , 'event' , 'output' , 'set', 'process' , 'branch', 'path', 'bend' , 'loop' ,'lend' , 'end'  ]);//
+generic(result = extract_rightmost_pattern( comment , keytoks , lang_commentmarker ));// ////
+generic(result =result[1:].strip());// 
+set(flowline = f'{ result }({ codeline.strip() });{VFC_DIVIDER}  {comment.replace( result, "").replace( lang_commentmarker, "")  }');//
+end(return flowline);//
 set(''' -------------------------------------------- );//
-set(tagger = VFCTagger( FORMATTER ));//
+set(tagger = VFCTagger( lang ));//
 set(result = tagger.process_file(args.file, args.skip));//
 set(output_file = args.output if args.output else os.path.basename(args.file) + ".tag");//
 branch( with open(output_file, "w", encoding="utf-8") as out:);//    
@@ -399,7 +262,39 @@ set(-------------------------------------------- ''');//
 end(  );//   endif---------------- # tag-----<<< 
 branch(if __name__ == "__main__":);//////
 path();//
-set(main());//
+branch(if len( sys.argv ) > 2 :);//
+path( );//
+set(CODEFILE = sys.argv[1]);///LANG = args.language.lower( )//
+set(LANG = sys.argv[2]);///LANGUAGE = args.language.lower( )//
+path(else: );//
+set(CODEFILE = "TEST2\python1.py");///LANG = args.language.lower( )//
+set(LANG = "python");///LANGUAGE = args.language.lower( )//
+bend( );//
+event(lang = import_language( LANG  ));//
+set();//////
+output( lang.pretty_print( CODEFILE ));//
+set(tabfile = gettabbed_file( CODEFILE ));//////
+process(marked_file = process_tabbed_file( tabfile ) ;);//
+set(output_file = CODEFILE + '.vfc');//
+branch( with open(output_file, "w", encoding="utf-8") as out:);//    
+path();//
+loop(for line in marked_file :);//
+set(vfcline =  mark2flow( line ));//
+branch(if  vfcline.startswith( 'input' )   :);//<--------   insert a endbefoer an input
+path();//
+output(print( 'end();'  ));// 
+output(out.write( 'end();'+ '\n' ));//
+bend( );//
+output(print( vfcline  ));//print( line )
+output(out.write( vfcline + '\n' ));//
+branch(if  vfcline.startswith( 'branch' )   :);//<-------- needs to insert a path since we processed paths and linear tokens
+path();//
+output(print( 'path();'  ));//print( line )
+output(out.write( 'path();'+ '\n' ));//
+bend( );//
+lend( );//
+end(exit);//////////
+bend();//
 bend();//
 end();//
 
@@ -410,4 +305,4 @@ end();//
 ;    VFCtagger.py   #   .
 ; notepad++.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 449 38 1854 1999 211 148   894   4294962447    python.key  0
+; 703 20 2710 2081 0 117   1433   4294959664    python.key  0

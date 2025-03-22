@@ -1,0 +1,134 @@
+set();//    
+set();//    
+event(import argparse);//     
+event(import os);//     
+event(import re);//     
+event(import sys);//     
+end();
+input(def phase2_map_tags(lines, comment_marker, lang):);//    
+set();//      """
+  
+set();//      Process lines marked with a generic tag.
+  
+set();//      For header lines:
+  
+set();//        - If a line contains "tag-header", remove that marker and call lang.tagMapper() with isIndent=True
+  
+set();//          on the header's content. Replace the marker with the refined tag and push the expected closure (via lang.closureMapping)
+  
+set();//          onto a local stack.
+  
+set();//        - For the following line marked "tag-brace", simply replace its marker with " path".
+  
+set();//        - For normal header lines (ending with "{ tag"), process similarly.
+  
+set();//      For closing lines (lines starting with "}" with " tag"), call lang.tagMapper() with isIndent=False to get the refined closing tag.
+  
+set();//      """
+  
+set(new_lines = []);//    
+set(stack = []);//   local stack for expected closures  
+set(line_num = 0);//    
+end();
+input(def remove_marker(line, marker):);//    
+end(return re.sub(r"\s*" + re.escape(comment_marker) + r"\s*" + re.escape(marker), "", line));//    
+end();//    
+loop(for line in lines:);//    
+set(line_num += 1);//    
+branch(if comment_marker + " tag-header" in line:);//     
+path();
+set(header_line = line);//    
+set(cleaned = remove_marker(header_line, "tag-header").rstrip());//    
+set(refined = lang.tagMapper(cleaned, True, line_num));//    
+set(new_header = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag-header", " " + comment_marker + " " + refined, header_line));//    
+set(new_lines.append(new_header));//    
+set(expected = lang.closureMapping.get(refined, refined));//    
+set(stack.append(expected));//    
+output(continue);//    
+bend();//    
+branch(if comment_marker + " tag-brace" in line:);//     
+path();
+set(new_brace = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag-brace", " " + comment_marker + " path", line));//    
+set(new_lines.append(new_brace));//    
+output(continue);//    
+bend();//    
+branch(if comment_marker + " tag" in line:);//     
+path();
+set(stripped = line.strip());//    
+branch(if stripped.endswith("{ " + comment_marker + " tag"):);//     
+path();
+set(header_line = line);//    
+set(cleaned = remove_marker(header_line, "tag").rstrip());//    
+branch(if cleaned.endswith("{"):);//     
+path();
+set(header_content = cleaned[:-1].strip());//    
+set();//    
+path(else:);//    
+set(header_content = cleaned.strip());//    
+bend();//    
+set(refined = lang.tagMapper(header_content, True, line_num));//    
+set(new_line = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag", " " + comment_marker + " " + refined, line));//    
+set(new_lines.append(new_line));//    
+set(expected = lang.closureMapping.get(refined, refined));//    
+set(stack.append(expected));//    
+output(continue);//    
+bend();//    
+branch(if stripped.startswith("}") and (comment_marker + " tag") in stripped:);//     
+path();
+set(base_line = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag", "", line).rstrip());//    
+set(refined = lang.tagMapper(base_line, False, line_num));//    
+set(new_line = base_line + " " + comment_marker + " " + refined);//    
+set(new_lines.append(new_line));//    
+output(continue);//    
+bend();//    
+bend();//    
+set(new_lines.append(line));//    
+lend();//    
+end(return new_lines);//    
+end();//    
+end();
+input(def main():);//    
+set(parser.add_argument("language", help="Language (e.g., javascript, python, perl)"));//    
+set(parser.add_argument("file", help="Source file to tag"));//    
+set(args = parser.parse_args());//    
+set(lang = None);//    
+branch(try:);//     
+path();
+set(lang = load_language_module(args.language.lower()));//    
+set();//    
+path(except Exception as e:);//    
+set(sys.exit("Error loading language module: " + str(e)));//    
+bend();//    
+branch(try:);//     
+path();
+branch(with open(args.file, "r", encoding="utf-8") as f:);//     
+path();
+set(source = f.read());//    
+bend();//    
+set();//    
+path(except Exception as e:);//    
+set(sys.exit(f"Error reading source file: {e}"));//    
+bend();//    
+set(formatted = lang.pretty_print(source));//    
+set(formatted = convert_spaces_to_tabs(formatted, spaces_per_tab=4));//    
+set(lines = formatted.splitlines());//    
+set(lang.reset_tag_stack());//    
+set(phase1_lines = phase1_reindent(lines, lang.comment_marker));//    
+set(final_lines = phase2_map_tags(phase1_lines, lang.comment_marker, lang));//    
+set(output_file = os.path.basename(args.file) + ".txt");//    
+branch(try:);//     
+path();
+branch(with open(output_file, "w", encoding="utf-8") as out:);//     
+path();
+output(out.write(f"{lang.comment_marker} TAGGED FOR VFC\n"));//    
+output(out.write(f"{lang.comment_marker} TAGGED FOR VFC\n"));//    
+loop(for l in final_lines:);//    
+output(out.write(l + "\n"));//    
+lend();//    
+bend();//    
+set();//    
+path(except Exception as e:);//    
+set(sys.exit(f"Error writing output file: {e}"));//    
+bend();//    
+output(print(f"Output written to: {output_file}"));//    
+end();//    

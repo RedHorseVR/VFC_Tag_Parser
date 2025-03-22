@@ -3,229 +3,52 @@ import os
 import re
 import sys
 import importlib
-from typing import List, Dict, Any, Optional
 
-
-TAG_OPEN = "tagA"
-TAG_CLOSE = "tagB"
-TAG_BRIDGE = "tagX"
-
-
-class VFCTagger:
-	
-	
-	def __init__(self, language_module):
-		self.lang = language_module
-		
-	def convert_spaces_to_tabs(self, text: str, spaces_per_tab: int = 4) -> str:
-		text = re.sub(f"( {{{spaces_per_tab}}})", "\t", text)
-		
-		return re.sub(r"(?m)^[\n]+", "", text)
-	def process_file(self, source_file: str, skip_mapping: bool = False) -> str:
-		
-		try:
-		
-			with open(source_file, "r", encoding="utf-8") as f:
-			
-				source = f.read()
-				
-			
-		except Exception as e:
-			raise IOError(f"Error reading source file: {e}")
-			
-		
-		formatted = self.lang.pretty_print(source)
-		formatted = self.convert_spaces_to_tabs(formatted)
-		
-		lines = formatted.splitlines()
-		tagged_lines = self.insert_indentation_tags(lines)
-		
-		if not skip_mapping:
-		
-			tagged_lines = self.map_language_tags(tagged_lines)
-			
-		return "\n".join(tagged_lines)
-		
-	def map_language_tags(self, lines: List[str]) -> List[str]:
-		new_lines = []
-		tags = [TAG_OPEN, TAG_CLOSE, TAG_BRIDGE]
-		for i, line in enumerate(lines):
-			mapped = False
-			for tag in tags:
-				tag_marker = f"{self.lang.comment_marker} {tag}"
-				if tag_marker in line:
-				
-					cleaned = line.replace(tag_marker, "").strip()
-					refined = self.lang.tagMapper(cleaned, tag, i + 1)
-					new_line = line.replace(tag_marker, f"{self.lang.comment_marker} {refined}")
-					indent_level = len(line) - len(line.lstrip("\t"))
-					tab = "\t"
-					if tag == TAG_CLOSE and self.lang.language == "python" :
-					
-						new_lines.append(f"{ tab *indent_level }{self.lang.comment_marker} {refined}")
-						new_lines.append(f"{ tab *indent_level }{cleaned}")
-					else:
-						new_lines.append(new_line)
-						
-					mapped = True
-					break
-					
-				
-				
-				
-			
-			if not mapped:
-			
-				new_lines.append(line)
-				
-			
-		
-		return new_lines
-		
-		
-	
-	def count_tabs(self, line):
-		#try-catch-exception
-		try:
-			match = re.match(r'^(\t*)', line)
-			return len(match.group(1))
-		except :
-			return 0
-			
-		
-	def insert_indentation_tags(self, lines: List[str]) -> List[str]:
-		
-		
-		
-		
-		
-		
-		
-		new_lines = []
-		prev_indent = 0
-		InsideMultiLineComment = False
-		for i, line in enumerate(lines):
-			stripped = line.lstrip()
-			if not stripped:
-			
-				new_lines.append(line)
-				continue
-				
-			indent_level = self.count_tabs(line)
-			
-			if stripped.startswith(self.lang.multiline_comment_start) and not InsideMultiLineComment:
-			
-				
-				InsideMultiLineComment = True
-			else:
-				if stripped.endswith(self.lang.multiline_comment_end):
-				
-					
-					InsideMultiLineComment = False
-					
-				
-			
-			
-			
-			
-			if InsideMultiLineComment or stripped.startswith(self.lang.multiline_comment_end):
-			
-				new_lines.append(line.rstrip())
-				continue
-				
-			
-			print( i , len(lines) )
-			next_indent = 0
-			indent_level = thisLevel = self.count_tabs( line )
-			prev_indent = prevLevel = 0  if i == 0 else self.count_tabs( lines[ i-1] )
-			next_indent = nextLevel = 0 if i >= len(lines)-1 else  self.count_tabs( lines[ i+1] )
-			
-			
-			if indent_level > prev_indent + 1:
-			
-				
-				for bridge_level in range(prev_indent + 1, indent_level):
-					new_lines.append("\t" * bridge_level + f"{self.lang.comment_marker} {TAG_BRIDGE}")
-					
-				
-				
-			
-			
-			if prev_indent > indent_level + 1:
-			
-				
-				for step in range(prev_indent - 1, indent_level, -1):
-					new_lines.append("\t" * step + f"{self.lang.comment_marker} {TAG_CLOSE}")
-					
-				
-				
-			
-			
-			if prev_indent == 1 and indent_level == 0 and next_indent > 0:
-			
-				new_lines.append(f"{self.lang.comment_marker} {TAG_CLOSE}")
-				
-			
-			if indent_level < prev_indent and indent_level < next_indent:
-			
-				
-				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_BRIDGE} ")
-				
-			elif indent_level < next_indent:
-				
-				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_OPEN} ")
-				
-			elif indent_level < prev_indent:
-				
-				new_lines.append(line.rstrip() + f" {self.lang.comment_marker} {TAG_CLOSE} ")
-				
-			else:
-				
-				new_lines.append(line.rstrip())
-				
-				
-			prev_indent = indent_level
-			
-					
-		return new_lines
-		
-	
-def get_main_args():
-	parser = argparse.ArgumentParser(description="Indentation Validator and Marker")
-	parser.add_argument("language", help="Language (e.g., javascript, python, perl)")
-	parser.add_argument("file", help="Source file to process")
-	parser.add_argument("--skip", action="store_true", help="Skip language processing and only perform indentation tagging")
-	parser.add_argument("--output", help="Output file (default: {input}_indented.txt)")
-	args = parser.parse_args()
-	return args
+#========================================================
 lang_commentmarker = '#'
 path_types = [ 'else', 'except', 'catch', 'case' ]
+branch_types = [ 'if', 'with', 'try', 'switch'  ]
+loop_types = [ 'for ', 'while ', 'do ', 'until '  ]
+input_types = [ 'function', 'def', 'async', 'module'  ]
+event_types = [ 'from ',  'import '  ]
+output_types = [ 'print(', 'continue', '.write' ]
+end_types = [ 'return ', 'return ' , 'exit(' ]
+
 def  lang_filter( line  ):
-	branch_types = [ 'if', 'with', 'try', 'switch'  ]
-	loop_types = [ 'for ', 'while ', 'do ', 'until '  ]
-	input_types = [ 'function', 'def', 'async', 'module'  ]
-	event_types = [ 'from', 'include', 'import', 'use'  ]
 	if any(word in line for word in path_types )  :
 	
 		
 		newline  =  '\t' + line + f'{ lang_commentmarker } path '
-	elif   any(line.lstrip().startswith(word) for word in branch_types  )   :
+	elif  scanTok( line,  branch_types  )   :
 		push( 'bend' )
 		newline  =  line + f'{ lang_commentmarker } branch  '
-		newline  +=  '\n' + f'{ lang_commentmarker } path  '
-	elif   any(line.lstrip().startswith(word) for word in loop_types  ) :
+		# <--- add then path as default
+	elif  scanTok( line, loop_types  ) :
 		push( 'lend' )
 		newline  =  line + f'{ lang_commentmarker } loop '
-	elif   any(line.lstrip().startswith(word) for word in input_types  ) :
+	elif  scanTok( line, input_types  ) :
 		push( 'end' )
 		newline  =  line + f'{ lang_commentmarker } input '
-	elif   any(line.lstrip().startswith(word) for word in event_types  ) :
+	elif  scanTok( line, event_types  ) :
 		newline  =  line + f'{ lang_commentmarker } event '
+	elif  scanTok( line, output_types  ) :
+		newline  =  line + f'{ lang_commentmarker } output '
+	elif  scanTok( line, end_types  ) :
+		newline  =  line + f'{ lang_commentmarker } end '
 	else:
 		
 		newline  =  line + f'{ lang_commentmarker } set '
 		
 	return newline
+#========================================================
+def  scanTok( line, toklist ):
+	sub_list = [item for item in toklist if item.startswith('.')]
+	subtok = any(f"{word}" in line for word in sub_list )
+	if len(sub_list) > 0  and subtok  :
+	
+		return True
+		
+	return  any(line.lstrip().startswith(word) for word in toklist )
 stack = []
 def  pop( ):
 	global stack
@@ -243,7 +66,6 @@ def  push(  item ):
 	global stack
 	stack.append( item )
 	
-	
 def  lang_check_path( line ):
 	if any(word in line for word in path_types )  :
 	
@@ -255,35 +77,47 @@ def  lang_check_path( line ):
 def  process_tabbed_file( tabfile ):
 	TABS =0
 	last_TAB = 0
-	print(  f'{ lang_commentmarker } set '  )
-	print(  f'{ lang_commentmarker } set '  )
+	marked_file = []
+	marked_line =  f'{ lang_commentmarker } set '
+	
+	marked_file.append( marked_line );
+	marked_file.append( marked_line );
 	for i in range ( 0 , len(tabfile) - 2 )  :
 		line = tabfile[ i ]
-		line = lang_filter( line )
-		last_TAB = TABS
-		TABS = len( line ) - len( line.lstrip('\t') )
-		nextline = lang_check_path( tabfile[i+1] )
-		next_TABS = len( nextline  ) - len( nextline.lstrip('\t') )
-		tabrate = last_TAB-TABS
-		next_tabrate = TABS - next_TABS
-		if   next_tabrate == 1  :
 		
-			print(  f'\t' * (TABS) + f'{ lang_commentmarker } { pop() } -----'  )
+		if  not  line.strip().startswith( lang_commentmarker )  :
+		
+			line = lang_filter( line )
+			last_TAB = TABS
+			TABS = len( line ) - len( line.lstrip('\t') )
+			nextline = lang_check_path( tabfile[i+1] )
+			next_TABS = len( nextline  ) - len( nextline.lstrip('\t') )
+			tabrate = last_TAB-TABS
+			next_tabrate = TABS - next_TABS
+			if   next_tabrate == 1  :
 			
+				marked_line =  f'\t' * (TABS) + f'{ lang_commentmarker } { pop() } '
+				marked_file.append( marked_line );
+				
+			else:
+				marked_line =  f'{line}'
+				marked_file.append( marked_line );
+				
+			
+			for rate in range( 2, next_tabrate ):
+				marked_line =  f'\t' * (TABS) + f'{ lang_commentmarker } { pop() } '
+				marked_file.append( marked_line );
+							
 		else:
-			print(  f'{line}'  )
-			
-		if   next_tabrate == 2  :
-		
-			print(  f'\t' * (TABS) + f'{ lang_commentmarker } { pop() } -----'  )
+			newline = line.replace( "\t" , "" )
+			marked_line =  f'{ newline  } {lang_commentmarker} set'
+			marked_file.append( marked_line );
 			
 			
 			
 	
-	
-	print( '------------------------------------------------')
-	
-def proc_file(filename):
+	return marked_file
+def gettabbed_file(filename):
 	filename = filename.strip()
 	print( '------------------------------------------------')
 	print( filename )
@@ -309,7 +143,7 @@ def proc_file(filename):
 						if IN_COMMENT_BLOCK   :
 						
 							pass
-							
+							tabbed_file.append( lang_commentmarker  + line )
 						else:
 							last_TAB = TABS
 							TABS = len( linet ) - len( linet.lstrip('\t') )
@@ -331,11 +165,14 @@ def proc_file(filename):
 							tabbed_file.append( LINE2  )
 							
 					else:
+						if  IN_COMMENT_BLOCK   :
+						
+							tabbed_file.append( lang_commentmarker  + line )
+							
 						if line.strip().endswith( '"""'  )  :
 						
 							IN_COMMENT_BLOCK = False;
 							
-						
 						
 						
 				else:
@@ -351,26 +188,54 @@ def proc_file(filename):
 		
 	return tabbed_file
 
-def import_language( LANGUAGE ):
+def import_language( LANG ):
 	try:
 	
-		FORMATTER  = importlib.import_module(f"languages.{  LANGUAGE  }_lang")
+		lang  = importlib.import_module(f"languages.{  LANG  }_lang")
 	except ImportError as e:
-		sys.exit(f"Error loading FORMATTER module: {e}")
+		sys.exit(f"Error loading lang module: {e}")
 		
-	return FORMATTER
-def main():
+	return lang
+def extract_rightmost_pattern(string, words, marker):
+	patterns = [f"{marker} {word}" for word in words]
+	matches = [pattern for pattern in patterns if pattern in string]
+	return max(matches, key=string.rfind) if matches else ' generic'
+
+def split_line_on_comment(line, comment_marker ) :
+	in_literal = None
+	codeline = []
+	comment = []
+	for i, char in enumerate(line):
+		
+		if char in ["'", '"', '`']:
+		
+			if in_literal is None:
+			
+				in_literal = char
+			elif in_literal == char:
+				in_literal = None
+				
+		elif char == comment_marker and in_literal is None:
+			
+			comment.append(line[i:])
+			return ''.join(codeline), ''.join(comment)
+			
+		codeline.append(char)
+		
+		
 	
-	LANGUAGE = "python"
-	FORMATTER = import_language( LANGUAGE  )
-	CODEFILE = "TEST2\python1.py"
-	tabfile = proc_file( CODEFILE )
-	tabbed = process_tabbed_file( tabfile ) ;
+	return ''.join(codeline), ''
 	
-	print( '----------DONE----------')
-	exit
+def  mark2flow( marked_line ):
+	codeline , comment  =  split_line_on_comment( marked_line ,  lang_commentmarker )
+	VFC_DIVIDER = '//'
+	keytoks = [ 'input' , 'event' , 'output' , 'set', 'process' , 'branch', 'path', 'bend' , 'loop' ,'lend' , 'end'  ]
+	result = extract_rightmost_pattern( comment , keytoks , lang_commentmarker )
+	result =result[1:].strip()
+	flowline = f'{ result }({ codeline.strip() });{VFC_DIVIDER}  {comment.replace( result, "").replace( lang_commentmarker, "")  }'
+	return flowline
 ''' --------------------------------------------
-tagger = VFCTagger( FORMATTER )
+tagger = VFCTagger( lang )
 result = tagger.process_file(args.file, args.skip)
 output_file = args.output if args.output else os.path.basename(args.file) + ".tag"
 with open(output_file, "w", encoding="utf-8") as out:
@@ -382,8 +247,40 @@ print(f"Output written to: {output_file}")
 
 if __name__ == "__main__":
 
-	main()
+	if len( sys.argv ) > 2 :
+	
+		CODEFILE = sys.argv[1]
+		LANG = sys.argv[2]
+	else:
+		CODEFILE = "TEST2\python1.py"
+		LANG = "python"
+		
+	lang = import_language( LANG  )
+	
+	lang.pretty_print( CODEFILE )
+	tabfile = gettabbed_file( CODEFILE )
+	marked_file = process_tabbed_file( tabfile ) ;
+	output_file = CODEFILE + '.vfc'
+	with open(output_file, "w", encoding="utf-8") as out:
+	
+		for line in marked_file :
+			vfcline =  mark2flow( line )
+			if  vfcline.startswith( 'input' )   :
+			
+				print( 'end();'  )
+				out.write( 'end();'+ '\n' )
+				
+			print( vfcline  )
+			out.write( vfcline + '\n' )
+			if  vfcline.startswith( 'branch' )   :
+			
+				print( 'path();'  )
+				out.write( 'path();'+ '\n' )
+				
+					
+		exit
+		
 	
 
-#  Export  Date: 12:42:37 PM - 22:Mar:2025.
+#  Export  Date: 03:48:30 PM - 22:Mar:2025.
 

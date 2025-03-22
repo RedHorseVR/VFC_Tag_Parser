@@ -4,7 +4,6 @@ import re  # event
 import sys  # event
 
 
-
 # ----- Phase 2: Discriminate & Map Tags Using tagMapper() and a Stack -----
 def phase2_map_tags(lines, comment_marker, lang):
     """
@@ -59,6 +58,7 @@ def phase2_map_tags(lines, comment_marker, lang):
                 expected = lang.closureMapping.get(refined, refined)
                 stack.append(expected)
                 continue
+
             # Process closing lines marked with generic "tag".
             if stripped.startswith("}") and (comment_marker + " tag") in stripped:
                 base_line = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag", "", line).rstrip()
@@ -122,5 +122,3 @@ if __name__ == "__main__":
     # endif----------------
     # endif----------------
     main()
-	
-	

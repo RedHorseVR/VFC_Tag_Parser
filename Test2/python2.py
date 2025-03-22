@@ -4,6 +4,82 @@ import re  # event
 import sys  # event
 
 
+# Helper to load a language module based on command line argument.
+def load_language_module(lang_name):
+    lang_name = lang_name.lower()
+    if lang_name == "javascript":
+        import languages.javascript_lang as mod
+    elif lang_name == "python":
+        import languages.python_lang as mod
+    elif lang_name == "perl":
+        import languages.perl_lang as mod
+    else:
+        sys.exit("Unsupported language: " + lang_name)
+
+    return mod
+
+
+# Convert groups of spaces to tabs (assuming 4 spaces per tab).  # event
+def convert_spaces_to_tabs(text, spaces_per_tab=4):
+    return re.sub(" {" + str(spaces_per_tab) + r"}", "\t", text)
+
+
+# ----- Phase 1: Pretty Print, Reindent & Mark Block Lines -----
+def phase1_reindent(lines, comment_marker):
+    """
+    Assumes the source has been pretty printed.
+    Reindent the code using a simple brace counter.
+    Every line that ends with "{" or starts with "}" is appended with the generic tag " tag".
+    Additionally, if a control statement does not end with "{" but the following line is a lone "{",
+    then mark the control statement with " tag-header" and the brace line with " tag-brace".
+    """
+    indent_level = 0
+    new_lines = []
+    i = 0
+    while i < len(lines):
+        line = lines[i].rstrip()
+        # Look ahead for a header pair.
+        if i < len(lines) - 1 and not line.rstrip().endswith("{"):
+            next_line = lines[i + 1].rstrip()
+            if next_line.strip() == "{" or next_line.strip().startswith("{" + " " + comment_marker + " tag"):
+                new_indent = "\t" * indent_level
+                # Mark control statement with special header marker.
+                if comment_marker + " tag-header" not in line:
+                    new_lines.append(new_indent + line.strip() + " " + comment_marker + " tag-header")
+                else:
+                    new_lines.append(new_indent + line.strip())
+
+                indent_level += 1
+                new_indent = "\t" * indent_level
+                # Mark lone brace with special brace marker.
+                if comment_marker + " tag-brace" not in next_line:
+                    new_lines.append(new_indent + next_line.strip() + " " + comment_marker + " tag-brace")
+                else:
+                    new_lines.append(new_indent + next_line.strip())
+
+                i += 2
+                continue
+
+        # Normal processing.
+        stripped = line.strip()
+        if stripped.startswith("}"):
+            indent_level = max(0, indent_level - 1)
+
+        new_indent = "\t" * indent_level
+        if stripped.endswith("{") or stripped.startswith("}"):
+            if comment_marker + " tag" not in stripped:
+                new_lines.append(new_indent + stripped + " " + comment_marker + " tag")
+            else:
+                new_lines.append(new_indent + stripped)
+        else:
+            new_lines.append(new_indent + stripped)
+        if stripped.endswith("{"):
+            indent_level += 1
+
+        i += 1
+
+    return new_lines
+
 
 # ----- Phase 2: Discriminate & Map Tags Using tagMapper() and a Stack -----
 def phase2_map_tags(lines, comment_marker, lang):
@@ -84,6 +160,7 @@ def main():
         lang = load_language_module(args.language.lower())
     except Exception as e:
         sys.exit("Error loading language module: " + str(e))
+
     try:
         with open(args.file, "r", encoding="utf-8") as f:
             source = f.read()

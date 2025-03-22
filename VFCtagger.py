@@ -198,10 +198,92 @@ def get_main_args():
 	parser.add_argument("--output", help="Output file (default: {input}_indented.txt)")
 	args = parser.parse_args()
 	return args
-def print_file(filename):
+lang_commentmarker = '#'
+path_types = [ 'else', 'except', 'catch', 'case' ]
+def  lang_filter( line  ):
+	branch_types = [ 'if', 'with', 'try', 'switch'  ]
+	loop_types = [ 'for ', 'while ', 'do ', 'until '  ]
+	input_types = [ 'function', 'def', 'async', 'module'  ]
+	event_types = [ 'from', 'include', 'import', 'use'  ]
+	if any(word in line for word in path_types )  :
+	
+		
+		newline  =  '\t' + line + f'{ lang_commentmarker } path '
+	elif   any(line.lstrip().startswith(word) for word in branch_types  )   :
+		push( 'bend' )
+		newline  =  line + f'{ lang_commentmarker } branch  '
+	elif   any(line.lstrip().startswith(word) for word in loop_types  ) :
+		push( 'lend' )
+		newline  =  line + f'{ lang_commentmarker } loop '
+	elif   any(line.lstrip().startswith(word) for word in input_types  ) :
+		push( 'end' )
+		newline  =  line + f'{ lang_commentmarker } input '
+	elif   any(line.lstrip().startswith(word) for word in event_types  ) :
+		newline  =  line + f'{ lang_commentmarker } event '
+	else:
+		newline  =   line
+		
+	return newline
+stack = []
+def  pop( ):
+	global stack
+	if len( stack) >0  :
+	
+		item = stack.pop()
+		
+		return item
+	else:
+		print( '--------------------empty stack----------------------------')
+		return ""
+		
+	
+def  push(  item ):
+	global stack
+	stack.append( item )
+	
+	
+def  lang_check_path( line ):
+	if any(word in line for word in path_types )  :
+	
+		newline  =  '\t' + line
+	else:
+		newline  =   line
+		
+	return newline
+def  process_tabbed_file( tabfile ):
+	TABS =0
+	last_TAB = 0
+	for i in range ( 0 , len(tabfile) - 2 )  :
+		line = tabfile[ i ]
+		line = lang_filter( line )
+		last_TAB = TABS
+		TABS = len( line ) - len( line.lstrip('\t') )
+		nextline = lang_check_path( tabfile[i+1] )
+		next_TABS = len( nextline  ) - len( nextline.lstrip('\t') )
+		tabrate = last_TAB-TABS
+		next_tabrate = TABS - next_TABS
+		if   next_tabrate == 1  :
+		
+			print(  f'\t' * (TABS) + f'{ lang_commentmarker } { pop() } -----'  )
+			
+		else:
+			print(  f'{line}'  )
+			
+		if   next_tabrate == 2  :
+		
+			print(  f'\t' * (TABS) + f'{ lang_commentmarker } { pop() } -----'  )
+			
+			
+			
+	
+	
+	print( '------------------------------------------------')
+	
+def proc_file(filename):
 	filename = filename.strip()
 	print( '------------------------------------------------')
 	print( filename )
+	tabbed_file = []
 	try:
 	
 		LINE = ' '
@@ -213,33 +295,47 @@ def print_file(filename):
 			last_TAB = 0
 			for line in file:
 				linet = line.replace('    ', '\t').strip( "\n" )
-				if  not IN_COMMENT_BLOCK and not line.startswith('\n')  :
+				LINE2 = line.replace('    ', '\t').strip( "\n" )
+				if  not linet.strip() == ''    :
 				
-					i +=1
-					IN_COMMENT_BLOCK = line.strip().startswith( '"""'  )
-					if IN_COMMENT_BLOCK   :
+					if  not IN_COMMENT_BLOCK and not line.startswith('\n')  and not line.lstrip().startswith('#') :
 					
-						print( f' { "##" }  { linet  }'  )
-					else:
-						last_TAB = TABS
-						TABS = len( linet ) - len( linet.lstrip('\t') )
-						LINE = line.replace('    ', '\t.').strip( "\n" )
-						diff = TABS - last_TAB
-						if  diff < -1   :
+						i +=1
+						IN_COMMENT_BLOCK = line.strip().startswith( '"""'  )
+						if IN_COMMENT_BLOCK   :
 						
-							for tabs in range(  last_TAB-1 , TABS, -1 ) :
-								FillLINE = '\t.' * tabs
-								print( f'FillLINE---->  { FillLINE }' )
-															
+							pass
 							
-						print( f'{ TABS } : { diff }   { LINE  }' )
+						else:
+							last_TAB = TABS
+							TABS = len( linet ) - len( linet.lstrip('\t') )
+							LINE2 = line.replace('    ', '\t').strip( "\n" )
+							
+							LINE = line.replace('    ', '\t.').strip( "\n" )
+							
+							diff = TABS - last_TAB
+							if  diff < 0   :
+							
+								for tabs in range(  last_TAB , TABS , -1 ) :
+									FillLINE = '\t.' * tabs
+									FillLINE2 = '\t' * tabs
+									
+									tabbed_file.append( FillLINE2  )
+																	
+								
+							
+							tabbed_file.append( LINE2  )
+							
+					else:
+						if line.strip().endswith( '"""'  )  :
+						
+							IN_COMMENT_BLOCK = False;
+							
+						
+						
 						
 				else:
-					if line.strip().endswith( '"""'  )  :
-					
-						IN_COMMENT_BLOCK = False;
-						
-					
+					print( '------------------------------------------------')
 					
 				
 			
@@ -249,7 +345,8 @@ def print_file(filename):
 	except Exception as e:
 		print(f"An error occurred: {e}")
 		
-	
+	return tabbed_file
+
 def import_language( LANGUAGE ):
 	try:
 	
@@ -263,9 +360,8 @@ def main():
 	LANGUAGE = "python"
 	FORMATTER = import_language( LANGUAGE  )
 	CODEFILE = "TEST2\python1.py"
-	print( CODEFILE )
-	
-	print_file( CODEFILE )
+	tabfile = proc_file( CODEFILE )
+	tabbed = process_tabbed_file( tabfile ) ;
 	
 	print( '----------DONE----------')
 	exit
@@ -285,5 +381,5 @@ if __name__ == "__main__":
 	main()
 	
 
-#  Export  Date: 11:17:36 PM - 20:Mar:2025.
+#  Export  Date: 01:52:35 AM - 22:Mar:2025.
 

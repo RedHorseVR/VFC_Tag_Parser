@@ -64,6 +64,7 @@ def add_block_end_comments(code_str):
 	prevline = ""
 	while i < len(lines):
 		line = lines[i]
+		line = line.replace('    ', '\t')
 		if len(lines) - 1 > i:
 		
 			nextline = lines[i + 1]
@@ -295,5 +296,5 @@ if __name__ == "__main__":
 		print("Usage: python python_lang.py <source_file>")
 		
 	
-#  Export  Date: 12:18:37 PM - 10:Mar:2025.
+#  Export  Date: 09:56:31 PM - 21:Mar:2025.
 

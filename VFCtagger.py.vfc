@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : VFCtagger.py.vfc
-;  File Date : 11:17:36 PM - 20:Mar:2025
+;  File Date : 01:52:35 AM - 22:Mar:2025
 
 event(import argparse);//
 event(import os);//
@@ -208,11 +208,98 @@ set(parser.add_argument("--skip", action="store_true", help="Skip language proce
 set(parser.add_argument("--output", help="Output file (default: {input}_indented.txt)"));//
 set(args = parser.parse_args());//
 end(return args);//
+set(lang_commentmarker = '#');// 
+set(path_types = [ 'else', 'except', 'catch', 'case' ]);//
 
-input(def print_file(filename):);// 
+input(def  lang_filter( line  ):);//
+set(branch_types = [ 'if', 'with', 'try', 'switch'  ]);//
+set(loop_types = [ 'for ', 'while ', 'do ', 'until '  ]);//
+set(input_types = [ 'function', 'def', 'async', 'module'  ]);//
+set(event_types = [ 'from', 'include', 'import', 'use'  ]);//
+branch(if any(word in line for word in path_types )  :);//if line.strip() in path_types  :
+path( );//
+output();//print( '----------------> ' , line.strip() )
+set(newline  =  '\t' + line + f'{ lang_commentmarker } path ');//
+path(elif   any(line.lstrip().startswith(word) for word in branch_types  )   :);// elif any(word in line for word in branch_types )  :
+generic(push( 'bend' ));// 
+set(newline  =  line + f'{ lang_commentmarker } branch  ');//
+path(elif   any(line.lstrip().startswith(word) for word in loop_types  ) :);// 
+process(push( 'lend' ));//
+set(newline  =  line + f'{ lang_commentmarker } loop ');//
+path(elif   any(line.lstrip().startswith(word) for word in input_types  ) :);// 
+process(push( 'end' ));//
+set(newline  =  line + f'{ lang_commentmarker } input ');//
+path(elif   any(line.lstrip().startswith(word) for word in event_types  ) :);// 
+set(newline  =  line + f'{ lang_commentmarker } event ');//
+path(else: );//
+set(newline  =   line);//
+bend( );//
+end(return newline);//
+set(stack = []);//
+
+input(def  pop( ):);//
+generic(global stack);// ////
+branch(if len( stack) >0  :);//
+path( );//
+generic(item = stack.pop());// 
+output();//print( '\t'*8 +'...POP' , item , stack )
+end(return item);//
+path(else: );//
+output(print( '--------------------empty stack----------------------------'));//
+end(return "");// 
+bend( );//
+end();//
+
+input(def  push(  item ):);//
+generic(global stack);// ////
+generic(stack.append( item ));// 
+output();//print( '\t'*8 +'...PUSH' , item , stack )
+end();//
+
+input(def  lang_check_path( line ):);//
+branch(if any(word in line for word in path_types )  :);//if line.strip() in path_types  :
+path( );//
+set(newline  =  '\t' + line);//
+path(else: );//
+set(newline  =   line);//
+bend( );//
+end(return newline);//
+
+input(def  process_tabbed_file( tabfile ):);//
+set(TABS =0);//
+set(last_TAB = 0);//
+loop(for i in range ( 0 , len(tabfile) - 2 )  :);//for line  in tabfile :
+set(line = tabfile[ i ]);//
+process(line = lang_filter( line ));//
+set(last_TAB = TABS);//
+set(TABS = len( line ) - len( line.lstrip('\t') ));//
+process(nextline = lang_check_path( tabfile[i+1] ));//
+set(next_TABS = len( nextline  ) - len( nextline.lstrip('\t') ));//
+set(tabrate = last_TAB-TABS);//
+set(next_tabrate = TABS - next_TABS);//
+branch(if   next_tabrate == 1  :);//
+path();//
+output(print(  f'\t' * (TABS) + f'{ lang_commentmarker } { pop() } -----'  ));//
+output();//print(  f'{TABS-1} {line}'  )
+path(else: );//
+output(print(  f'{line}'  ));//pass
+bend( );//
+branch(if   next_tabrate == 2  :);//
+path();//
+output(print(  f'\t' * (TABS) + f'{ lang_commentmarker } { pop() } -----'  ));//
+output();//print(  f'{TABS-1} {line}'  )
+bend( );//
+lend( );//
+set();//line = tabfile[ len(tabfile) - 1 ]
+output();//print(  f'{TABS} {last_TAB} { last_TAB-TABS } {line}'  )
+output(print( '------------------------------------------------') );//
+end(   );//
+
+input(def proc_file(filename):);// 
 set(filename = filename.strip());//
 output(print( '------------------------------------------------') );//
 output(print( filename ));//
+set(tabbed_file = []);//
 branch(try:  );// // branch //
 path();//
 generic(LINE = ' ');// ////
@@ -224,26 +311,36 @@ set(i = 0 );//
 set(last_TAB = 0);//
 loop(for line in file:  );// // loop //
 generic(linet = line.replace('    ', '\t').strip( "\n" ));//
-branch(if  not IN_COMMENT_BLOCK and not line.startswith('\n')  :);//
+generic(LINE2 = line.replace('    ', '\t').strip( "\n" ));//
+branch(if  not linet.strip() == ''    :);//
+path();//
+branch(if  not IN_COMMENT_BLOCK and not line.startswith('\n')  and not line.lstrip().startswith('#') :);//
 path( );//
 set(i +=1 );//
 generic(IN_COMMENT_BLOCK = line.strip().startswith( '"""'  ));//
 branch(if IN_COMMENT_BLOCK   :);//
 path( );//
-output(print( f' { "##" }  { linet  }'  ));// 
+output(pass);//print( f'{ "##" }  { linet  }'  )
+set();//tabbed_file.append( '###' + LINE2  )
 path(else: );//
 set(last_TAB = TABS);//
 set(TABS = len( linet ) - len( linet.lstrip('\t') ));//
+generic(LINE2 = line.replace('    ', '\t').strip( "\n" ));//LINE2 = line.replace('    ', '\t.').strip( "\n" )
+process();//LINE2 = lang_filter( LINE2 )
 generic(LINE = line.replace('    ', '\t.').strip( "\n" ));//
+process();//LINE = lang_filter( LINE )
 generic(diff = TABS - last_TAB);// 
-branch(if  diff < -1   :);//if  False   :
+branch(if  diff < 0   :);// 
 path();//
-loop(for tabs in range(  last_TAB-1 , TABS, -1 ) :);//
+loop(for tabs in range(  last_TAB , TABS , -1 ) :);//
 generic(FillLINE = '\t.' * tabs);// FillLINE = '\t.' * (last_TAB-1)
-output(print( f'FillLINE---->  { FillLINE }' ));// 
+generic(FillLINE2 = '\t' * tabs);//FillLINE2 = '\t.' * tabs
+output( );//print( f'{ tabs }---->  { FillLINE }' )
+set(tabbed_file.append( FillLINE2  ));//
 lend( );//
 bend( );//
-output(print( f'{ TABS } : { diff }   { LINE  }' ));// print( f'{i},{diff}..{ TABS }  { LINE  }' )
+output();//print( f'{ TABS } : { diff }   { LINE  }' )
+set(tabbed_file.append( LINE2  ));//
 bend( );//
 path(else: );//
 branch(if line.strip().endswith( '"""'  )  :);//
@@ -251,6 +348,10 @@ path( );//
 set(IN_COMMENT_BLOCK = False;);//
 bend( );//
 output( );//print( f'{ "##"  }  { linet }' )
+set();//tabbed_file.append( '###' + LINE2  )
+bend( );//
+path(else: );//
+output(print( '------------------------------------------------') );//
 bend( );//
 lend();// // lend //
 bend();// // bend //
@@ -259,6 +360,7 @@ output(print(f"The file '{filename}' was not found."));//
 path(except Exception as e:  );//// // branch ////
 output(print(f"An error occurred: {e}"));//// // General error handling ////
 bend();// // bend //
+end(return tabbed_file);//
 end();//
 
 input(def import_language( LANGUAGE ):);//
@@ -275,9 +377,8 @@ process(    );//args =  get_main_args() ;
 generic(LANGUAGE = "python");//LANGUAGE = args.language.lower( )
 event(FORMATTER = import_language( LANGUAGE  ));//
 generic(CODEFILE = "TEST2\python1.py");//LANGUAGE = args.language.lower( )
-output(print( CODEFILE ));//
-generic();//SKIP = args.skip
-output(print_file( CODEFILE ));//
+output(tabfile = proc_file( CODEFILE ));//
+process(tabbed = process_tabbed_file( tabfile ) ;);//
 output();//print_file( FORMATTER.pretty_print( CODEFILE ) )
 output(print( '----------DONE----------') );//
 end(exit);//////////
@@ -305,4 +406,4 @@ end();//
 ;    VFCtagger.py   #   .
 ; notepad++.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 697 248 2301 1645 226 119   1279   4294963049    python.key  0
+; 449 38 1854 1999 0 208   1097   4294956908    python.key  0

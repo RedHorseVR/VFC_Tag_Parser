@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : VFCtagger.py.vfc
-;  File Date : 03:48:30 PM - 22:Mar:2025
+;  File Date : 05:15:45 PM - 22:Mar:2025
 
 event(import argparse);//
 event(import os);//
@@ -10,81 +10,9 @@ event(import re);//
 event(import sys);//
 event(import importlib);//
 end();//
-set(#========================================================);//////
-set(lang_commentmarker = '#');// 
-set(path_types = [ 'else', 'except', 'catch', 'case' ]);//
-set(branch_types = [ 'if', 'with', 'try', 'switch'  ]);//
-set(loop_types = [ 'for ', 'while ', 'do ', 'until '  ]);//
-set(input_types = [ 'function', 'def', 'async', 'module'  ]);//
-set(event_types = [ 'from ',  'import '  ]);//
-set(output_types = [ 'print(', 'continue', '.write' ]);//
-set(end_types = [ 'return ', 'return ' , 'exit(' ]);//
+set(lang = None);//
+set(lang_commentmarker = '');//
 end();//
-
-input(def  lang_filter( line  ):);//
-branch(if any(word in line for word in path_types )  :);//if line.strip() in path_types  :
-path( );//
-output();//print( '----------------> ' , line.strip() )
-set(newline  =  '\t' + line + f'{ lang_commentmarker } path ');//
-path(elif  scanTok( line,  branch_types  )   :);/// elif any(word in line for word in branch_types )  :elif   any(line.lstrip().startswith(word) for word in branch_types  )   ://
-generic(push( 'bend' ));// 
-set(newline  =  line + f'{ lang_commentmarker } branch  ');//
-set(# <--- add then path as default);//newline  +=  '\n' + f'{ lang_commentmarker } path  '
-path(elif  scanTok( line, loop_types  ) :);//
-process(push( 'lend' ));//
-set(newline  =  line + f'{ lang_commentmarker } loop ');//
-path(elif  scanTok( line, input_types  ) :);//
-process(push( 'end' ));//
-set(newline  =  line + f'{ lang_commentmarker } input ');//
-path(elif  scanTok( line, event_types  ) :);//
-set(newline  =  line + f'{ lang_commentmarker } event ');//
-path(elif  scanTok( line, output_types  ) :);//
-set(newline  =  line + f'{ lang_commentmarker } output ');//
-path(elif  scanTok( line, end_types  ) :);//
-set(newline  =  line + f'{ lang_commentmarker } end ');//
-path(else: );//
-set();//newline  =   line
-set(newline  =  line + f'{ lang_commentmarker } set ');//
-bend( );//
-end(return newline);//
-end(#========================================================);//
-
-input(def  scanTok( line, toklist ):);//
-set(sub_list = [item for item in toklist if item.startswith('.')]);// ////
-set(subtok = any(f"{word}" in line for word in sub_list ));// 
-branch(if len(sub_list) > 0  and subtok  :);//
-path();//
-end(return True);//
-bend( );//
-end(return  any(line.lstrip().startswith(word) for word in toklist ));//
-set(stack = []);//
-
-input(def  pop( ):);//
-generic(global stack);// ////
-branch(if len( stack) >0  :);//
-path( );//
-generic(item = stack.pop());// 
-output();//print( '\t'*8 +'...POP' , item , stack )
-end(return item);//
-path(else: );//
-output(print( '--------------------empty stack----------------------------'));//
-end(return "");// 
-bend( );//
-end();//
-
-input(def  push(  item ):);//
-generic(global stack);// ////
-generic(stack.append( item ));// 
-end();//
-
-input(def  lang_check_path( line ):);//
-branch(if any(word in line for word in path_types )  :);//if line.strip() in path_types  :
-path( );//
-set(newline  =  '\t' + line);//
-path(else: );//
-set(newline  =   line);//
-bend( );//
-end(return newline);//
 
 input(def  process_tabbed_file( tabfile ):);//
 set(TABS =0);//
@@ -99,16 +27,16 @@ set(line = tabfile[ i ]);//
 output();//print( line  ) ; input('>')
 branch(if  not  line.strip().startswith( lang_commentmarker )  :);//
 path();//
-process(line = lang_filter( line ));//
+process(line = lang.lang_filter( line ));//
 set(last_TAB = TABS);//
 set(TABS = len( line ) - len( line.lstrip('\t') ));//
-process(nextline = lang_check_path( tabfile[i+1] ));//
+process(nextline = lang.lang_check_path( tabfile[i+1] ));//
 set(next_TABS = len( nextline  ) - len( nextline.lstrip('\t') ));//
 set(tabrate = last_TAB-TABS);//
 set(next_tabrate = TABS - next_TABS);//
 branch(if   next_tabrate == 1  :);//
 path();//
-set(marked_line =  f'\t' * (TABS) + f'{ lang_commentmarker } { pop() } ');//
+set(marked_line =  f'\t' * (TABS) + f'{ lang_commentmarker } { lang.pop() } ');//
 process(marked_file.append( marked_line ););//////
 output();//print(  f'{TABS-1} {line}'  )
 path(else: );//
@@ -117,7 +45,7 @@ process(marked_file.append( marked_line ););//////
 bend( );//
 output();//print( '---->' , next_tabrate )
 loop(for rate in range( 2, next_tabrate ):);//<---- in case we hit some tabs that may be missing and need to close sevearl items on a single line tab
-set(marked_line =  f'\t' * (TABS) + f'{ lang_commentmarker } { pop() } ');//
+set(marked_line =  f'\t' * (TABS) + f'{ lang_commentmarker } { lang.pop() } ');//
 process(marked_file.append( marked_line ););//////
 lend( );//
 path(else: );//
@@ -199,7 +127,6 @@ path(except Exception as e:  );//// // branch ////
 output(print(f"An error occurred: {e}"));//// // General error handling ////
 bend();// // bend //
 end(return tabbed_file);//
-end();//
 
 input(def import_language( LANG ):);//
 branch( try:);//    
@@ -249,17 +176,6 @@ generic(result = extract_rightmost_pattern( comment , keytoks , lang_commentmark
 generic(result =result[1:].strip());// 
 set(flowline = f'{ result }({ codeline.strip() });{VFC_DIVIDER}  {comment.replace( result, "").replace( lang_commentmarker, "")  }');//
 end(return flowline);//
-set(''' -------------------------------------------- );//
-set(tagger = VFCTagger( lang ));//
-set(result = tagger.process_file(args.file, args.skip));//
-set(output_file = args.output if args.output else os.path.basename(args.file) + ".tag");//
-branch( with open(output_file, "w", encoding="utf-8") as out:);//    
-path();//
-set(out.write(result));//
-bend(  );//    
-output(print(f"Output written to: {output_file}"));//
-set(-------------------------------------------- ''');//
-end(  );//   endif---------------- # tag-----<<< 
 branch(if __name__ == "__main__":);//////
 path();//
 branch(if len( sys.argv ) > 2 :);//
@@ -271,7 +187,8 @@ set(CODEFILE = "TEST2\python1.py");///LANG = args.language.lower( )//
 set(LANG = "python");///LANGUAGE = args.language.lower( )//
 bend( );//
 event(lang = import_language( LANG  ));//
-set();//////
+set(lang_commentmarker = lang.lang_commentmarker);//
+path();//////////
 output( lang.pretty_print( CODEFILE ));//
 set(tabfile = gettabbed_file( CODEFILE ));//////
 process(marked_file = process_tabbed_file( tabfile ) ;);//
@@ -305,4 +222,4 @@ end();//
 ;    VFCtagger.py   #   .
 ; notepad++.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 703 20 2710 2081 0 117   1433   4294959664    python.key  0
+; 703 20 2710 2081 9 96   1291   219    python.key  0

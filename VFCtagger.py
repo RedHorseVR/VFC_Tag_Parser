@@ -4,76 +4,9 @@ import re
 import sys
 import importlib
 
-#========================================================
-lang_commentmarker = '#'
-path_types = [ 'else', 'except', 'catch', 'case' ]
-branch_types = [ 'if', 'with', 'try', 'switch'  ]
-loop_types = [ 'for ', 'while ', 'do ', 'until '  ]
-input_types = [ 'function', 'def', 'async', 'module'  ]
-event_types = [ 'from ',  'import '  ]
-output_types = [ 'print(', 'continue', '.write' ]
-end_types = [ 'return ', 'return ' , 'exit(' ]
+lang = None
+lang_commentmarker = ''
 
-def  lang_filter( line  ):
-	if any(word in line for word in path_types )  :
-	
-		
-		newline  =  '\t' + line + f'{ lang_commentmarker } path '
-	elif  scanTok( line,  branch_types  )   :
-		push( 'bend' )
-		newline  =  line + f'{ lang_commentmarker } branch  '
-		# <--- add then path as default
-	elif  scanTok( line, loop_types  ) :
-		push( 'lend' )
-		newline  =  line + f'{ lang_commentmarker } loop '
-	elif  scanTok( line, input_types  ) :
-		push( 'end' )
-		newline  =  line + f'{ lang_commentmarker } input '
-	elif  scanTok( line, event_types  ) :
-		newline  =  line + f'{ lang_commentmarker } event '
-	elif  scanTok( line, output_types  ) :
-		newline  =  line + f'{ lang_commentmarker } output '
-	elif  scanTok( line, end_types  ) :
-		newline  =  line + f'{ lang_commentmarker } end '
-	else:
-		
-		newline  =  line + f'{ lang_commentmarker } set '
-		
-	return newline
-#========================================================
-def  scanTok( line, toklist ):
-	sub_list = [item for item in toklist if item.startswith('.')]
-	subtok = any(f"{word}" in line for word in sub_list )
-	if len(sub_list) > 0  and subtok  :
-	
-		return True
-		
-	return  any(line.lstrip().startswith(word) for word in toklist )
-stack = []
-def  pop( ):
-	global stack
-	if len( stack) >0  :
-	
-		item = stack.pop()
-		
-		return item
-	else:
-		print( '--------------------empty stack----------------------------')
-		return ""
-		
-	
-def  push(  item ):
-	global stack
-	stack.append( item )
-	
-def  lang_check_path( line ):
-	if any(word in line for word in path_types )  :
-	
-		newline  =  '\t' + line
-	else:
-		newline  =   line
-		
-	return newline
 def  process_tabbed_file( tabfile ):
 	TABS =0
 	last_TAB = 0
@@ -87,16 +20,16 @@ def  process_tabbed_file( tabfile ):
 		
 		if  not  line.strip().startswith( lang_commentmarker )  :
 		
-			line = lang_filter( line )
+			line = lang.lang_filter( line )
 			last_TAB = TABS
 			TABS = len( line ) - len( line.lstrip('\t') )
-			nextline = lang_check_path( tabfile[i+1] )
+			nextline = lang.lang_check_path( tabfile[i+1] )
 			next_TABS = len( nextline  ) - len( nextline.lstrip('\t') )
 			tabrate = last_TAB-TABS
 			next_tabrate = TABS - next_TABS
 			if   next_tabrate == 1  :
 			
-				marked_line =  f'\t' * (TABS) + f'{ lang_commentmarker } { pop() } '
+				marked_line =  f'\t' * (TABS) + f'{ lang_commentmarker } { lang.pop() } '
 				marked_file.append( marked_line );
 				
 			else:
@@ -105,7 +38,7 @@ def  process_tabbed_file( tabfile ):
 				
 			
 			for rate in range( 2, next_tabrate ):
-				marked_line =  f'\t' * (TABS) + f'{ lang_commentmarker } { pop() } '
+				marked_line =  f'\t' * (TABS) + f'{ lang_commentmarker } { lang.pop() } '
 				marked_file.append( marked_line );
 							
 		else:
@@ -187,7 +120,6 @@ def gettabbed_file(filename):
 		print(f"An error occurred: {e}")
 		
 	return tabbed_file
-
 def import_language( LANG ):
 	try:
 	
@@ -234,17 +166,6 @@ def  mark2flow( marked_line ):
 	result =result[1:].strip()
 	flowline = f'{ result }({ codeline.strip() });{VFC_DIVIDER}  {comment.replace( result, "").replace( lang_commentmarker, "")  }'
 	return flowline
-''' --------------------------------------------
-tagger = VFCTagger( lang )
-result = tagger.process_file(args.file, args.skip)
-output_file = args.output if args.output else os.path.basename(args.file) + ".tag"
-with open(output_file, "w", encoding="utf-8") as out:
-
-	out.write(result)
-	
-print(f"Output written to: {output_file}")
--------------------------------------------- '''
-
 if __name__ == "__main__":
 
 	if len( sys.argv ) > 2 :
@@ -256,7 +177,8 @@ if __name__ == "__main__":
 		LANG = "python"
 		
 	lang = import_language( LANG  )
-	
+	lang_commentmarker = lang.lang_commentmarker
+
 	lang.pretty_print( CODEFILE )
 	tabfile = gettabbed_file( CODEFILE )
 	marked_file = process_tabbed_file( tabfile ) ;
@@ -282,5 +204,5 @@ if __name__ == "__main__":
 		
 	
 
-#  Export  Date: 03:48:30 PM - 22:Mar:2025.
+#  Export  Date: 05:15:45 PM - 22:Mar:2025.
 

@@ -1,193 +1,1531 @@
  set();//  # set
- set();//  # set
- event(import argparse);//  # event# event
- event(import os);//  # event# event
- event(import re);//  # event# event
- event(import sys);//  # event# event
- input(def load_language_module(lang_name):);//  # input
- set(lang_name = lang_name.lower());//  # set
- branch(if lang_name == "javascript":);//  # branch
- event(import languages.javascript_lang as mod);//  # event
- set();//  # set
- path(elif lang_name == "python":);//  # path
- event(import languages.python_lang as mod);//  # event
- set();//  # set
- path(elif lang_name == "perl":);//  # path
- event(import languages.perl_lang as mod);//  # event
- set();//  # set
- path(else:);//  # path
- set(sys.exit("Unsupported language: " + lang_name));//  # set
- bend();//  # bend
- end(return mod);//  # end
- end();//  # end
- input(def convert_spaces_to_tabs(text, spaces_per_tab=4):);//  # input
- end(return re.sub(" {" + str(spaces_per_tab) + r"}", "\t", text));//  # end
- end();//  # end
- input(def phase1_reindent(lines, comment_marker):);//  # input
- set();//  #    """
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 event(import argparse);//  # event# event
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 event(import os);//  # event# event
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 event(import re);//  # event# event
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 event(import sys);//  # event# event
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 input(def load_language_module(lang_name):);//  # input
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(lang_name = lang_name.lower());//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(if lang_name == "javascript":);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 event(import languages.javascript_lang as mod);//  # event
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 path(elif lang_name == "python":);//  # path
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 event(import languages.python_lang as mod);//  # event
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 path(elif lang_name == "perl":);//  # path
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 event(import languages.perl_lang as mod);//  # event
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 path(else:);//  # path
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(sys.exit("Unsupported language: " + lang_name));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 end(return mod);//  # end
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 end();//  # end
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 input(def convert_spaces_to_tabs(text, spaces_per_tab=4):);//  # input
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 end(return re.sub(" {" + str(spaces_per_tab) + r"}", "\t", text));//  # end
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 end();//  # end
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 input(def phase1_reindent(lines, comment_marker):);//  # input
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  #    """
  # set --
- set();//  #    Assumes the source has been pretty printed. # set --
- set();//  #    Reindent the code using a simple brace counter. # set --
- set();//  #    Every line that ends with "{" or starts with "}" is appended with the generic tag " tag". # set --
- set();//  #    Additionally, if a control statement does not end with "{" but the following line is a lone "{", # set --
- set();//  #    then mark the control statement with " tag-header" and the brace line with " tag-brace". # set --
- set();//  #    """ # set --
- set(indent_level = 0);//  # set
- set(new_lines = []);//  # set
- set(i = 0);//  # set
- loop(while i < len(lines):);//  # loop
- set(line = lines[i].rstrip());//  # set
- branch(if i < len(lines) - 1 and not line.rstrip().endswith("{"):);//  # branch
- set(next_line = lines[i + 1].rstrip());//  # set
- branch(if next_line.strip() == "{" or next_line.strip().startswith("{" + " " + comment_marker + " tag"):);//  # branch
- set(new_indent = "\t" * indent_level);//  # set
- branch(if comment_marker + " tag-header" not in line:);//  # branch
- set(new_lines.append(new_indent + line.strip() + " " + comment_marker + " tag-header"));//  # set
- set();//  # set
- path(else:);//  # path
- set(new_lines.append(new_indent + line.strip()));//  # set
- bend();//  # bend
- set(indent_level += 1);//  # set
- set(new_indent = "\t" * indent_level);//  # set
- branch(if comment_marker + " tag-brace" not in next_line:);//  # branch
- set(new_lines.append(new_indent + next_line.strip() + " " + comment_marker + " tag-brace"));//  # set
- set();//  # set
- path(else:);//  # path
- set(new_lines.append(new_indent + next_line.strip()));//  # set
- bend();//  # bend
- set(i += 2);//  # set
- output(continue);//  # output
- bend();//  # bend
- bend();//  # bend
- set(stripped = line.strip());//  # set
- branch(if stripped.startswith("}"):);//  # branch
- set(indent_level = max(0, indent_level - 1));//  # set
- bend();//  # bend
- set(new_indent = "\t" * indent_level);//  # set
- branch(if stripped.endswith("{") or stripped.startswith("}"):);//  # branch
- branch(if comment_marker + " tag" not in stripped:);//  # branch
- set(new_lines.append(new_indent + stripped + " " + comment_marker + " tag"));//  # set
- set();//  # set
- path(else:);//  # path
- set(new_lines.append(new_indent + stripped));//  # set
- bend();//  # bend
- set();//  # set
- path(else:);//  # path
- set(new_lines.append(new_indent + stripped));//  # set
- bend();//  # bend
- branch(if stripped.endswith("{"):);//  # branch
- set(indent_level += 1);//  # set
- bend();//  # bend
- set(i += 1);//  # set
- lend();//  # lend
- end(return new_lines);//  # end
- end();//  # end
- input(def phase2_map_tags(lines, comment_marker, lang):);//  # input
- set();//  #    """
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  #    Assumes the source has been pretty printed. # set --
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  #    Reindent the code using a simple brace counter. # set --
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  #    Every line that ends with "{" or starts with "}" is appended with the generic tag " tag". # set --
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  #    Additionally, if a control statement does not end with "{" but the following line is a lone "{", # set --
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  #    then mark the control statement with " tag-header" and the brace line with " tag-brace". # set --
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  #    """ # set --
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(indent_level = 0);//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_lines = []);//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(i = 0);//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 loop(while i < len(lines):);//  # loop
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(line = lines[i].rstrip());//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(if i < len(lines) - 1 and not line.rstrip().endswith("{"):);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(next_line = lines[i + 1].rstrip());//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(if next_line.strip() == "{" or next_line.strip().startswith("{" + " " + comment_marker + " tag"):);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_indent = "\t" * indent_level);//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(if comment_marker + " tag-header" not in line:);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_lines.append(new_indent + line.strip() + " " + comment_marker + " tag-header"));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 path(else:);//  # path
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_lines.append(new_indent + line.strip()));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(indent_level += 1);//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_indent = "\t" * indent_level);//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(if comment_marker + " tag-brace" not in next_line:);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_lines.append(new_indent + next_line.strip() + " " + comment_marker + " tag-brace"));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 path(else:);//  # path
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_lines.append(new_indent + next_line.strip()));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(i += 2);//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 output(continue);//  # output
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(stripped = line.strip());//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(if stripped.startswith("}"):);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(indent_level = max(0, indent_level - 1));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_indent = "\t" * indent_level);//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(if stripped.endswith("{") or stripped.startswith("}"):);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(if comment_marker + " tag" not in stripped:);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_lines.append(new_indent + stripped + " " + comment_marker + " tag"));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 path(else:);//  # path
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_lines.append(new_indent + stripped));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 path(else:);//  # path
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_lines.append(new_indent + stripped));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(if stripped.endswith("{"):);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(indent_level += 1);//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(i += 1);//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 lend();//  # lend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 end(return new_lines);//  # end
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 end();//  # end
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 input(def phase2_map_tags(lines, comment_marker, lang):);//  # input
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  #    """
  # set --
- set();//  #    Process lines marked with a generic tag. # set --
- set();//  #    For header lines: # set --
- set();//  #      - If a line contains "tag-header", remove that marker and call lang.tagMapper() with isIndent=True # set --
- set();//  #        on the header's content. Replace the marker with the refined tag and push the expected closure (via lang.closureMapping) # set --
- set();//  #        onto a local stack. # set --
- set();//  #      - For the following line marked "tag-brace", simply replace its marker with " path". # set --
- set();//  #      - For normal header lines (ending with "{ tag"), process similarly. # set --
- set();//  #    For closing lines (lines starting with "}" with " tag"), call lang.tagMapper() with isIndent=False to get the refined closing tag. # set --
- set();//  #    """ # set --
- set(new_lines = []);//  # set
- set(stack = []);//  # local stack for expected closures# set
- set(line_num = 0);//  # set
- input(def remove_marker(line, marker):);//  # input
- end(return re.sub(r"\s*" + re.escape(comment_marker) + r"\s*" + re.escape(marker), "", line));//  # end
- end();//  # end
- loop(for line in lines:);//  # loop
- set(line_num += 1);//  # set
- branch(if comment_marker + " tag-header" in line:);//  # branch
- set(header_line = line);//  # set
- set(cleaned = remove_marker(header_line, "tag-header").rstrip());//  # set
- set(refined = lang.tagMapper(cleaned, True, line_num));//  # set
- set(new_header = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag-header", " " + comment_marker + " " + refined, header_line));//  # set
- set(new_lines.append(new_header));//  # set
- set(expected = lang.closureMapping.get(refined, refined));//  # set
- set(stack.append(expected));//  # set
- output(continue);//  # output
- bend();//  # bend
- branch(if comment_marker + " tag-brace" in line:);//  # branch
- set(new_brace = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag-brace", " " + comment_marker + " path", line));//  # set
- set(new_lines.append(new_brace));//  # set
- output(continue);//  # output
- bend();//  # bend
- branch(if comment_marker + " tag" in line:);//  # branch
- set(stripped = line.strip());//  # set
- branch(if stripped.endswith("{ " + comment_marker + " tag"):);//  # branch
- set(header_line = line);//  # set
- set(cleaned = remove_marker(header_line, "tag").rstrip());//  # set
- branch(if cleaned.endswith("{"):);//  # branch
- set(header_content = cleaned[:-1].strip());//  # set
- set();//  # set
- path(else:);//  # path
- set(header_content = cleaned.strip());//  # set
- bend();//  # bend
- set(refined = lang.tagMapper(header_content, True, line_num));//  # set
- set(new_line = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag", " " + comment_marker + " " + refined, line));//  # set
- set(new_lines.append(new_line));//  # set
- set(expected = lang.closureMapping.get(refined, refined));//  # set
- set(stack.append(expected));//  # set
- output(continue);//  # output
- bend();//  # bend
- branch(if stripped.startswith("}") and (comment_marker + " tag") in stripped:);//  # branch
- set(base_line = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag", "", line).rstrip());//  # set
- set(refined = lang.tagMapper(base_line, False, line_num));//  # set
- set(new_line = base_line + " " + comment_marker + " " + refined);//  # set
- set(new_lines.append(new_line));//  # set
- output(continue);//  # output
- bend();//  # bend
- bend();//  # bend
- set(new_lines.append(line));//  # set
- lend();//  # lend
- end(return new_lines);//  # end
- end();//  # end
- input(def main():);//  # input
- set(parser.add_argument("language", help="Language (e.g., javascript, python, perl)"));//  # set
- set(parser.add_argument("file", help="Source file to tag"));//  # set
- set(args = parser.parse_args());//  # set
- set(lang = None);//  # set
- branch(try:);//  # branch
- set(lang = load_language_module(args.language.lower()));//  # set
- set();//  # set
- path(except Exception as e:);//  # path
- set(sys.exit("Error loading language module: " + str(e)));//  # set
- bend();//  # bend
- branch(try:);//  # branch
- branch(with open(args.file, "r", encoding="utf-8") as f:);//  # branch
- set(source = f.read());//  # set
- bend();//  # bend
- set();//  # set
- path(except Exception as e:);//  # path
- set(sys.exit(f"Error reading source file: {e}"));//  # set
- bend();//  # bend
- set(formatted = lang.pretty_print(source));//  # set
- set(formatted = convert_spaces_to_tabs(formatted, spaces_per_tab=4));//  # set
- set(lines = formatted.splitlines());//  # set
- set(lang.reset_tag_stack());//  # set
- set(phase1_lines = phase1_reindent(lines, lang.comment_marker));//  # set
- set(final_lines = phase2_map_tags(phase1_lines, lang.comment_marker, lang));//  # set
- set(output_file = os.path.basename(args.file) + ".txt");//  # set
- branch(try:);//  # branch
- branch(with open(output_file, "w", encoding="utf-8") as out:);//  # branch
- output(out.write(f"{lang.comment_marker} TAGGED FOR VFC\n"));//  # output
- output(out.write(f"{lang.comment_marker} TAGGED FOR VFC\n"));//  # output
- loop(for l in final_lines:);//  # loop
- output(out.write(l + "\n"));//  # output
- lend();//  # lend
- bend();//  # bend
- set();//  # set
- path(except Exception as e:);//  # path
- set(sys.exit(f"Error writing output file: {e}"));//  # set
- bend();//  # bend
- output(print(f"Output written to: {output_file}"));//  # output
- end();//  # end
- branch(if __name__ == "__main__":);//  # branch
- set(main());//  # set
- bend();//  # bend
- end();//  # end
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  #    Process lines marked with a generic tag. # set --
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  #    For header lines: # set --
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  #      - If a line contains "tag-header", remove that marker and call lang.tagMapper() with isIndent=True # set --
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  #        on the header's content. Replace the marker with the refined tag and push the expected closure (via lang.closureMapping) # set --
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  #        onto a local stack. # set --
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  #      - For the following line marked "tag-brace", simply replace its marker with " path". # set --
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  #      - For normal header lines (ending with "{ tag"), process similarly. # set --
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  #    For closing lines (lines starting with "}" with " tag"), call lang.tagMapper() with isIndent=False to get the refined closing tag. # set --
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  #    """ # set --
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_lines = []);//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(stack = []);//  # local stack for expected closures# set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(line_num = 0);//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 input(def remove_marker(line, marker):);//  # input
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 end(return re.sub(r"\s*" + re.escape(comment_marker) + r"\s*" + re.escape(marker), "", line));//  # end
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 end();//  # end
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 loop(for line in lines:);//  # loop
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(line_num += 1);//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(if comment_marker + " tag-header" in line:);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(header_line = line);//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(cleaned = remove_marker(header_line, "tag-header").rstrip());//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(refined = lang.tagMapper(cleaned, True, line_num));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_header = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag-header", " " + comment_marker + " " + refined, header_line));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_lines.append(new_header));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(expected = lang.closureMapping.get(refined, refined));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(stack.append(expected));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 output(continue);//  # output
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(if comment_marker + " tag-brace" in line:);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_brace = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag-brace", " " + comment_marker + " path", line));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_lines.append(new_brace));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 output(continue);//  # output
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(if comment_marker + " tag" in line:);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(stripped = line.strip());//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(if stripped.endswith("{ " + comment_marker + " tag"):);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(header_line = line);//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(cleaned = remove_marker(header_line, "tag").rstrip());//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(if cleaned.endswith("{"):);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(header_content = cleaned[:-1].strip());//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 path(else:);//  # path
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(header_content = cleaned.strip());//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(refined = lang.tagMapper(header_content, True, line_num));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_line = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag", " " + comment_marker + " " + refined, line));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_lines.append(new_line));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(expected = lang.closureMapping.get(refined, refined));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(stack.append(expected));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 output(continue);//  # output
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(if stripped.startswith("}") and (comment_marker + " tag") in stripped:);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(base_line = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag", "", line).rstrip());//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(refined = lang.tagMapper(base_line, False, line_num));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_line = base_line + " " + comment_marker + " " + refined);//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_lines.append(new_line));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 output(continue);//  # output
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(new_lines.append(line));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 lend();//  # lend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 end(return new_lines);//  # end
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 end();//  # end
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 input(def main():);//  # input
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(parser.add_argument("language", help="Language (e.g., javascript, python, perl)"));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(parser.add_argument("file", help="Source file to tag"));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(args = parser.parse_args());//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(lang = None);//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(try:);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(lang = load_language_module(args.language.lower()));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 path(except Exception as e:);//  # path
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(sys.exit("Error loading language module: " + str(e)));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(try:);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(with open(args.file, "r", encoding="utf-8") as f:);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(source = f.read());//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 path(except Exception as e:);//  # path
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(sys.exit(f"Error reading source file: {e}"));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(formatted = lang.pretty_print(source));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(formatted = convert_spaces_to_tabs(formatted, spaces_per_tab=4));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(lines = formatted.splitlines());//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(lang.reset_tag_stack());//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(phase1_lines = phase1_reindent(lines, lang.comment_marker));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(final_lines = phase2_map_tags(phase1_lines, lang.comment_marker, lang));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(output_file = os.path.basename(args.file) + ".txt");//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(try:);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(with open(output_file, "w", encoding="utf-8") as out:);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 output(out.write(f"{lang.comment_marker} TAGGED FOR VFC\n"));//  # output
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 output(out.write(f"{lang.comment_marker} TAGGED FOR VFC\n"));//  # output
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 loop(for l in final_lines:);//  # loop
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 output(out.write(l + "\n"));//  # output
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 lend();//  # lend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set();//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 path(except Exception as e:);//  # path
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(sys.exit(f"Error writing output file: {e}"));//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 output(print(f"Output written to: {output_file}"));//  # output
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 end();//  # end
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 branch(if __name__ == "__main__":);//  # branch
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 set(main());//  # set
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 bend();//  # bend
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	 end();//  # end
+
+	;INSECTA EMBEDDED SESSION INFORMATION
+	; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+	;    python_lang.py
+	; notepad.exe
+	;INSECTA EMBEDDED ALTSESSION INFORMATION
+	; 389 43 901 2029 59 89   344   63    python.key  0
+	

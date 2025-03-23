@@ -1,13 +1,13 @@
 ;  IRL FlowCode Version: Version 10.0
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
-;  File Name : javascript_lang.vfc
-;  File Date : 09:40:33 PM - 22:Mar:2025
+;  File Name : javascript_lang.py.vfc
+;  File Date : 04:30:36 PM - 23:Mar:2025
 
 event(import sys);// ////
 event(import re);//
 event(import subprocess);//
-event(import os );//
+event(import os);//
 end();//// // Basic language settings               # set ////
 set(language = "javascript");//
 set(commentmarker = "//");//
@@ -32,7 +32,7 @@ input(def  lang_check_path( line ):);//
 branch(if any(word in line for word in path_types )  :);//if line.strip() in path_types  :
 path( );//
 set(newline  =  '\t' + line);//
-path(else: );//
+path(else:);//
 set(newline  =   line);//
 bend( );//
 end(return newline);//
@@ -58,13 +58,13 @@ path(elif  scanTok( line, output_types  ) :);//
 set(newline  =  line + f'{ commentmarker } output ');//
 path(elif  scanTok( line, end_types  ) :);//
 set(newline  =  line + f'{ commentmarker } end ');//
-path(else: );//
+path(else:);//
 set();//newline  =   line
 branch(if  len( line ) ==0   :);//
 path( );//
 set(newline  = '');//
 set(newline  =  line + f'{ commentmarker } set ');//
-path(else: );//
+path(else:);//
 set(newline  =  line + f'{ commentmarker } set ');//
 bend( );//
 bend( );//
@@ -78,7 +78,7 @@ path( );//
 generic(item = stack.pop());// 
 output();//print( '\t'*8 +'...POP' , item , stack )
 end(return item);//
-path(else: );//
+path(else:);//
 output(print( '--------------------empty stack----------------------------'));//
 end(return "");// 
 bend( );//
@@ -98,11 +98,21 @@ end(return True);//
 bend( );//
 end(return  any(line.lstrip().startswith(word) for word in toklist ));//
 
+input(def  footer( exportname  ):);//
+set(ENVTOK = 'INSECTA');//
+generic(foot = f';{ENVTOK} EMBEDDED SESSION INFORMATION');//  
+generic(foot+= '; 255 16777215 65280 16777088 16711680 13158600 16711935 0 255 255 9895835 6946660 5308416');//  
+generic(foot+= f';    { exportname } . ');// 
+generic(foot+='; notepad.exe');//  
+generic(foot+=f';{ENVTOK} EMBEDDED ALTSESSION INFORMATION');//  
+generic(foot+= '; 1403 30 1055 2034 95 135   485   4294965576    javascript.key  0');//  
+end(return foot);//
+
 
 
 ;INSECTA EMBEDDED SESSION INFORMATION
-; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 7798784
-;    javascript_lang.py   #   .
+; 255 16777215 65280 16777088 16711680 13158600 8388863 0 255 255 9895835 16711680 1907997
+;    javascript_lang.py   //   ...
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 404 802 3292 1181 118 135   1159   4294967082    python.key  0
+; 1292 419 1980 1572 0 130   632   4294966436    javascript.key  0

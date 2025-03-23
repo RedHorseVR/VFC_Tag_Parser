@@ -23,7 +23,7 @@ literals =  ["'", '"', '`']
 path_types = [ 'else', 'elif' ,'except', 'catch', 'case' ]
 branch_types = [ 'if', 'with', 'try', 'switch'  ]
 loop_types = [ 'for ', 'while ', 'do ', 'until '  ]
-input_types = [ 'function', 'def', 'async', 'module'  ]
+input_types = [ 'class', 'def'  ]
 event_types = [ 'from ',  'import '  ]
 output_types = [ 'print(', 'continue', '.write' ]
 end_types = [ 'return ', 'return ' , 'exit(' ]
@@ -36,21 +36,34 @@ def  lang_check_path( line ):
 		newline  =   line
 		
 	return newline
-def  lang_filter( line  ):
-	if any(word in line for word in path_types )  :
+def  lang_filter( line ,  marked_file ):
+	if scanTok( line , path_types )  :
 	
 		
 		newline  =  '\t' + line + f'{ commentmarker } path '
 	elif  scanTok( line,  branch_types  )   :
 		push( 'bend' )
-		newline  =  line + f'{ commentmarker } branch  '
-		# <--- add then path as default
+		marked_file.append(    line + f'{ commentmarker } branch  '  )
+		newline =   '\n' + f'{ commentmarker } path'
 	elif  scanTok( line, loop_types  ) :
 		push( 'lend' )
 		newline  =  line + f'{ commentmarker } loop '
 	elif  scanTok( line, input_types  ) :
-		push( 'end' )
-		newline  =  line + f'{ commentmarker } input '
+		if  'class' in line  :
+		
+			
+			push( 'bend' )
+			marked_file.append(  line + f'{ commentmarker } input ' )
+			marked_file.append(  f'{ commentmarker } branch ' )
+			marked_file.append(   f'{ commentmarker } path ' )
+			
+			newline  =   f'{ commentmarker } path '
+		else:
+			push( 'end' )
+			
+			
+			newline  =  line + f'{ commentmarker } input '
+			
 	elif  scanTok( line, event_types  ) :
 		newline  =  line + f'{ commentmarker } event '
 	elif  scanTok( line, output_types  ) :
@@ -87,5 +100,15 @@ def  scanTok( line, toklist ):
 		return True
 		
 	return  any(line.lstrip().startswith(word) for word in toklist )
-#  Export  Date: 10:16:32 PM - 22:Mar:2025.
+def  footer( exportname  ):
+	
+	ENVTOK = 'INSECTA'
+	foot = f';{ENVTOK} EMBEDDED SESSION INFORMATION'
+	foot+= '; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384'
+	foot+= f';    { exportname } . '
+	foot+='; notepad.exe'
+	foot+=f';{ENVTOK} EMBEDDED ALTSESSION INFORMATION'
+	foot+='; 389 43 901 2029 59 89   344   63    python.key  0'
+	return foot
+#  Export  Date: 06:18:40 PM - 23:Mar:2025.
 

@@ -1,8 +1,8 @@
 ;  IRL FlowCode Version: Version 10.0
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
-;  File Name : python_lang.vfc
-;  File Date : 10:16:32 PM - 22:Mar:2025
+;  File Name : python_lang.py.vfc
+;  File Date : 06:18:40 PM - 23:Mar:2025
 
 event(import sys);// ////
 event(import black);// ////
@@ -30,7 +30,7 @@ set();//
 set(path_types = [ 'else', 'elif' ,'except', 'catch', 'case' ]);//
 set(branch_types = [ 'if', 'with', 'try', 'switch'  ]);//
 set(loop_types = [ 'for ', 'while ', 'do ', 'until '  ]);//
-set(input_types = [ 'function', 'def', 'async', 'module'  ]);//
+set(input_types = [ 'class', 'def'  ]);//
 set(event_types = [ 'from ',  'import '  ]);//
 set(output_types = [ 'print(', 'continue', '.write' ]);//
 set(end_types = [ 'return ', 'return ' , 'exit(' ]);//
@@ -40,33 +40,46 @@ input(def  lang_check_path( line ):);//
 branch(if any(word in line for word in path_types )  :);//if line.strip() in path_types  :
 path( );//
 set(newline  =  '\t' + line);//
-path(else: );//
+path(else:);//
 set(newline  =   line);//
 bend( );//
 end(return newline);//
 
-input(def  lang_filter( line  ):);//
-branch(if any(word in line for word in path_types )  :);//if line.strip() in path_types  :
+input(def  lang_filter( line ,  marked_file ):);//
+branch(if scanTok( line , path_types )  :);//if line.strip() in path_types  :
 path( );//
 output();//print( '----------------> ' , line.strip() )
 set(newline  =  '\t' + line + f'{ commentmarker } path ');//
 path(elif  scanTok( line,  branch_types  )   :);/// elif any(word in line for word in branch_types )  :elif   any(line.lstrip().startswith(word) for word in branch_types  )   ://
 generic(push( 'bend' ));// 
-set(newline  =  line + f'{ commentmarker } branch  ');//
-set(# <--- add then path as default);///newline  +=  '\n' + f'{ commentmarker } path  '//
+set(marked_file.append(    line + f'{ commentmarker } branch  '  ));//
+set(newline =   '\n' + f'{ commentmarker } path');//# <--- add then path as default
 path(elif  scanTok( line, loop_types  ) :);//
 process(push( 'lend' ));//
 set(newline  =  line + f'{ commentmarker } loop ');//
 path(elif  scanTok( line, input_types  ) :);//
+branch(if  'class' in line  :);//
+path( );//
+process();//push( 'end' )
+process(push( 'bend' ));//
+set(marked_file.append(  line + f'{ commentmarker } input ' ));//
+set(marked_file.append(  f'{ commentmarker } branch ' ));//
+set(marked_file.append(   f'{ commentmarker } path ' ));//
+set();//
+set(newline  =   f'{ commentmarker } path ');//
+path(else: );//
 process(push( 'end' ));//
+set();//marked_file.append( f'{ commentmarker } end ' )
+set();//
 set(newline  =  line + f'{ commentmarker } input ');//
+bend( );//
 path(elif  scanTok( line, event_types  ) :);//
 set(newline  =  line + f'{ commentmarker } event ');//
 path(elif  scanTok( line, output_types  ) :);//
 set(newline  =  line + f'{ commentmarker } output ');//
 path(elif  scanTok( line, end_types  ) :);//
 set(newline  =  line + f'{ commentmarker } end ');//
-path(else: );//
+path(else:);//
 set();//newline  =   line
 set(newline  =  line + f'{ commentmarker } set ');//
 bend( );//
@@ -80,7 +93,7 @@ path( );//
 generic(item = stack.pop());// 
 output();//print( '\t'*8 +'...POP' , item , stack )
 end(return item);//
-path(else: );//
+path(else:);//
 output(print( '--------------------empty stack----------------------------'));//
 end(return "");// 
 bend( );//
@@ -100,11 +113,22 @@ end(return True);//
 bend( );//
 end(return  any(line.lstrip().startswith(word) for word in toklist ));//
 
+input(def  footer( exportname  ):);//
+set();//
+set(ENVTOK = 'INSECTA');//
+generic(foot = f';{ENVTOK} EMBEDDED SESSION INFORMATION');//  
+generic(foot+= '; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384');//  
+generic(foot+= f';    { exportname } . ');// 
+generic(foot+='; notepad.exe');//  
+generic(foot+=f';{ENVTOK} EMBEDDED ALTSESSION INFORMATION');//  
+generic(foot+='; 389 43 901 2029 59 89   344   63    python.key  0');//  
+end(return foot);//
+
 
 
 ;INSECTA EMBEDDED SESSION INFORMATION
-; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+; 255 16777215 65280 16777088 16711680 13158600 8388863 0 255 255 9895835 6946660 6656
 ;    python_lang.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 244 916 2109 1088 59 250   1071   4294965483    python.key  0
+; 478 624 3511 1349 0 110   504   4294966209    python.key  0

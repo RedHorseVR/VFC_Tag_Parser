@@ -14,12 +14,13 @@ def  process_tabbed_file( tabfile ):
 	
 	marked_file.append( marked_line );
 	marked_file.append( marked_line );
+	i = 0
 	for i in range ( 0 , len(tabfile) - 1 )  :
 		line = tabfile[ i ]
 		
 		if  not  line.strip().startswith( lang.commentmarker )  :
 		
-			line = lang.lang_filter( line )
+			line = lang.lang_filter( line , marked_file )
 			last_TAB = TABS
 			TABS = len( line ) - len( line.lstrip('\t') )
 			nextline = lang.lang_check_path( tabfile[i+1] )
@@ -28,7 +29,7 @@ def  process_tabbed_file( tabfile ):
 			next_tabrate = TABS - next_TABS
 			if   next_tabrate == 1  :
 			
-				marked_line =  f'\t' * (TABS) + f'{ lang.commentmarker } { lang.pop() } '
+				marked_line =  f'\t' * (TABS) + f'{line} { lang.commentmarker } { lang.pop() } '
 				marked_file.append( marked_line );
 				
 			else:
@@ -48,10 +49,16 @@ def  process_tabbed_file( tabfile ):
 			
 			
 	line = tabfile[ i+1 ]
-	line = lang.lang_filter( line )
+	line = lang.lang_filter( line  , marked_file  )
 	marked_file.append( line );
-	if lang.language == 'python' : marked_file.append( f'{lang.commentmarker } bend' );
+	TYPE = lang.pop()
+	while len(TYPE) > 0  :
+		marked_file.append(  f'{lang.commentmarker } {TYPE}'  );
+		TYPE = lang.pop()
+			
+	
 	marked_file.append( f'{lang.commentmarker } end' );
+	
 	
 	return marked_file
 def gettabbed_file(filename):
@@ -165,8 +172,16 @@ def  mark2flow( marked_line ):
 	result =result.lstrip( lang.commentmarker )
 	flowline = f'{ result }({ codeline.strip() });{VFC_DIVIDER}  {comment }'
 	return flowline
+def  writeout( filename, list ) :
+	with open( filename , "w", encoding="utf-8") as out:
+	
+		for line  in  list :
+			out.write( line + '\n'  )
+					
+		
+	
 PRINTFLOW = False
-CODEFILE = "TEST2\python1.py"
+CODEFILE = "TEST2\snake.py"
 LANG = "python"
 if __name__ == "__main__":
 
@@ -186,20 +201,25 @@ if __name__ == "__main__":
 				LANG = 'javascript'
 				
 			
+	else:
+		LANG = "python"
+		CODEFILE = "TEST2\snake.py"
 		
 	lang = import_language( LANG  )
 	lang.commentmarker = lang.commentmarker
 
 	lang.pretty_print( CODEFILE )
 	tabfile = gettabbed_file( CODEFILE )
-	marked_file = process_tabbed_file( tabfile ) ;
-	for line  in  marked_file :
+	writeout( 'tabs.txt' ,  tabfile )
+	markfile = process_tabbed_file( tabfile ) ;
+	writeout( 'marks.txt' ,  markfile )
+	for line  in  markfile :
 		print( line )
 			
 	output_file = CODEFILE + '.vfc'
 	with open(output_file, "w", encoding="utf-8") as out:
 	
-		for line in marked_file :
+		for line in markfile :
 			vfcline =  mark2flow( line )
 			if  vfcline.startswith( 'input' )   :
 			
@@ -208,15 +228,15 @@ if __name__ == "__main__":
 				
 			if PRINTFLOW :print( vfcline  )
 			out.write( vfcline + '\n' )
-			if  vfcline.startswith( 'branch' )   :
-			
-				if PRINTFLOW :print( 'path();'  )
-				out.write( 'path();'+ '\n' )
-				
 					
+		out.write( lang.footer( os.path.basename(CODEFILE)  ) )
+		out.close()
 		
-	os.system( f"VFC2000 { output_file} -Reload" )
+	
+	print( 'Opening ...' , output_file  )
+	
+	os.system( f"start VFC2000 { output_file} -Reload" )
 	
 
-#  Export  Date: 10:10:59 PM - 22:Mar:2025.
+#  Export  Date: 06:20:42 PM - 23:Mar:2025.
 

@@ -2,13 +2,14 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : snake.py.vfc
-;  File Date : 10:20:43 PM - 22:Mar:2025
+;  File Date : 06:21:46 PM - 23:Mar:2025
 
 set();//  # set
 set();//  # set
 event(import pygame);//  # event
 event(import time);//  # event
 event(import random);//  # event
+event(import math);//  # event
 set(pygame.init());//  # set
 set(WIDTH, HEIGHT = 600, 400);//  # set
 set(BLOCK_SIZE = 20);//  # set
@@ -17,9 +18,115 @@ set(BLACK = (0, 0, 0));//  # set
 set(RED = (255, 0, 0));//  # set
 set(GREEN = (0, 255, 0));//  # set
 set(BLUE = (0, 0, 255));//  # set
+set(YELLOW = (255, 255, 0));//  # set
+set(PURPLE = (128, 0, 128));//  # set
+set(CYAN = (0, 255, 255));//  # set
+set(ORANGE = (255, 165, 0));//  # set
 set(screen = pygame.display.set_mode((WIDTH, HEIGHT)));//  # set
 set(pygame.display.set_caption("Snake Game"));//  # set
 set(clock = pygame.time.Clock());//  # set
+set(GAME_DURATION = 120);//  # Game duration in seconds# set
+
+input(class Particle:);//  # input
+branch();//  # branch
+path();//  # path
+path();//  # path
+
+input(def __init__(self, x, y, color):);//  # input
+set(self.x = x);//  # set
+set(self.y = y);//  # set
+set(self.color = color);//  # set
+set(self.size = random.randint(2, 5));//  # set
+set(self.speed_x = random.uniform(-3, 3));//  # set
+set(self.speed_y = random.uniform(-3, 3));//  # set
+set(self.lifetime = random.randint(20, 30));//  # set
+end();//  # set  # end
+
+input(def update(self):);//  # input
+set(self.x += self.speed_x);//  # set
+set(self.y += self.speed_y);//  # set
+set(self.lifetime -= 1);//  # set
+end();//  # set  # end
+
+input(def draw(self, surface):);//  # input
+set(pygame.draw.circle(surface, self.color, (int(self.x), int(self.y)), self.size));//  # set
+end();//  # set  # end
+
+input(def is_dead(self):);//  # input
+end(return self.lifetime <= 0);//  # end
+end();//  # set  # end
+bend();//  # set  # bend
+
+input(def show_score(score):);//  # input
+set(font = pygame.font.SysFont("times new roman", 20));//  # set
+set(score_surface = font.render(f"Score : {score}", True, WHITE));//  # set
+set(screen.blit(score_surface, (10, 10)));//  # set
+end();//  # set  # end
+
+input(def show_speed(speed):);//  # input
+set(font = pygame.font.SysFont("times new roman", 20));//  # set
+set(speed_surface = font.render(f"Speed : {speed} FPS", True, WHITE));//  # set
+set(screen.blit(speed_surface, (WIDTH - 150, 10)));//  # set
+end();//  # set  # end
+
+input(def show_timer(time_left):);//  # input
+set(font = pygame.font.SysFont("times new roman", 20));//  # set
+set(color = RED if time_left < 30 else YELLOW if time_left < 60 else WHITE);//  # set
+set(time_surface = font.render(f"Time : {time_left} sec", True, color));//  # set
+set(screen.blit(time_surface, (WIDTH // 2 - 50, 10)));//  # set
+end();//  # set  # end
+
+input(def game_over(score, time_expired=False):);//  # input
+set(screen.fill(BLACK));//  # set
+set(font = pygame.font.SysFont("times new roman", 50));//  # set
+branch(if time_expired:);//  # branch
+path();//  # path
+set(go_surface = font.render("TIME'S UP!", True, YELLOW));//  # set
+set();//  # set
+path(else:);//  # path
+set(go_surface = font.render("GAME OVER", True, RED));//  # set
+bend();//  # set  # bend
+set(screen.blit(go_surface, (WIDTH // 4, HEIGHT // 3 - 50)));//  # set
+set(score_font = pygame.font.SysFont("times new roman", 36));//  # set
+set(score_surface = score_font.render(f"Final Score: {score}", True, WHITE));//  # set
+set(screen.blit(score_surface, (WIDTH // 4, HEIGHT // 2)));//  # set
+set(pygame.display.flip());//  # set
+set(time.sleep(3));//  # set
+set(pygame.quit());//  # set
+set(quit());//  # set
+end();//  # set  # end
+
+input(def create_explosion(x, y, num_particles=30):);//  # input
+set(particles = []);//  # set
+set(colors = [RED, ORANGE, YELLOW, WHITE]);//  # set
+loop(for _ in range(num_particles):);//  # loop
+set(color = random.choice(colors));//  # set
+set(particles.append(Particle(x + BLOCK_SIZE / 2, y + BLOCK_SIZE / 2, color)));//  # set
+lend();//  # set  # lend
+end(return particles);//  # end
+end();//  # set  # end
+
+input(def get_snake_color(score):);//  # input
+branch(if score < 20:);//  # branch
+path();//  # path
+end(return GREEN);//  # end
+set();//  # set
+path(elif score < 50:);//  # path
+end(return BLUE);//  # end
+set();//  # set
+path(elif score < 100:);//  # path
+end(return PURPLE);//  # end
+set();//  # set
+path(elif score < 150:);//  # path
+end(return CYAN);//  # end
+set();//  # set
+path(else:);//  # path
+set(colors = [RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE]);//  # set
+end(return colors[int(pygame.time.get_ticks() / 200) % len(colors)]);//  # end
+bend();//  # set  # bend
+end();//  # set  # end
+
+input(def game_loop():);//  # input
 set(snake_pos = [100, 50]);//  # set
 set(snake_body = [[100, 50], [90, 50], [80, 50]]);//  # set
 set(direction = "RIGHT");//  # set
@@ -27,110 +134,155 @@ set(change_to = direction);//  # set
 set(food_pos = [random.randrange(1, (WIDTH // BLOCK_SIZE)) * BLOCK_SIZE, random.randrange(1, (HEIGHT // BLOCK_SIZE)) * BLOCK_SIZE]);//  # set
 set(food_spawn = True);//  # set
 set(score = 0);//  # set
-
-input(def show_score(choice, color, font, size):);//  # input
-set(font = pygame.font.SysFont(font, size));//  # set
-set(score_surface = font.render(f"Score : {score}", True, color));//  # set
-set(screen.blit(score_surface, (10, 10)));//  # set
-end();//  # end
-
-input(def game_over():);//  # input
-set(font = pygame.font.SysFont("times new roman", 50));//  # set
-set(go_surface = font.render("GAME OVER", True, RED));//  # set
-set(screen.blit(go_surface, (WIDTH // 4, HEIGHT // 3)));//  # set
-set(pygame.display.flip());//  # set
-set(time.sleep(2));//  # set
+set(game_speed = 15);//  # Initial game speed (frames per second)# set
+set(particles = []);//  # set
+set(start_time = pygame.time.get_ticks());//  # set
+set(time_left = GAME_DURATION);//  # set
+loop(while True:);//  # loop
+set(current_time = pygame.time.get_ticks());//  # set
+set(elapsed_seconds = (current_time - start_time) // 1000);//  # set
+set(time_left = max(0, GAME_DURATION - elapsed_seconds));//  # set
+branch(if time_left == 0:);//  # branch
+path();//  # path
+set(game_over(score, time_expired=True));//  # set
+bend();//  # set  # bend
+loop(for event in pygame.event.get():);//  # loop
+branch(if event.type == pygame.QUIT:);//  # branch
+path();//  # path
 set(pygame.quit());//  # set
 set(quit());//  # set
-end();//  # end
-loop(while True:);//  # loop
-loop(for event in pygame.event.get():);//  # loop
+bend();//  # set  # bend
 branch(if event.type == pygame.KEYDOWN:);//  # branch
-path();//
+path();//  # path
 branch(if event.key == pygame.K_UP:);//  # branch
-path();//
+path();//  # path
 branch(if direction != "DOWN":);//  # branch
-path();//
+path();//  # path
 set(change_to = "UP");//  # set
-bend();//  # bend
+bend();//  # set  # bend
 set();//  # set
 path(elif event.key == pygame.K_DOWN:);//  # path
 branch(if direction != "UP":);//  # branch
-path();//
+path();//  # path
 set(change_to = "DOWN");//  # set
-bend();//  # bend
+bend();//  # set  # bend
 set();//  # set
 path(elif event.key == pygame.K_LEFT:);//  # path
 branch(if direction != "RIGHT":);//  # branch
-path();//
+path();//  # path
 set(change_to = "LEFT");//  # set
-bend();//  # bend
+bend();//  # set  # bend
 set();//  # set
 path(elif event.key == pygame.K_RIGHT:);//  # path
 branch(if direction != "LEFT":);//  # branch
-path();//
+path();//  # path
 set(change_to = "RIGHT");//  # set
-bend();//  # bend
-bend();//  # bend
-bend();//  # bend
-lend();//  # lend
+bend();//  # set  # bend
+set();//  # set
+path(elif event.key == pygame.K_1:);//  # path
+set(game_speed = max(5, game_speed - 2));//  # Decrease speed (minimum 5)# set
+set();//  # set
+path(elif event.key == pygame.K_2:);//  # path
+set(game_speed = min(30, game_speed + 2));//  # Increase speed (maximum 30)# set
+bend();//  # set  # bend
+bend();//  # set  # bend
+lend();//  # set  # lend
 set(direction = change_to);//  # set
 branch(if direction == "UP":);//  # branch
-path();//
+path();//  # path
 set(snake_pos[1] -= BLOCK_SIZE);//  # set
-bend();//  # bend
+bend();//  # set  # bend
 branch(if direction == "DOWN":);//  # branch
-path();//
+path();//  # path
 set(snake_pos[1] += BLOCK_SIZE);//  # set
-bend();//  # bend
+bend();//  # set  # bend
 branch(if direction == "LEFT":);//  # branch
-path();//
+path();//  # path
 set(snake_pos[0] -= BLOCK_SIZE);//  # set
-bend();//  # bend
+bend();//  # set  # bend
 branch(if direction == "RIGHT":);//  # branch
-path();//
+path();//  # path
 set(snake_pos[0] += BLOCK_SIZE);//  # set
-bend();//  # bend
+bend();//  # set  # bend
+branch(if snake_pos[0] < 0:);//  # branch
+path();//  # path
+set(snake_pos[0] = WIDTH - BLOCK_SIZE);//  # set
+bend();//  # set  # bend
+branch(if snake_pos[0] >= WIDTH:);//  # branch
+path();//  # path
+set(snake_pos[0] = 0);//  # set
+bend();//  # set  # bend
+branch(if snake_pos[1] < 0:);//  # branch
+path();//  # path
+set(snake_pos[1] = HEIGHT - BLOCK_SIZE);//  # set
+bend();//  # set  # bend
+branch(if snake_pos[1] >= HEIGHT:);//  # branch
+path();//  # path
+set(snake_pos[1] = 0);//  # set
+bend();//  # set  # bend
 set(snake_body.insert(0, list(snake_pos)));//  # set
 branch(if snake_pos[0] == food_pos[0] and snake_pos[1] == food_pos[1]:);//  # branch
-path();//
+path();//  # path
 set(score += 10);//  # set
 set(food_spawn = False);//  # set
+set(particles = create_explosion(food_pos[0], food_pos[1]));//  # set
 set();//  # set
 path(else:);//  # path
 set(snake_body.pop());//  # set
-bend();//  # bend
+bend();//  # set  # bend
 branch(if not food_spawn:);//  # branch
-path();//
+path();//  # path
 set(food_pos = [random.randrange(1, (WIDTH // BLOCK_SIZE)) * BLOCK_SIZE, random.randrange(1, (HEIGHT // BLOCK_SIZE)) * BLOCK_SIZE]);//  # set
-bend();//  # bend
+bend();//  # set  # bend
 set(food_spawn = True);//  # set
 set(screen.fill(BLACK));//  # set
-loop(for block in snake_body:);//  # loop
-set(pygame.draw.rect(screen, GREEN, pygame.Rect(block[0], block[1], BLOCK_SIZE, BLOCK_SIZE)));//  # set
-lend();//  # lend
+loop(for particle in particles[:]:);//  # loop
+set(particle.update());//  # set
+branch(if particle.is_dead():);//  # branch
+path();//  # path
+set(particles.remove(particle));//  # set
+set();//  # set
+path(else:);//  # path
+set(particle.draw(screen));//  # set
+bend();//  # set  # bend
+lend();//  # set  # lend
+set(snake_color = get_snake_color(score));//  # set
+loop(for i, block in enumerate(snake_body):);//  # loop
+branch(if i == 0:);//  # branch
+path();//  # path
+set(pygame.draw.rect(screen, snake_color, pygame.Rect(block[0], block[1], BLOCK_SIZE, BLOCK_SIZE)));//  # set
+set();//  # set
+path(else:);//  # path
+set(darkness = min(i * 10, 100));//  # Limit darkness# set
+set(adjusted_color = tuple(max(c - darkness, 0) for c in snake_color));//  # set
+set(pygame.draw.rect(screen, adjusted_color, pygame.Rect(block[0], block[1], BLOCK_SIZE, BLOCK_SIZE)));//  # set
+bend();//  # set  # bend
+lend();//  # set  # lend
 set(pygame.draw.rect(screen, WHITE, pygame.Rect(food_pos[0], food_pos[1], BLOCK_SIZE, BLOCK_SIZE)));//  # set
-branch(if snake_pos[0] < 0 or snake_pos[0] >= WIDTH or snake_pos[1] < 0 or snake_pos[1] >= HEIGHT:);//  # branch
-path();//
-set(game_over());//  # set
-bend();//  # bend
 loop(for block in snake_body[1:]:);//  # loop
 branch(if snake_pos[0] == block[0] and snake_pos[1] == block[1]:);//  # branch
-path();//
-set(game_over());//  # set
-bend();//  # bend
-lend();//  # lend
-set(show_score(1, WHITE, "times new roman", 20));//  # set
+path();//  # path
+set(game_over(score));//  # set
+bend();//  # set  # bend
+lend();//  # set  # lend
+set(show_score(score));//  # set
+set(show_speed(game_speed));//  # set
+set(show_timer(time_left));//  # set
 set(pygame.display.update());//  # set
-set(clock.tick(15));//  # set
-lend();////  # bend//
+set(clock.tick(game_speed));//  # set
+lend();//  # set  # lend
+end();//  # set  # end
+branch(if __name__ == "__main__":);//  # branch
+path();//  # path
+set(game_loop());//  # set
+bend();//  # bend
 end();//  # end
 
 
 
 ;INSECTA EMBEDDED SESSION INFORMATION
-; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 3289650
+; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
 ;    snake.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 338 0 2290 2004 0 80   855   4294966599    python.key  0
+; 436 309 1224 1798 59 69   464   4294964326    python.key  0

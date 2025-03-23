@@ -25,6 +25,7 @@
  loop(for line in lines:);//  # loop
  set(line_num += 1);//  # set
  branch(if comment_marker + " tag-header" in line:);//  # branch
+ path();//  # path
  set(header_line = line);//  # set
  set(cleaned = remove_marker(header_line, "tag-header").rstrip());//  # set
  set(refined = lang.tagMapper(cleaned, True, line_num));//  # set
@@ -35,16 +36,20 @@
  output(continue);//  # output
  bend();//  # bend
  branch(if comment_marker + " tag-brace" in line:);//  # branch
+ path();//  # path
  set(new_brace = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag-brace", " " + comment_marker + " path", line));//  # set
  set(new_lines.append(new_brace));//  # set
  output(continue);//  # output
  bend();//  # bend
  branch(if comment_marker + " tag" in line:);//  # branch
+ path();//  # path
  set(stripped = line.strip());//  # set
  branch(if stripped.endswith("{ " + comment_marker + " tag"):);//  # branch
+ path();//  # path
  set(header_line = line);//  # set
  set(cleaned = remove_marker(header_line, "tag").rstrip());//  # set
  branch(if cleaned.endswith("{"):);//  # branch
+ path();//  # path
  set(header_content = cleaned[:-1].strip());//  # set
  set();//  # set
  path(else:);//  # path
@@ -58,6 +63,7 @@
  output(continue);//  # output
  bend();//  # bend
  branch(if stripped.startswith("}") and (comment_marker + " tag") in stripped:);//  # branch
+ path();//  # path
  set(base_line = re.sub(r"\s*" + re.escape(comment_marker) + r"\s*tag", "", line).rstrip());//  # set
  set(refined = lang.tagMapper(base_line, False, line_num));//  # set
  set(new_line = base_line + " " + comment_marker + " " + refined);//  # set
@@ -75,13 +81,16 @@
  set(args = parser.parse_args());//  # set
  set(lang = None);//  # set
  branch(try:);//  # branch
+ path();//  # path
  set(lang = load_language_module(args.language.lower()));//  # set
  set();//  # set
  path(except Exception as e:);//  # path
  set(sys.exit("Error loading language module: " + str(e)));//  # set
  bend();//  # bend
  branch(try:);//  # branch
+ path();//  # path
  branch(with open(args.file, "r", encoding="utf-8") as f:);//  # branch
+ path();//  # path
  set(source = f.read());//  # set
  bend();//  # bend
  set();//  # set
@@ -96,7 +105,9 @@
  set(final_lines = phase2_map_tags(phase1_lines, lang.comment_marker, lang));//  # set
  set(output_file = os.path.basename(args.file) + ".txt");//  # set
  branch(try:);//  # branch
+ path();//  # path
  branch(with open(output_file, "w", encoding="utf-8") as out:);//  # branch
+ path();//  # path
  output(out.write(f"{lang.comment_marker} TAGGED FOR VFC\n"));//  # output
  output(out.write(f"{lang.comment_marker} TAGGED FOR VFC\n"));//  # output
  loop(for l in final_lines:);//  # loop
@@ -110,6 +121,8 @@
  output(print(f"Output written to: {output_file}"));//  # output
  end();//  # end
  branch(if __name__ == "__main__":);//  # branch
+ path();//  # path
  set(main());//  # set
  bend();//  # bend
  end();//  # end
+;INSECTA EMBEDDED SESSION INFORMATION; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384;    python1.py . ; notepad.exe;INSECTA EMBEDDED ALTSESSION INFORMATION; 389 43 901 2029 59 89   344   63    python.key  0

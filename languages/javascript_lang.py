@@ -85,5 +85,14 @@ def  scanTok( line, toklist ):
 		return True
 		
 	return  any(line.lstrip().startswith(word) for word in toklist )
-#  Export  Date: 09:40:33 PM - 22:Mar:2025.
+def  footer( exportname  ):
+	ENVTOK = 'INSECTA'
+	foot = f';{ENVTOK} EMBEDDED SESSION INFORMATION'
+	foot+= '; 255 16777215 65280 16777088 16711680 13158600 16711935 0 255 255 9895835 6946660 5308416'
+	foot+= f';    { exportname } . '
+	foot+='; notepad.exe'
+	foot+=f';{ENVTOK} EMBEDDED ALTSESSION INFORMATION'
+	foot+= '; 1403 30 1055 2034 95 135   485   4294965576    javascript.key  0'
+	return foot
+//  Export  Date: 04:30:36 PM - 23:Mar:2025...
 

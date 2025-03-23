@@ -1,5 +1,3 @@
-
-
 import pygame
 import time
 import random
@@ -19,11 +17,8 @@ ORANGE = (255, 165, 0)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Snake Game")
 clock = pygame.time.Clock()
-GAME_DURATION = 120
+GAME_DURATION = 120  # Game duration in seconds
 class Particle:
-	
-	
-	
 	def __init__(self, x, y, color):
 		self.x = x
 		self.y = y
@@ -44,7 +39,7 @@ class Particle:
 	def is_dead(self):
 		return self.lifetime <= 0
 		
-		
+	
 def show_score(score):
 	font = pygame.font.SysFont("times new roman", 20)
 	score_surface = font.render(f"Score : {score}", True, WHITE)
@@ -65,7 +60,6 @@ def game_over(score, time_expired=False):
 	screen.fill(BLACK)
 	font = pygame.font.SysFont("times new roman", 50)
 	if time_expired:
-	
 		go_surface = font.render("TIME'S UP!", True, YELLOW)
 		
 	else:
@@ -87,12 +81,10 @@ def create_explosion(x, y, num_particles=30):
 		color = random.choice(colors)
 		particles.append(Particle(x + BLOCK_SIZE / 2, y + BLOCK_SIZE / 2, color))
 		
-	
 	return particles
-
+	
 def get_snake_color(score):
 	if score < 20:
-	
 		return GREEN
 		
 	elif score < 50:
@@ -117,7 +109,7 @@ def game_loop():
 	food_pos = [random.randrange(1, (WIDTH // BLOCK_SIZE)) * BLOCK_SIZE, random.randrange(1, (HEIGHT // BLOCK_SIZE)) * BLOCK_SIZE]
 	food_spawn = True
 	score = 0
-	game_speed = 15
+	game_speed = 15  # Initial game speed (frames per second)
 	particles = []
 	start_time = pygame.time.get_ticks()
 	time_left = GAME_DURATION
@@ -126,87 +118,69 @@ def game_loop():
 		elapsed_seconds = (current_time - start_time) // 1000
 		time_left = max(0, GAME_DURATION - elapsed_seconds)
 		if time_left == 0:
-		
 			game_over(score, time_expired=True)
 			
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
-			
 				pygame.quit()
 				quit()
 				
 			if event.type == pygame.KEYDOWN:
-			
 				if event.key == pygame.K_UP:
-				
 					if direction != "DOWN":
-					
 						change_to = "UP"
 						
 					
 				elif event.key == pygame.K_DOWN:
 					if direction != "UP":
-					
 						change_to = "DOWN"
 						
 					
 				elif event.key == pygame.K_LEFT:
 					if direction != "RIGHT":
-					
 						change_to = "LEFT"
 						
 					
 				elif event.key == pygame.K_RIGHT:
 					if direction != "LEFT":
-					
 						change_to = "RIGHT"
 						
 					
 				elif event.key == pygame.K_1:
-					game_speed = max(5, game_speed - 2)
+					game_speed = max(5, game_speed - 2)  # Decrease speed (minimum 5)
 					
 				elif event.key == pygame.K_2:
-					game_speed = min(30, game_speed + 2)
+					game_speed = min(30, game_speed + 2)  # Increase speed (maximum 30)
 					
 				
 			
-		
 		direction = change_to
 		if direction == "UP":
-		
 			snake_pos[1] -= BLOCK_SIZE
 			
 		if direction == "DOWN":
-		
 			snake_pos[1] += BLOCK_SIZE
 			
 		if direction == "LEFT":
-		
 			snake_pos[0] -= BLOCK_SIZE
 			
 		if direction == "RIGHT":
-		
 			snake_pos[0] += BLOCK_SIZE
 			
 		if snake_pos[0] < 0:
-		
 			snake_pos[0] = WIDTH - BLOCK_SIZE
 			
 		if snake_pos[0] >= WIDTH:
-		
 			snake_pos[0] = 0
 			
 		if snake_pos[1] < 0:
-		
 			snake_pos[1] = HEIGHT - BLOCK_SIZE
 			
 		if snake_pos[1] >= HEIGHT:
-		
 			snake_pos[1] = 0
 			
 		snake_body.insert(0, list(snake_pos))
 		if snake_pos[0] == food_pos[0] and snake_pos[1] == food_pos[1]:
-		
 			score += 10
 			food_spawn = False
 			particles = create_explosion(food_pos[0], food_pos[1])
@@ -215,7 +189,6 @@ def game_loop():
 			snake_body.pop()
 			
 		if not food_spawn:
-		
 			food_pos = [random.randrange(1, (WIDTH // BLOCK_SIZE)) * BLOCK_SIZE, random.randrange(1, (HEIGHT // BLOCK_SIZE)) * BLOCK_SIZE]
 			
 		food_spawn = True
@@ -223,35 +196,29 @@ def game_loop():
 		for particle in particles[:]:
 			particle.update()
 			if particle.is_dead():
-			
 				particles.remove(particle)
 				
 			else:
 				particle.draw(screen)
 				
 			
-		
 		snake_color = get_snake_color(score)
 		for i, block in enumerate(snake_body):
 			if i == 0:
-			
 				pygame.draw.rect(screen, snake_color, pygame.Rect(block[0], block[1], BLOCK_SIZE, BLOCK_SIZE))
 				
 			else:
-				darkness = min(i * 10, 100)
+				darkness = min(i * 10, 100)  # Limit darkness
 				adjusted_color = tuple(max(c - darkness, 0) for c in snake_color)
 				pygame.draw.rect(screen, adjusted_color, pygame.Rect(block[0], block[1], BLOCK_SIZE, BLOCK_SIZE))
 				
 			
-		
 		pygame.draw.rect(screen, WHITE, pygame.Rect(food_pos[0], food_pos[1], BLOCK_SIZE, BLOCK_SIZE))
 		for block in snake_body[1:]:
 			if snake_pos[0] == block[0] and snake_pos[1] == block[1]:
-			
 				game_over(score)
 				
 			
-		
 		show_score(score)
 		show_speed(game_speed)
 		show_timer(time_left)
@@ -259,11 +226,5 @@ def game_loop():
 		clock.tick(game_speed)
 		
 	
-	
 if __name__ == "__main__":
-
 	game_loop()
-	
-
-#  Export  Date: 06:21:46 PM - 23:Mar:2025.
-

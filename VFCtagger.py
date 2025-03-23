@@ -5,20 +5,19 @@ import sys
 import importlib
 
 lang = None
-lang_commentmarker = ''
 
 def  process_tabbed_file( tabfile ):
 	TABS =0
 	last_TAB = 0
 	marked_file = []
-	marked_line =  f'{ lang_commentmarker } set '
+	marked_line =  f'{ lang.commentmarker } set '
 	
 	marked_file.append( marked_line );
 	marked_file.append( marked_line );
-	for i in range ( 0 , len(tabfile) - 2 )  :
+	for i in range ( 0 , len(tabfile) - 1 )  :
 		line = tabfile[ i ]
 		
-		if  not  line.strip().startswith( lang_commentmarker )  :
+		if  not  line.strip().startswith( lang.commentmarker )  :
 		
 			line = lang.lang_filter( line )
 			last_TAB = TABS
@@ -29,7 +28,7 @@ def  process_tabbed_file( tabfile ):
 			next_tabrate = TABS - next_TABS
 			if   next_tabrate == 1  :
 			
-				marked_line =  f'\t' * (TABS) + f'{ lang_commentmarker } { lang.pop() } '
+				marked_line =  f'\t' * (TABS) + f'{ lang.commentmarker } { lang.pop() } '
 				marked_file.append( marked_line );
 				
 			else:
@@ -38,16 +37,21 @@ def  process_tabbed_file( tabfile ):
 				
 			
 			for rate in range( 2, next_tabrate ):
-				marked_line =  f'\t' * (TABS) + f'{ lang_commentmarker } { lang.pop() } '
+				marked_line =  f'\t' * (TABS) + f'{ lang.commentmarker } { lang.pop() } '
 				marked_file.append( marked_line );
 							
 		else:
 			newline = line.replace( "\t" , "" )
-			marked_line =  f'{ newline  } {lang_commentmarker} set'
+			marked_line =  f'{ newline  } {lang.commentmarker} set --'
 			marked_file.append( marked_line );
 			
 			
 			
+	line = tabfile[ i+1 ]
+	line = lang.lang_filter( line )
+	marked_file.append( line );
+	if lang.language == 'python' : marked_file.append( f'{lang.commentmarker } bend' );
+	marked_file.append( f'{lang.commentmarker } end' );
 	
 	return marked_file
 def gettabbed_file(filename):
@@ -69,14 +73,13 @@ def gettabbed_file(filename):
 				LINE2 = line.replace('    ', '\t').strip( "\n" )
 				if  not linet.strip() == ''    :
 				
-					if  not IN_COMMENT_BLOCK and not line.startswith('\n')  and not line.lstrip().startswith('#') :
+					if  not IN_COMMENT_BLOCK and not line.startswith('\n')  and not line.lstrip().startswith(  lang.commentmarker ) :
 					
 						i +=1
-						IN_COMMENT_BLOCK = line.strip().startswith( '"""'  )
+						IN_COMMENT_BLOCK = line.strip().startswith( lang.multiline_comment_start )
 						if IN_COMMENT_BLOCK   :
 						
-							pass
-							tabbed_file.append( lang_commentmarker  + line )
+							tabbed_file.append( lang.commentmarker  + line )
 						else:
 							last_TAB = TABS
 							TABS = len( linet ) - len( linet.lstrip('\t') )
@@ -85,10 +88,10 @@ def gettabbed_file(filename):
 							LINE = line.replace('    ', '\t.').strip( "\n" )
 							
 							diff = TABS - last_TAB
-							if  diff < 0   :
+							if  diff < 0    :
 							
 								for tabs in range(  last_TAB , TABS , -1 ) :
-									FillLINE = '\t.' * tabs
+									
 									FillLINE2 = '\t' * tabs
 									
 									tabbed_file.append( FillLINE2  )
@@ -100,13 +103,12 @@ def gettabbed_file(filename):
 					else:
 						if  IN_COMMENT_BLOCK   :
 						
-							tabbed_file.append( lang_commentmarker  + line )
+							tabbed_file.append( lang.commentmarker  + line.strip('\n') )
 							
-						if line.strip().endswith( '"""'  )  :
+						if line.strip().endswith( lang.multiline_comment_end )  :
 						
 							IN_COMMENT_BLOCK = False;
 							
-						
 						
 				else:
 					print( '------------------------------------------------')
@@ -133,13 +135,13 @@ def extract_rightmost_pattern(string, words, marker):
 	matches = [pattern for pattern in patterns if pattern in string]
 	return max(matches, key=string.rfind) if matches else ' generic'
 
-def split_line_on_comment(line, comment_marker ) :
+def split_line_on_comment(line, comment_marker , literals ) :
 	in_literal = None
 	codeline = []
 	comment = []
 	for i, char in enumerate(line):
 		
-		if char in ["'", '"', '`']:
+		if char in literals:
 		
 			if in_literal is None:
 			
@@ -147,41 +149,42 @@ def split_line_on_comment(line, comment_marker ) :
 			elif in_literal == char:
 				in_literal = None
 				
-		elif char == comment_marker and in_literal is None:
-			
+		elif char == comment_marker[0] and line[i:i+len(comment_marker)] == comment_marker and in_literal is None:
 			comment.append(line[i:])
-			return ''.join(codeline), ''.join(comment)
+			return ''.join(codeline).rstrip(), ''.join(comment).strip()
 			
 		codeline.append(char)
 		
-		
 	
-	return ''.join(codeline), ''
-	
+	return ''.join(codeline).rstrip(), ''
 def  mark2flow( marked_line ):
-	codeline , comment  =  split_line_on_comment( marked_line ,  lang_commentmarker )
+	codeline , comment  =  split_line_on_comment( marked_line ,  lang.commentmarker , lang.literals )
 	VFC_DIVIDER = '//'
 	keytoks = [ 'input' , 'event' , 'output' , 'set', 'process' , 'branch', 'path', 'bend' , 'loop' ,'lend' , 'end'  ]
-	result = extract_rightmost_pattern( comment , keytoks , lang_commentmarker )
-	result =result[1:].strip()
-	flowline = f'{ result }({ codeline.strip() });{VFC_DIVIDER}  {comment.replace( result, "").replace( lang_commentmarker, "")  }'
+	result = extract_rightmost_pattern( comment , keytoks , lang.commentmarker )
+	result =result.lstrip( lang.commentmarker )
+	flowline = f'{ result }({ codeline.strip() });{VFC_DIVIDER}  {comment }'
 	return flowline
+PRINTFLOW = False
 if __name__ == "__main__":
 
 	if len( sys.argv ) > 2 :
 	
-		CODEFILE = sys.argv[1]
-		LANG = sys.argv[2]
+		CODEFILE = sys.argv[2]
+		LANG = sys.argv[1]
 	else:
 		CODEFILE = "TEST2\python1.py"
 		LANG = "python"
 		
 	lang = import_language( LANG  )
-	lang_commentmarker = lang.lang_commentmarker
+	lang.commentmarker = lang.commentmarker
 
 	lang.pretty_print( CODEFILE )
 	tabfile = gettabbed_file( CODEFILE )
 	marked_file = process_tabbed_file( tabfile ) ;
+	for line  in  marked_file :
+		print( line )
+			
 	output_file = CODEFILE + '.vfc'
 	with open(output_file, "w", encoding="utf-8") as out:
 	
@@ -189,20 +192,20 @@ if __name__ == "__main__":
 			vfcline =  mark2flow( line )
 			if  vfcline.startswith( 'input' )   :
 			
-				print( 'end();'  )
+				if PRINTFLOW : print( 'end();'  )
 				out.write( 'end();'+ '\n' )
 				
-			print( vfcline  )
+			if PRINTFLOW :print( vfcline  )
 			out.write( vfcline + '\n' )
 			if  vfcline.startswith( 'branch' )   :
 			
-				print( 'path();'  )
+				if PRINTFLOW :print( 'path();'  )
 				out.write( 'path();'+ '\n' )
 				
 					
-		exit
 		
+	os.system( f"VFC2000 { output_file} -Reload" )
 	
 
-#  Export  Date: 05:15:45 PM - 22:Mar:2025.
+#  Export  Date: 09:51:00 PM - 22:Mar:2025.
 

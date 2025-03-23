@@ -2,207 +2,101 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : javascript_lang.vfc
-;  File Date : 11:30:22 PM - 18:Mar:2025
+;  File Date : 09:40:33 PM - 22:Mar:2025
 
 event(import sys);// ////
 event(import re);//
 event(import subprocess);//
+event(import os );//
 end();//// // Basic language settings               # set ////
-set(language = "JavaScript");//
-set(comment_marker = "//");//
+set(language = "javascript");//
+set(commentmarker = "//");//
 generic(multiline_comment_start = "/*");//
 generic(multiline_comment_end = "*/");//
-branch();//// // (Optional) Block type rules           # set ////
-path(blockTypeRules = [);////// ////////
-generic({"type": "input", "regex": r"(async|function)\b\("},);//{"type": "input", "regex": r"^(async\s+function|function)\s+\w+\s*\("},
-generic({"type": "branch", "regex": r"^if\s*\("},);// ////
-generic({"type": "path",   "regex": r"(else|catch|finally)\b"},);//
-generic({"type": "loop",   "regex": r"^(for\s*\(|while\s*\("});// ////
-set(]);////// // set //////
-path(closureMapping = {);////// ////////
-generic("input": "end",);// ////
-generic("branch": "bend",);// ////
-generic("path": "bend",);// ////
-generic("loop": "lend");//
-set(});////// // set //////
-path(outputRules = [);////// ////////
-generic({"regex": r"\bconsole\.(log|info|error|warn)\s*\(", "tag": "output"},);// ////
-generic();//{"regex": r"^\s*return\b", "tag": "output"}
-set(]);////// // set //////
-bend();//
-branch(singleLineExpansions = [);////// ////////
-path({);//// //////
-generic("name": "singleIf",);// ////
-generic("regex": r"^\s*if\s*\((.*?)\)\s*(?!\{)(.*);$",);// ////
-generic("replacement": [);// ////
-set("if ($1) {",);//// //////
-set("\t$2;",);//// //////
-generic("}");// ////
-generic(]);// ////
-generic(},);// ////
-path({);//// //////
-generic("name": "singleElse",);// ////
-generic("regex": r"^\s*else\s+(.*);$",);// ////
-generic("replacement": [);// ////
-generic("else {",);// ////
-generic("\t$1;",);// ////
-generic("}");// ////
-generic(]);// ////
-generic(},);// ////
-path({);//// //////
-generic("name": "singleFor",);// ////
-generic("regex": r"^\s*for\s*\((.*?)\)\s*(?!\{)(.*);$",);// ////
-generic("replacement": [);// ////
-set("for ($1) {",);//// //////
-generic("\t$2;",);// ////
-generic("}");// ////
-generic(]);// ////
-generic(},);// ////
-path({);//// //////
-generic("name": "singleWhile",);// ////
-generic("regex": r"^\s*while\s*\((.*?)\)\s*(?!\{)(.*);$",);// ////
-generic("replacement": [);// ////
-set("while ($1) {",);//// //////
-generic("\t$2;",);// ////
-generic("}");// ////
-generic(]);// ////
-generic(});// ////
-bend(]);//// // set ////
-set(_tag_stack = []);// // set //
+generic(literals =  ["'", '"', '`']);//
+set();//
+set(path_types = [ 'else', 'except', 'catch', 'case' ]);//
+set(branch_types = [ 'if', 'with', 'try', 'switch'  ]);//
+set(loop_types = [ 'for ', 'while ', 'do ', 'until '  ]);//
+set(input_types = [ 'function', 'def', 'async', 'module'  ]);//
+set(event_types = [ 'from ',  'import '  ]);//
+set(output_types = [ 'print(', 'continue', '.write' ]);//
+set(end_types = [ 'return ', 'return ' , 'exit(' ]);//
 end();//
 
 input(def pretty_print(source):);// // input//
-generic(""");//
-generic(Format JavaScript source code using Prettier.);// ////
-generic(This function calls 'npx prettier --use-tabs --stdin-filepath dummy.js');// ////
-set(to read the source from STDIN and return the formatted code from STDOUT.);//// //////
-generic(""");//
-branch(try:);//// //////
-path();//
-generic(result = subprocess.run();// ////
-generic(["npx", "prettier", "--use-tabs", "--print-width", "500", "--stdin-filepath", "dummy.js"],);// ////
-generic(input=source.encode("utf-8"),);// ////
-generic(stdout=subprocess.PIPE,);// ////
-generic(stderr=subprocess.PIPE,);// ////
-generic(shell=True,);// // <-- Enable shell mode//
-generic(check=True);// ////
-generic());// ////
-end(tabbed_source = result.stdout.decode("utf-8"));//// // output////
-path(except subprocess.CalledProcessError as e:);//// //////
-output(print("Error in pretty_print:", e.stderr.decode("utf-8")));//// //////
-end(return source);// // fallback//
-bend();//
-end(return insert_comment_after_empty_if(tabbed_source));//////
-end();// // end//
+generic(os.system( f"npx prettier --use-tabs --print-width 500 --single-quote --write { source }" ));// 
+end();//return tabbed_source
 
-input(def replace_match(match):);// ////
-generic(if_part = match.group(1));// ////
-generic(whitespace = match.group(2));// ////
-generic(closing_brace = match.group(3));// ////
-generic();// // Extract indentation from the closing brace line //
-generic(indent = re.match(r'\n(\s*)}', closing_brace).group(1));// ////
-generic();// // Construct the replacement with the added comment line //
-end(return f"{if_part}{whitespace}// tagA\n{indent}\t{closing_brace}");// ////
-
-input(def insert_comment_after_empty_if(source):);// ////
-set(pattern = r'(if\s*\([^)]*\)\s*{)(\s*)(\n\s*})');//// //////
-generic();// // Apply the replacement //
-end(return re.sub(pattern, replace_match, source));// ////
-end();//
-set();//// // Example usage: ////
-generic();// // result = insert_comment_after_empty_if(source) //
-generic();// // print(result)//
-
-input(def reset_tag_stack():);// ////
-generic();///""" //
-generic(# Reset the language module's internal tag stack.);// ////
-generic();///""" //
-set(global _tag_stack);// // set //
-set(_tag_stack = []);// // set //
-end();// // end //
-set(i = 0);//
-
-input(def tagMapper(line, indentTag, lineNumber):);/// //////
-set(global i);//
-set();//
-set();//
-set();//
-set(global _tag_stack);// // set //
-process(cleaned = line.strip());// // process //
-output(print(f"DEBUG: Line {lineNumber} {i} ({ indentTag  }): {line} "));// // output //
-branch( if indentTag == 'tagA'  or indentTag == 'tagX'    :);// 
-path();//
-branch(if re.match(r"^(if\s*\()", cleaned, re.IGNORECASE):);//if  "try" in line  :
-path();//
-output(print( "--------->",  line  ));//
-generic(_tag_stack.append("bend"));// ////
-end(rtnval =  "branch");//
-path(elif re.match(r"^try", cleaned, re.IGNORECASE):);//
-set(_tag_stack.append("bend"));//
-end(rtnval =  "branch");//
-path(elif re.match(r"^(for\s*\(|while\s*\()", cleaned, re.IGNORECASE):);//// //////
-set(_tag_stack.append("lend"));// ////
-end(rtnval =  "loop");//
-path(elif "class" in line :);// elif re.match(r"async", line , re.IGNORECASE):
-set(_tag_stack.append("end"));// ////
-end(rtnval =  "input---");//
-path(elif "async" in line :);// elif re.match(r"async", line , re.IGNORECASE):
-set(_tag_stack.append("end"));// ////
-end(rtnval =  "input---");//
-path(elif re.match(r"function", line , re.IGNORECASE):);// 
-set(_tag_stack.append("end"));// ////
-end(rtnval =  "input");//
-path( elif re.match(r"(\}\s*else|\}\s*catch|finally)", cleaned, re.IGNORECASE):);//elif  "else" or "catch" or "finally" in line and len(line) < 10  :
-set();// // Do not push a new closure for else/catch; reuse prior closure. //
-generic();//_tag_stack.append("bend")
-set();//i -=1
-output(print( '------------------------------------------------'));//
-end(rtnval =  "path...");//
-path(elif re.match(r"^(return|continue)", cleaned, re.IGNORECASE):);// 
-end(rtnval =  "end");//
-path(else:);//// //////
-generic(_tag_stack.append("tag - " + lineNumber  ));// ////
-branch(if   re.match(r"^}", cleaned )   :);//
+input(def  lang_check_path( line ):);//
+branch(if any(word in line for word in path_types )  :);//if line.strip() in path_types  :
 path( );//
-end(rtnval =  "end");//
-path(else:);//
-end(rtnval =  "process");//
+set(newline  =  '\t' + line);//
+path(else: );//
+set(newline  =   line);//
 bend( );//
-bend();//
-path(else:);//// //////
-branch(if _tag_stack  and  indentTag == 'tagB' :);//
-path();//
-set(i -=1);//
-end(rtnval =  _tag_stack.pop());///// ////////
-path(else:);//// //////
-branch(if  re.match( r"^if\b", cleaned ) :);//catch the a line empty if
+end(return newline);//
+
+input(def  lang_filter( line  ):);//
+branch(if any(word in line for word in path_types )  :);//if line.strip() in path_types  :
 path( );//
-generic(_tag_stack.append("bend"));// ////
-end(rtnval =  "branch");//
-path(else:);//
-end(rtnval =  "process");//
+output();//print( '----------------> ' , line.strip() )
+set(newline  =  '\t' + line + f'{ commentmarker } path ');//
+path(elif  scanTok( line,  branch_types  )   :);/// elif any(word in line for word in branch_types )  :elif   any(line.lstrip().startswith(word) for word in branch_types  )   ://
+generic(push( 'bend' ));// 
+set(newline  =  line + f'{ commentmarker } branch  ');//
+set(# <--- add then path as default);///newline  +=  '\n' + f'{ commentmarker } path  '//
+path(elif  scanTok( line, loop_types  ) :);//
+process(push( 'lend' ));//
+set(newline  =  line + f'{ commentmarker } loop ');//
+path(elif  scanTok( line, input_types  ) :);//
+process(push( 'end' ));//
+set(newline  =  line + f'{ commentmarker } input ');//
+path(elif  scanTok( line, event_types  ) :);//
+set(newline  =  line + f'{ commentmarker } event ');//
+path(elif  scanTok( line, output_types  ) :);//
+set(newline  =  line + f'{ commentmarker } output ');//
+path(elif  scanTok( line, end_types  ) :);//
+set(newline  =  line + f'{ commentmarker } end ');//
+path(else: );//
+set();//newline  =   line
+branch(if  len( line ) ==0   :);//
+path( );//
+set(newline  = '');//
+set(newline  =  line + f'{ commentmarker } set ');//
+path(else: );//
+set(newline  =  line + f'{ commentmarker } set ');//
 bend( );//
-bend();//// // end ////
-bend();//// // end ////
-end(return rtnval);//
+bend( );//
+end(return newline);//
+set(stack = []);//
+
+input(def  pop( ):);//
+generic(global stack);// ////
+branch(if len( stack) >0  :);//
+path( );//
+generic(item = stack.pop());// 
+output();//print( '\t'*8 +'...POP' , item , stack )
+end(return item);//
+path(else: );//
+output(print( '--------------------empty stack----------------------------'));//
+end(return "");// 
+bend( );//
 end();//
 
-input(if __name__ == "__main__":);// // input //
-branch(if len(sys.argv) > 1:);// ////
+input(def  push(  item ):);//
+generic(global stack);// ////
+generic(stack.append( item ));// 
+end();//
+
+input(def  scanTok( line, toklist ):);//
+set(sub_list = [item for item in toklist if item.startswith('.')]);// ////
+set(subtok = any(f"{word}" in line for word in sub_list ));// 
+branch(if len(sub_list) > 0  and subtok  :);//
 path();//
-branch(with open(sys.argv[1], "r", encoding="utf-8") as f:);//// //////
-path();//
-generic(source = f.read());// ////
-bend();//
-generic(pretty = pretty_print(source));// ////
-output(print(");   // === Final Pretty Printed Code ===")   # output ////);//
-output(print(pretty));// // output //
-path(else:);//// //////
-output(print("Usage: python javascript_lang.py <source_file>"));//// //
-bend();//// // end////
-end();//
-end();//
-end();//
+end(return True);//
+bend( );//
+end(return  any(line.lstrip().startswith(word) for word in toklist ));//
 
 
 
@@ -211,4 +105,4 @@ end();//
 ;    javascript_lang.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 656 1381 3068 1065 118 146   4294964584   4294963361    python.key  0
+; 404 802 3292 1181 118 135   1159   4294967082    python.key  0

@@ -1,195 +1,89 @@
 import sys
 import re
 import subprocess
+import os
 
-language = "JavaScript"
-comment_marker = "//"
+language = "javascript"
+commentmarker = "//"
 multiline_comment_start = "/*"
 multiline_comment_end = "*/"
+literals =  ["'", '"', '`']
 
-blockTypeRules = [
-	{"type": "input", "regex": r"(async|function)\b\("},
-	{"type": "branch", "regex": r"^if\s*\("},
-	{"type": "path",   "regex": r"(else|catch|finally)\b"},
-	{"type": "loop",   "regex": r"^(for\s*\(|while\s*\("}
-	]
-closureMapping = {
-	"input": "end",
-	"branch": "bend",
-	"path": "bend",
-	"loop": "lend"
-	}
-outputRules = [
-	{"regex": r"\bconsole\.(log|info|error|warn)\s*\(", "tag": "output"},
-	
-	]
-	
-singleLineExpansions = [
-{
-	"name": "singleIf",
-	"regex": r"^\s*if\s*\((.*?)\)\s*(?!\{)(.*);$",
-	"replacement": [
-	"if ($1) {",
-	"\t$2;",
-	"}"
-	]
-	},
-{
-	"name": "singleElse",
-	"regex": r"^\s*else\s+(.*);$",
-	"replacement": [
-	"else {",
-	"\t$1;",
-	"}"
-	]
-	},
-{
-	"name": "singleFor",
-	"regex": r"^\s*for\s*\((.*?)\)\s*(?!\{)(.*);$",
-	"replacement": [
-	"for ($1) {",
-	"\t$2;",
-	"}"
-	]
-	},
-{
-	"name": "singleWhile",
-	"regex": r"^\s*while\s*\((.*?)\)\s*(?!\{)(.*);$",
-	"replacement": [
-	"while ($1) {",
-	"\t$2;",
-	"}"
-	]
-	}
-	]
-_tag_stack = []
+path_types = [ 'else', 'except', 'catch', 'case' ]
+branch_types = [ 'if', 'with', 'try', 'switch'  ]
+loop_types = [ 'for ', 'while ', 'do ', 'until '  ]
+input_types = [ 'function', 'def', 'async', 'module'  ]
+event_types = [ 'from ',  'import '  ]
+output_types = [ 'print(', 'continue', '.write' ]
+end_types = [ 'return ', 'return ' , 'exit(' ]
 
 def pretty_print(source):
-	"""
-	Format JavaScript source code using Prettier.
-	This function calls 'npx prettier --use-tabs --stdin-filepath dummy.js'
-	to read the source from STDIN and return the formatted code from STDOUT.
-	"""
-	try:
+	os.system( f"npx prettier --use-tabs --print-width 500 --single-quote --write { source }" )
 	
-		result = subprocess.run(
-		["npx", "prettier", "--use-tabs", "--print-width", "500", "--stdin-filepath", "dummy.js"],
-		input=source.encode("utf-8"),
-		stdout=subprocess.PIPE,
-		stderr=subprocess.PIPE,
-		shell=True,
-		check=True
-		)
-		tabbed_source = result.stdout.decode("utf-8")
-	except subprocess.CalledProcessError as e:
-		print("Error in pretty_print:", e.stderr.decode("utf-8"))
-		return source
-		
-	return insert_comment_after_empty_if(tabbed_source)
-
-def replace_match(match):
-	if_part = match.group(1)
-	whitespace = match.group(2)
-	closing_brace = match.group(3)
+def  lang_check_path( line ):
+	if any(word in line for word in path_types )  :
 	
-	indent = re.match(r'\n(\s*)}', closing_brace).group(1)
-	
-	return f"{if_part}{whitespace}// tagA\n{indent}\t{closing_brace}"
-def insert_comment_after_empty_if(source):
-	pattern = r'(if\s*\([^)]*\)\s*{)(\s*)(\n\s*})'
-	
-	return re.sub(pattern, replace_match, source)
-
-
-
-
-def reset_tag_stack():
-	
-	# Reset the language module's internal tag stack.
-	
-	global _tag_stack
-	_tag_stack = []
-	
-i = 0
-def tagMapper(line, indentTag, lineNumber):
-	global i
-	
-	
-	
-	global _tag_stack
-	cleaned = line.strip()
-	print(f"DEBUG: Line {lineNumber} {i} ({ indentTag  }): {line} ")
-	if indentTag == 'tagA'  or indentTag == 'tagX'    :
-	
-		if re.match(r"^(if\s*\()", cleaned, re.IGNORECASE):
-		
-			print( "--------->",  line  )
-			_tag_stack.append("bend")
-			rtnval =  "branch"
-		elif re.match(r"^try", cleaned, re.IGNORECASE):
-			_tag_stack.append("bend")
-			rtnval =  "branch"
-		elif re.match(r"^(for\s*\(|while\s*\()", cleaned, re.IGNORECASE):
-			_tag_stack.append("lend")
-			rtnval =  "loop"
-		elif "class" in line :
-			_tag_stack.append("end")
-			rtnval =  "input---"
-		elif "async" in line :
-			_tag_stack.append("end")
-			rtnval =  "input---"
-		elif re.match(r"function", line , re.IGNORECASE):
-			_tag_stack.append("end")
-			rtnval =  "input"
-		elif re.match(r"(\}\s*else|\}\s*catch|finally)", cleaned, re.IGNORECASE):
-			
-			
-			
-			print( '------------------------------------------------')
-			rtnval =  "path..."
-		elif re.match(r"^(return|continue)", cleaned, re.IGNORECASE):
-			rtnval =  "end"
-		else:
-			_tag_stack.append("tag - " + lineNumber  )
-			if   re.match(r"^}", cleaned )   :
-			
-				rtnval =  "end"
-			else:
-				rtnval =  "process"
-				
-			
+		newline  =  '\t' + line
 	else:
-		if _tag_stack  and  indentTag == 'tagB' :
+		newline  =   line
 		
-			i -=1
-			rtnval =  _tag_stack.pop()
-		else:
-			if  re.match( r"^if\b", cleaned ) :
-			
-				_tag_stack.append("bend")
-				rtnval =  "branch"
-			else:
-				rtnval =  "process"
-				
-			
-		
-	return rtnval
-
-if __name__ == "__main__":
-	if len(sys.argv) > 1:
+	return newline
+def  lang_filter( line  ):
+	if any(word in line for word in path_types )  :
 	
-		with open(sys.argv[1], "r", encoding="utf-8") as f:
 		
-			source = f.read()
-			
-		pretty = pretty_print(source)
-		print(");   // === Final Pretty Printed Code ===")   # output ////
-		print(pretty)
+		newline  =  '\t' + line + f'{ commentmarker } path '
+	elif  scanTok( line,  branch_types  )   :
+		push( 'bend' )
+		newline  =  line + f'{ commentmarker } branch  '
+		# <--- add then path as default
+	elif  scanTok( line, loop_types  ) :
+		push( 'lend' )
+		newline  =  line + f'{ commentmarker } loop '
+	elif  scanTok( line, input_types  ) :
+		push( 'end' )
+		newline  =  line + f'{ commentmarker } input '
+	elif  scanTok( line, event_types  ) :
+		newline  =  line + f'{ commentmarker } event '
+	elif  scanTok( line, output_types  ) :
+		newline  =  line + f'{ commentmarker } output '
+	elif  scanTok( line, end_types  ) :
+		newline  =  line + f'{ commentmarker } end '
 	else:
-		print("Usage: python javascript_lang.py <source_file>")
+		
+		if  len( line ) ==0   :
+		
+			newline  = ''
+			newline  =  line + f'{ commentmarker } set '
+		else:
+			newline  =  line + f'{ commentmarker } set '
+			
+		
+	return newline
+stack = []
+def  pop( ):
+	global stack
+	if len( stack) >0  :
+	
+		item = stack.pop()
+		
+		return item
+	else:
+		print( '--------------------empty stack----------------------------')
+		return ""
 		
 	
-
-
-#  Export  Date: 11:30:22 PM - 18:Mar:2025.
+def  push(  item ):
+	global stack
+	stack.append( item )
+	
+def  scanTok( line, toklist ):
+	sub_list = [item for item in toklist if item.startswith('.')]
+	subtok = any(f"{word}" in line for word in sub_list )
+	if len(sub_list) > 0  and subtok  :
+	
+		return True
+		
+	return  any(line.lstrip().startswith(word) for word in toklist )
+#  Export  Date: 09:40:33 PM - 22:Mar:2025.
 

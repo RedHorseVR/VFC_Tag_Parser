@@ -1,0 +1,93 @@
+ set();//  // set
+ set();//  // set
+ input(function showLineInfo(message = '') {);//  // input
+ set(const e = new Error(););//  // set
+ set(const stack = e.stack.split('\n'););//  // set
+ set(const lineInfo = stack[2].trim(););//  // set
+ set(console.log(`${message} LINE Executing at: ${lineInfo}`););//  // set
+ end();//  // end
+ set(});//  // set
+ input(async function getCredentials() {);//  // input
+ branch(try {);//  // branch
+ set(const response = await fetch(addAPIKEY('/api/get-credentials'), {);//  // set
+ set(headers: { 'Cache-Control': 'no-cache' },);//  // set
+ bend();//  // bend
+ set(}););//  // set
+ branch(if (!response.ok) {);//  // branch
+ set(throw new Error('Network response was not ok'););//  // set
+ bend();//  // bend
+ set(});//  // set
+ set(const text = await response.text(););//  // set
+ set(let data = JSON.parse(text););//  // set
+ set(let L = data.result.length;);//  // set
+ branch(if (data.result[L - 1].type === 'BLANK') {);//  // branch
+ end(return JSON.parse('[]'););//  // end
+ set();//  // set
+ path(} else {);//  // path
+ end(return data.result;);//  // end
+ bend();//  // bend
+ set(});//  // set
+ set();//  // set
+ path(} catch (error) {);//  // path
+ set(console.info('EMPTY WALLET ON SERVER :', error););//  // set
+ end(return JSON.parse('[]'););//  // end
+ end();//  // end
+ set(});//  // set
+ generic();//  //
+ set(});//  // set
+ input(async function Confirmation(prompt, callback) {);//  // input
+ set(var result = confirm(prompt););//  // set
+ branch(if (result) {);//  // branch
+ end(return callback(););//  // end
+ set();//  // set
+ path(} else {);//  // path
+ set(ReLoad(););//  // set
+ set(return;);//  // set
+ bend();//  // bend
+ set(});//  // set
+ end();//  // end
+ set(});//  // set
+ input(function togglePopup(message) {);//  // input
+ set(var popup = document.getElementById('myPopup'););//  // set
+ set(popup.classList.toggle('show'););//  // set
+ end();//  // end
+ set(});//  // set
+ input(function toggleHelp(ID) {);//  // input
+ set(alert('help toggle ' + ID););//  // set
+ set(var popup = document.getElementById(ID););//  // set
+ set(popup.classList.toggle('show'););//  // set
+ end();//  // end
+ set(});//  // set
+ set(let userData;);//  // set
+ input(async function loadJsonFile() {);//  // input
+ branch(try {);//  // branch
+ set(const response = await fetch(JSON_FILE););//  // set
+ branch(if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`););//  // branch
+ set(data = await response.json(););//  // set
+ set(window.credentials = data;);//  // set
+ end(return true;);//  // end
+ set();//  // set
+ path(} catch (error) {);//  // path
+ set(console.error(`INFO Error loading JSON:`, error););//  // set
+ set(showLineInfo(););//  // set
+ set(sessionStorage.setItem('sessionAIprocessing', 'false'););//  // set
+ end(return false;);//  // end
+ bend();//  // bend
+ set(});//  // set
+ bend();//  // bend
+ set(});//  // set
+ input(function updateChecked(user) {);//  // input
+ set(hitEndPoint('/api/update-checked-credentials', USER_ID, [], true););//  // set
+ set(console.error('update-checked-credentials FileStates:', FileStates););//  // set
+ set(AI_process_Data(););//  // set
+ set(setTimeout(function () {);//  // set
+ set(location.reload(););//  // set
+ end();//  // end
+ set(}, 1000););//  // set
+ end();//  // end
+ set(});//  // set
+ set(window.onload = async function init() {);//  // set
+ set(return;);//  // set
+ generic();//  //
+ set(};);//  // set
+ end();//  // end

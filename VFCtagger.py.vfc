@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : VFCtagger.py.vfc
-;  File Date : 05:15:45 PM - 22:Mar:2025
+;  File Date : 09:51:00 PM - 22:Mar:2025
 
 event(import argparse);//
 event(import os);//
@@ -11,23 +11,22 @@ event(import sys);//
 event(import importlib);//
 end();//
 set(lang = None);//
-set(lang_commentmarker = '');//
 end();//
 
 input(def  process_tabbed_file( tabfile ):);//
 set(TABS =0);//
 set(last_TAB = 0);//
 set(marked_file = []);//
-set(marked_line =  f'{ lang_commentmarker } set ');//////////
+set(marked_line =  f'{ lang.commentmarker } set ');/////////////
 output();//print(  marked_line  )
 process(marked_file.append( marked_line ););//////////
 process(marked_file.append( marked_line ););//////
-loop(for i in range ( 0 , len(tabfile) - 2 )  :);//for line  in tabfile :
+loop(for i in range ( 0 , len(tabfile) - 1 )  :);//for line  in tabfile :
 set(line = tabfile[ i ]);//
 output();//print( line  ) ; input('>')
-branch(if  not  line.strip().startswith( lang_commentmarker )  :);//
+branch(if  not  line.strip().startswith( lang.commentmarker )  :);//
 path();//
-process(line = lang.lang_filter( line ));//
+event(line = lang.lang_filter( line ));//////
 set(last_TAB = TABS);//
 set(TABS = len( line ) - len( line.lstrip('\t') ));//
 process(nextline = lang.lang_check_path( tabfile[i+1] ));//
@@ -36,7 +35,7 @@ set(tabrate = last_TAB-TABS);//
 set(next_tabrate = TABS - next_TABS);//
 branch(if   next_tabrate == 1  :);//
 path();//
-set(marked_line =  f'\t' * (TABS) + f'{ lang_commentmarker } { lang.pop() } ');//
+set(marked_line =  f'\t' * (TABS) + f'{ lang.commentmarker } { lang.pop() } ');//
 process(marked_file.append( marked_line ););//////
 output();//print(  f'{TABS-1} {line}'  )
 path(else: );//
@@ -45,16 +44,21 @@ process(marked_file.append( marked_line ););//////
 bend( );//
 output();//print( '---->' , next_tabrate )
 loop(for rate in range( 2, next_tabrate ):);//<---- in case we hit some tabs that may be missing and need to close sevearl items on a single line tab
-set(marked_line =  f'\t' * (TABS) + f'{ lang_commentmarker } { lang.pop() } ');//
+set(marked_line =  f'\t' * (TABS) + f'{ lang.commentmarker } { lang.pop() } ');//
 process(marked_file.append( marked_line ););//////
 lend( );//
 path(else: );//
 generic(newline = line.replace( "\t" , "" ));// ////
-set(marked_line =  f'{ newline  } {lang_commentmarker} set');// 
+set(marked_line =  f'{ newline  } {lang.commentmarker} set --');//
 process(marked_file.append( marked_line ););//////
 output();//print( marked_line  ) ; input('>')
 bend( );//
 lend( );//
+set(line = tabfile[ i+1 ]);//
+event(line = lang.lang_filter( line ));//////
+process(marked_file.append( line ););//<---- last line 
+process(if lang.language == 'python' : marked_file.append( f'{lang.commentmarker } bend' ););//<---- last line 
+process(marked_file.append( f'{lang.commentmarker } end' ););//<---- last line 
 set();//line = tabfile[ len(tabfile) - 1 ]
 end(return marked_file);//
 
@@ -77,14 +81,13 @@ generic(linet = line.replace('    ', '\t').strip( "\n" ));//
 generic(LINE2 = line.replace('    ', '\t').strip( "\n" ));//
 branch(if  not linet.strip() == ''    :);//
 path();//
-branch(if  not IN_COMMENT_BLOCK and not line.startswith('\n')  and not line.lstrip().startswith('#') :);//
+branch(if  not IN_COMMENT_BLOCK and not line.startswith('\n')  and not line.lstrip().startswith(  lang.commentmarker ) :);//
 path( );//
 set(i +=1 );//
-generic(IN_COMMENT_BLOCK = line.strip().startswith( '"""'  ));//
+generic(IN_COMMENT_BLOCK = line.strip().startswith( lang.multiline_comment_start ));//
 branch(if IN_COMMENT_BLOCK   :);//
 path( );//
-output(pass);//print( f'{ "##" }  { linet  }'  )
-set(tabbed_file.append( lang_commentmarker  + line ));//
+set(tabbed_file.append( lang.commentmarker  + line ));//pass
 path(else: );//
 set(last_TAB = TABS);//
 set(TABS = len( linet ) - len( linet.lstrip('\t') ));//
@@ -93,10 +96,10 @@ process();//LINE2 = lang_filter( LINE2 )
 generic(LINE = line.replace('    ', '\t.').strip( "\n" ));//
 process();//LINE = lang_filter( LINE )
 generic(diff = TABS - last_TAB);// 
-branch(if  diff < 0   :);// 
+branch(if  diff < 0    :);// if  diff < 0 and lang.language == 'python'   :
 path();//
 loop(for tabs in range(  last_TAB , TABS , -1 ) :);//
-generic(FillLINE = '\t.' * tabs);// FillLINE = '\t.' * (last_TAB-1)
+generic();//FillLINE = '\t.' * tabs
 generic(FillLINE2 = '\t' * tabs);//FillLINE2 = '\t.' * tabs
 output( );//print( f'{ tabs }---->  { FillLINE }' )
 set(tabbed_file.append( FillLINE2  ));//
@@ -108,13 +111,12 @@ bend( );//
 path(else: );//
 branch(if  IN_COMMENT_BLOCK   :);//
 path();//
-set(tabbed_file.append( lang_commentmarker  + line ));//
+set(tabbed_file.append( lang.commentmarker  + line.strip('\n') ));//pass
 bend( );//
-branch(if line.strip().endswith( '"""'  )  :);//
+branch(if line.strip().endswith( lang.multiline_comment_end )  :);//
 path( );//
 set(IN_COMMENT_BLOCK = False;);//
 bend( );//
-output( );//print( f'{ "##"  }  { linet }' )
 bend( );//
 path(else: );//
 output(print( '------------------------------------------------') );//
@@ -143,55 +145,56 @@ generic(matches = [pattern for pattern in patterns if pattern in string]);// ///
 end(return max(matches, key=string.rfind) if matches else ' generic');//
 end();//
 
-input(def split_line_on_comment(line, comment_marker ) :);//// //'): ////
-generic(in_literal = None );// ////
-generic(codeline = [] );// ////
+input(def split_line_on_comment(line, comment_marker , literals ) :);//// //'): ////
+set(in_literal = None  );//// // Tracks if we are inside a literal ////
+set(codeline = [] );//// //////
 generic(comment = [] );// ////
-loop(for i, char in enumerate(line): );//// //////
-generic();// // Check if we are entering or exiting a literal //
-branch(if char in ["'", '"', '`']:);//
+loop(for i, char in enumerate(line): );// ////
+generic();// // Toggle in_literal state when encountering literal enclosures //
+branch(if char in literals: );// ////
 path();//
 branch(if in_literal is None:  );//// // Entering a literal ////
 path();//
 generic(in_literal = char );// ////
-path(elif in_literal == char:  );//// // Exiting the literal ////
-generic(in_literal = None );// ////
-bend();//// // Check for the comment marker if we're not inside a literal ////
-path(elif char == comment_marker and in_literal is None: );////// ////////
-generic();// // Switch to capturing the comment //
+path(elif in_literal == char:  );//// // Exiting the same literal ////
+set(in_literal = None );//// //////
+bend();//
+path(elif char == comment_marker[0] and line[i:i+len(comment_marker)] == comment_marker and in_literal is None: );// ////
 generic(comment.append(line[i:])  );// // Add the rest of the line as the comment //
-end(return ''.join(codeline), ''.join(comment) );//// //////
-bend();//// // Add to the codeline if we're not inside a comment ////
+end(return ''.join(codeline).rstrip(), ''.join(comment).strip() );// ////
+bend();//// // Append characters to the codeline unless part of the comment ////
 generic(codeline.append(char) );// ////
-generic();// // If no comment marker is found, return the entire line as code and an empty comment //
-lend();//////
-generic(return ''.join(codeline), '' );// ////
-end();//// // Example usage ////
+lend();//// // If no comment is found, return entire line as code and an empty comment ////
+end(return ''.join(codeline).rstrip(), '' );// ////
 
 input(def  mark2flow( marked_line ):);//
-generic(codeline , comment  =  split_line_on_comment( marked_line ,  lang_commentmarker ));//
+generic(codeline , comment  =  split_line_on_comment( marked_line ,  lang.commentmarker , lang.literals ));//
 generic(VFC_DIVIDER = '//');// 
 set(keytoks = [ 'input' , 'event' , 'output' , 'set', 'process' , 'branch', 'path', 'bend' , 'loop' ,'lend' , 'end'  ]);//
-generic(result = extract_rightmost_pattern( comment , keytoks , lang_commentmarker ));// ////
-generic(result =result[1:].strip());// 
-set(flowline = f'{ result }({ codeline.strip() });{VFC_DIVIDER}  {comment.replace( result, "").replace( lang_commentmarker, "")  }');//
+generic(result = extract_rightmost_pattern( comment , keytoks , lang.commentmarker ));//
+generic( result =result.lstrip( lang.commentmarker ));//result =result[2:]
+set(flowline = f'{ result }({ codeline.strip() });{VFC_DIVIDER}  {comment }');//flowline = f'{ result }({ codeline.strip() });{VFC_DIVIDER}  {comment.replace( result, "").replace( lang.commentmarker, "")  }'
 end(return flowline);//
+set(PRINTFLOW = False);//
 branch(if __name__ == "__main__":);//////
 path();//
 branch(if len( sys.argv ) > 2 :);//
 path( );//
-set(CODEFILE = sys.argv[1]);///LANG = args.language.lower( )//
-set(LANG = sys.argv[2]);///LANGUAGE = args.language.lower( )//
+set(CODEFILE = sys.argv[2]);///LANG = args.language.lower( )//
+set(LANG = sys.argv[1]);///LANGUAGE = args.language.lower( )//
 path(else: );//
 set(CODEFILE = "TEST2\python1.py");///LANG = args.language.lower( )//
 set(LANG = "python");///LANGUAGE = args.language.lower( )//
 bend( );//
 event(lang = import_language( LANG  ));//
-set(lang_commentmarker = lang.lang_commentmarker);//
+set(lang.commentmarker = lang.commentmarker);//
 path();//////////
 output( lang.pretty_print( CODEFILE ));//
 set(tabfile = gettabbed_file( CODEFILE ));//////
 process(marked_file = process_tabbed_file( tabfile ) ;);//
+loop(for line  in  marked_file :);//
+output(print( line ));//
+lend( );//
 set(output_file = CODEFILE + '.vfc');//
 branch( with open(output_file, "w", encoding="utf-8") as out:);//    
 path();//
@@ -199,19 +202,19 @@ loop(for line in marked_file :);//
 set(vfcline =  mark2flow( line ));//
 branch(if  vfcline.startswith( 'input' )   :);//<--------   insert a endbefoer an input
 path();//
-output(print( 'end();'  ));// 
+output(if PRINTFLOW : print( 'end();'  ));// 
 output(out.write( 'end();'+ '\n' ));//
 bend( );//
-output(print( vfcline  ));//print( line )
+output(if PRINTFLOW :print( vfcline  ));//print( line )
 output(out.write( vfcline + '\n' ));//
 branch(if  vfcline.startswith( 'branch' )   :);//<-------- needs to insert a path since we processed paths and linear tokens
 path();//
-output(print( 'path();'  ));//print( line )
+output(if PRINTFLOW :print( 'path();'  ));//print( line )
 output(out.write( 'path();'+ '\n' ));//
 bend( );//
 lend( );//
-end(exit);//////////
 bend();//
+generic(os.system( f"VFC2000 { output_file} -Reload" ));// 
 bend();//
 end();//
 
@@ -222,4 +225,4 @@ end();//
 ;    VFCtagger.py   #   .
 ; notepad++.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 703 20 2710 2081 9 96   1291   219    python.key  0
+; 782 243 2570 1806 106 137   1654   4294964561    python.key  0

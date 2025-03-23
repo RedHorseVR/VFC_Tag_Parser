@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : python_lang.vfc
-;  File Date : 05:14:11 PM - 22:Mar:2025
+;  File Date : 09:44:19 PM - 22:Mar:2025
 
 event(import sys);// ////
 event(import black);// ////
@@ -21,7 +21,12 @@ path(except :);//
 output(print(" black made no changes"));//////
 bend();// ////
 end();// //     //
-set(lang_commentmarker = '#');// 
+set(language = 'python');//
+set(commentmarker = '#');// 
+generic(multiline_comment_start = '"""');//
+generic(multiline_comment_end = '"""');//
+generic(literals =  ["'", '"', '`']);//
+set();//
 set(path_types = [ 'else', 'except', 'catch', 'case' ]);//
 set(branch_types = [ 'if', 'with', 'try', 'switch'  ]);//
 set(loop_types = [ 'for ', 'while ', 'do ', 'until '  ]);//
@@ -44,26 +49,26 @@ input(def  lang_filter( line  ):);//
 branch(if any(word in line for word in path_types )  :);//if line.strip() in path_types  :
 path( );//
 output();//print( '----------------> ' , line.strip() )
-set(newline  =  '\t' + line + f'{ lang_commentmarker } path ');//
+set(newline  =  '\t' + line + f'{ commentmarker } path ');//
 path(elif  scanTok( line,  branch_types  )   :);/// elif any(word in line for word in branch_types )  :elif   any(line.lstrip().startswith(word) for word in branch_types  )   ://
 generic(push( 'bend' ));// 
-set(newline  =  line + f'{ lang_commentmarker } branch  ');//
-set(# <--- add then path as default);//newline  +=  '\n' + f'{ lang_commentmarker } path  '
+set(newline  =  line + f'{ commentmarker } branch  ');//
+set(# <--- add then path as default);///newline  +=  '\n' + f'{ commentmarker } path  '//
 path(elif  scanTok( line, loop_types  ) :);//
 process(push( 'lend' ));//
-set(newline  =  line + f'{ lang_commentmarker } loop ');//
+set(newline  =  line + f'{ commentmarker } loop ');//
 path(elif  scanTok( line, input_types  ) :);//
 process(push( 'end' ));//
-set(newline  =  line + f'{ lang_commentmarker } input ');//
+set(newline  =  line + f'{ commentmarker } input ');//
 path(elif  scanTok( line, event_types  ) :);//
-set(newline  =  line + f'{ lang_commentmarker } event ');//
+set(newline  =  line + f'{ commentmarker } event ');//
 path(elif  scanTok( line, output_types  ) :);//
-set(newline  =  line + f'{ lang_commentmarker } output ');//
+set(newline  =  line + f'{ commentmarker } output ');//
 path(elif  scanTok( line, end_types  ) :);//
-set(newline  =  line + f'{ lang_commentmarker } end ');//
+set(newline  =  line + f'{ commentmarker } end ');//
 path(else: );//
 set();//newline  =   line
-set(newline  =  line + f'{ lang_commentmarker } set ');//
+set(newline  =  line + f'{ commentmarker } set ');//
 bend( );//
 end(return newline);//
 set(stack = []);//
@@ -102,4 +107,4 @@ end(return  any(line.lstrip().startswith(word) for word in toklist ));//
 ;    python_lang.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 279 393 2460 1531 59 150   973   4294966018    python.key  0
+; 170 944 2109 1088 20 250   1091   4294965704    python.key  0

@@ -14,7 +14,12 @@ def pretty_print(source):
 		print(" black made no changes")
 		
 	
-lang_commentmarker = '#'
+language = 'python'
+commentmarker = '#'
+multiline_comment_start = '"""'
+multiline_comment_end = '"""'
+literals =  ["'", '"', '`']
+
 path_types = [ 'else', 'except', 'catch', 'case' ]
 branch_types = [ 'if', 'with', 'try', 'switch'  ]
 loop_types = [ 'for ', 'while ', 'do ', 'until '  ]
@@ -35,26 +40,26 @@ def  lang_filter( line  ):
 	if any(word in line for word in path_types )  :
 	
 		
-		newline  =  '\t' + line + f'{ lang_commentmarker } path '
+		newline  =  '\t' + line + f'{ commentmarker } path '
 	elif  scanTok( line,  branch_types  )   :
 		push( 'bend' )
-		newline  =  line + f'{ lang_commentmarker } branch  '
+		newline  =  line + f'{ commentmarker } branch  '
 		# <--- add then path as default
 	elif  scanTok( line, loop_types  ) :
 		push( 'lend' )
-		newline  =  line + f'{ lang_commentmarker } loop '
+		newline  =  line + f'{ commentmarker } loop '
 	elif  scanTok( line, input_types  ) :
 		push( 'end' )
-		newline  =  line + f'{ lang_commentmarker } input '
+		newline  =  line + f'{ commentmarker } input '
 	elif  scanTok( line, event_types  ) :
-		newline  =  line + f'{ lang_commentmarker } event '
+		newline  =  line + f'{ commentmarker } event '
 	elif  scanTok( line, output_types  ) :
-		newline  =  line + f'{ lang_commentmarker } output '
+		newline  =  line + f'{ commentmarker } output '
 	elif  scanTok( line, end_types  ) :
-		newline  =  line + f'{ lang_commentmarker } end '
+		newline  =  line + f'{ commentmarker } end '
 	else:
 		
-		newline  =  line + f'{ lang_commentmarker } set '
+		newline  =  line + f'{ commentmarker } set '
 		
 	return newline
 stack = []
@@ -82,5 +87,5 @@ def  scanTok( line, toklist ):
 		return True
 		
 	return  any(line.lstrip().startswith(word) for word in toklist )
-#  Export  Date: 05:14:11 PM - 22:Mar:2025.
+#  Export  Date: 09:44:19 PM - 22:Mar:2025.
 

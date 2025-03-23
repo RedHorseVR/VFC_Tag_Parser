@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : python_lang.vfc
-;  File Date : 09:44:19 PM - 22:Mar:2025
+;  File Date : 10:16:32 PM - 22:Mar:2025
 
 event(import sys);// ////
 event(import black);// ////
@@ -27,7 +27,7 @@ generic(multiline_comment_start = '"""');//
 generic(multiline_comment_end = '"""');//
 generic(literals =  ["'", '"', '`']);//
 set();//
-set(path_types = [ 'else', 'except', 'catch', 'case' ]);//
+set(path_types = [ 'else', 'elif' ,'except', 'catch', 'case' ]);//
 set(branch_types = [ 'if', 'with', 'try', 'switch'  ]);//
 set(loop_types = [ 'for ', 'while ', 'do ', 'until '  ]);//
 set(input_types = [ 'function', 'def', 'async', 'module'  ]);//
@@ -107,4 +107,4 @@ end(return  any(line.lstrip().startswith(word) for word in toklist ));//
 ;    python_lang.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 170 944 2109 1088 20 250   1091   4294965704    python.key  0
+; 244 916 2109 1088 59 250   1071   4294965483    python.key  0

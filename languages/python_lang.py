@@ -20,7 +20,7 @@ multiline_comment_start = '"""'
 multiline_comment_end = '"""'
 literals =  ["'", '"', '`']
 
-path_types = [ 'else', 'except', 'catch', 'case' ]
+path_types = [ 'else', 'elif' ,'except', 'catch', 'case' ]
 branch_types = [ 'if', 'with', 'try', 'switch'  ]
 loop_types = [ 'for ', 'while ', 'do ', 'until '  ]
 input_types = [ 'function', 'def', 'async', 'module'  ]
@@ -87,5 +87,5 @@ def  scanTok( line, toklist ):
 		return True
 		
 	return  any(line.lstrip().startswith(word) for word in toklist )
-#  Export  Date: 09:44:19 PM - 22:Mar:2025.
+#  Export  Date: 10:16:32 PM - 22:Mar:2025.
 

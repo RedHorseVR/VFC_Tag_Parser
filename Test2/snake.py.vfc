@@ -1,0 +1,136 @@
+;  IRL FlowCode Version: Version 10.0
+;  c1995-2015: Visual Flow Coder by 2LResearch
+;
+;  File Name : snake.py.vfc
+;  File Date : 10:20:43 PM - 22:Mar:2025
+
+set();//  # set
+set();//  # set
+event(import pygame);//  # event
+event(import time);//  # event
+event(import random);//  # event
+set(pygame.init());//  # set
+set(WIDTH, HEIGHT = 600, 400);//  # set
+set(BLOCK_SIZE = 20);//  # set
+set(WHITE = (255, 255, 255));//  # set
+set(BLACK = (0, 0, 0));//  # set
+set(RED = (255, 0, 0));//  # set
+set(GREEN = (0, 255, 0));//  # set
+set(BLUE = (0, 0, 255));//  # set
+set(screen = pygame.display.set_mode((WIDTH, HEIGHT)));//  # set
+set(pygame.display.set_caption("Snake Game"));//  # set
+set(clock = pygame.time.Clock());//  # set
+set(snake_pos = [100, 50]);//  # set
+set(snake_body = [[100, 50], [90, 50], [80, 50]]);//  # set
+set(direction = "RIGHT");//  # set
+set(change_to = direction);//  # set
+set(food_pos = [random.randrange(1, (WIDTH // BLOCK_SIZE)) * BLOCK_SIZE, random.randrange(1, (HEIGHT // BLOCK_SIZE)) * BLOCK_SIZE]);//  # set
+set(food_spawn = True);//  # set
+set(score = 0);//  # set
+
+input(def show_score(choice, color, font, size):);//  # input
+set(font = pygame.font.SysFont(font, size));//  # set
+set(score_surface = font.render(f"Score : {score}", True, color));//  # set
+set(screen.blit(score_surface, (10, 10)));//  # set
+end();//  # end
+
+input(def game_over():);//  # input
+set(font = pygame.font.SysFont("times new roman", 50));//  # set
+set(go_surface = font.render("GAME OVER", True, RED));//  # set
+set(screen.blit(go_surface, (WIDTH // 4, HEIGHT // 3)));//  # set
+set(pygame.display.flip());//  # set
+set(time.sleep(2));//  # set
+set(pygame.quit());//  # set
+set(quit());//  # set
+end();//  # end
+loop(while True:);//  # loop
+loop(for event in pygame.event.get():);//  # loop
+branch(if event.type == pygame.KEYDOWN:);//  # branch
+path();//
+branch(if event.key == pygame.K_UP:);//  # branch
+path();//
+branch(if direction != "DOWN":);//  # branch
+path();//
+set(change_to = "UP");//  # set
+bend();//  # bend
+set();//  # set
+path(elif event.key == pygame.K_DOWN:);//  # path
+branch(if direction != "UP":);//  # branch
+path();//
+set(change_to = "DOWN");//  # set
+bend();//  # bend
+set();//  # set
+path(elif event.key == pygame.K_LEFT:);//  # path
+branch(if direction != "RIGHT":);//  # branch
+path();//
+set(change_to = "LEFT");//  # set
+bend();//  # bend
+set();//  # set
+path(elif event.key == pygame.K_RIGHT:);//  # path
+branch(if direction != "LEFT":);//  # branch
+path();//
+set(change_to = "RIGHT");//  # set
+bend();//  # bend
+bend();//  # bend
+bend();//  # bend
+lend();//  # lend
+set(direction = change_to);//  # set
+branch(if direction == "UP":);//  # branch
+path();//
+set(snake_pos[1] -= BLOCK_SIZE);//  # set
+bend();//  # bend
+branch(if direction == "DOWN":);//  # branch
+path();//
+set(snake_pos[1] += BLOCK_SIZE);//  # set
+bend();//  # bend
+branch(if direction == "LEFT":);//  # branch
+path();//
+set(snake_pos[0] -= BLOCK_SIZE);//  # set
+bend();//  # bend
+branch(if direction == "RIGHT":);//  # branch
+path();//
+set(snake_pos[0] += BLOCK_SIZE);//  # set
+bend();//  # bend
+set(snake_body.insert(0, list(snake_pos)));//  # set
+branch(if snake_pos[0] == food_pos[0] and snake_pos[1] == food_pos[1]:);//  # branch
+path();//
+set(score += 10);//  # set
+set(food_spawn = False);//  # set
+set();//  # set
+path(else:);//  # path
+set(snake_body.pop());//  # set
+bend();//  # bend
+branch(if not food_spawn:);//  # branch
+path();//
+set(food_pos = [random.randrange(1, (WIDTH // BLOCK_SIZE)) * BLOCK_SIZE, random.randrange(1, (HEIGHT // BLOCK_SIZE)) * BLOCK_SIZE]);//  # set
+bend();//  # bend
+set(food_spawn = True);//  # set
+set(screen.fill(BLACK));//  # set
+loop(for block in snake_body:);//  # loop
+set(pygame.draw.rect(screen, GREEN, pygame.Rect(block[0], block[1], BLOCK_SIZE, BLOCK_SIZE)));//  # set
+lend();//  # lend
+set(pygame.draw.rect(screen, WHITE, pygame.Rect(food_pos[0], food_pos[1], BLOCK_SIZE, BLOCK_SIZE)));//  # set
+branch(if snake_pos[0] < 0 or snake_pos[0] >= WIDTH or snake_pos[1] < 0 or snake_pos[1] >= HEIGHT:);//  # branch
+path();//
+set(game_over());//  # set
+bend();//  # bend
+loop(for block in snake_body[1:]:);//  # loop
+branch(if snake_pos[0] == block[0] and snake_pos[1] == block[1]:);//  # branch
+path();//
+set(game_over());//  # set
+bend();//  # bend
+lend();//  # lend
+set(show_score(1, WHITE, "times new roman", 20));//  # set
+set(pygame.display.update());//  # set
+set(clock.tick(15));//  # set
+lend();////  # bend//
+end();//  # end
+
+
+
+;INSECTA EMBEDDED SESSION INFORMATION
+; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 3289650
+;    snake.py   #   .
+; notepad.exe
+;INSECTA EMBEDDED ALTSESSION INFORMATION
+; 338 0 2290 2004 0 80   855   4294966599    python.key  0

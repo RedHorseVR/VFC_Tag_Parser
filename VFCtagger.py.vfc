@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : VFCtagger.py.vfc
-;  File Date : 09:51:00 PM - 22:Mar:2025
+;  File Date : 10:10:59 PM - 22:Mar:2025
 
 event(import argparse);//
 event(import os);//
@@ -176,15 +176,26 @@ generic( result =result.lstrip( lang.commentmarker ));//result =result[2:]
 set(flowline = f'{ result }({ codeline.strip() });{VFC_DIVIDER}  {comment }');//flowline = f'{ result }({ codeline.strip() });{VFC_DIVIDER}  {comment.replace( result, "").replace( lang.commentmarker, "")  }'
 end(return flowline);//
 set(PRINTFLOW = False);//
+set(CODEFILE = "TEST2\python1.py");///LANG = args.language.lower( )//
+set(LANG = "python");///LANGUAGE = args.language.lower( )//
 branch(if __name__ == "__main__":);//////
 path();//
+branch(if len( sys.argv ) > 1 :);//
+path( );//
 branch(if len( sys.argv ) > 2 :);//
 path( );//
 set(CODEFILE = sys.argv[2]);///LANG = args.language.lower( )//
 set(LANG = sys.argv[1]);///LANGUAGE = args.language.lower( )//
 path(else: );//
-set(CODEFILE = "TEST2\python1.py");///LANG = args.language.lower( )//
-set(LANG = "python");///LANGUAGE = args.language.lower( )//
+set(CODEFILE = sys.argv[1]);///LANG = args.language.lower( )//
+generic(name, extension = os.path.splitext( CODEFILE ));// ////
+branch(if extension.lower() == '.py'  :);//
+path( );//
+set(LANG = 'python');///LANG = args.language.lower( )//
+path(elif  extension.lower() == '.js' :);//
+set(LANG = 'javascript');///LANG = args.language.lower( )//
+bend( );//
+bend( );//
 bend( );//
 event(lang = import_language( LANG  ));//
 set(lang.commentmarker = lang.commentmarker);//
@@ -225,4 +236,4 @@ end();//
 ;    VFCtagger.py   #   .
 ; notepad++.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 782 243 2570 1806 106 137   1654   4294964561    python.key  0
+; 782 243 2570 1806 187 137   1195   4294961270    python.key  0

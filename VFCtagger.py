@@ -166,15 +166,26 @@ def  mark2flow( marked_line ):
 	flowline = f'{ result }({ codeline.strip() });{VFC_DIVIDER}  {comment }'
 	return flowline
 PRINTFLOW = False
+CODEFILE = "TEST2\python1.py"
+LANG = "python"
 if __name__ == "__main__":
 
-	if len( sys.argv ) > 2 :
+	if len( sys.argv ) > 1 :
 	
-		CODEFILE = sys.argv[2]
-		LANG = sys.argv[1]
-	else:
-		CODEFILE = "TEST2\python1.py"
-		LANG = "python"
+		if len( sys.argv ) > 2 :
+		
+			CODEFILE = sys.argv[2]
+			LANG = sys.argv[1]
+		else:
+			CODEFILE = sys.argv[1]
+			name, extension = os.path.splitext( CODEFILE )
+			if extension.lower() == '.py'  :
+			
+				LANG = 'python'
+			elif  extension.lower() == '.js' :
+				LANG = 'javascript'
+				
+			
 		
 	lang = import_language( LANG  )
 	lang.commentmarker = lang.commentmarker
@@ -207,5 +218,5 @@ if __name__ == "__main__":
 	os.system( f"VFC2000 { output_file} -Reload" )
 	
 
-#  Export  Date: 09:51:00 PM - 22:Mar:2025.
+#  Export  Date: 10:10:59 PM - 22:Mar:2025.
 

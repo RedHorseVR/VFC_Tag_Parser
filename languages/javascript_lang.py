@@ -29,7 +29,7 @@ def  lang_check_path( line ):
 		
 	return newline
 def  lang_filter( line  ):
-	if any(word in line for word in path_types )  :
+	if scanTok( line ,  path_types )  :
 	
 		
 		newline  =  '\t' + line + f'{ commentmarker } path '
@@ -94,5 +94,5 @@ def  footer( exportname  ):
 	foot+=f';{ENVTOK} EMBEDDED ALTSESSION INFORMATION'
 	foot+= '; 1403 30 1055 2034 95 135   485   4294965576    javascript.key  0'
 	return foot
-//  Export  Date: 04:30:36 PM - 23:Mar:2025...
+//  Export  Date: 06:56:42 PM - 25:Mar:2025...
 

@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : python_lang.py.vfc
-;  File Date : 06:18:40 PM - 23:Mar:2025
+;  File Date : 06:56:51 PM - 25:Mar:2025
 
 event(import sys);// ////
 event(import black);// ////
@@ -67,7 +67,7 @@ set(marked_file.append(  f'{ commentmarker } branch ' ));//
 set(marked_file.append(   f'{ commentmarker } path ' ));//
 set();//
 set(newline  =   f'{ commentmarker } path ');//
-path(else: );//
+path(else:);//
 process(push( 'end' ));//
 set();//marked_file.append( f'{ commentmarker } end ' )
 set();//
@@ -131,4 +131,4 @@ end(return foot);//
 ;    python_lang.py   #   .
 ; notepad.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 478 624 3511 1349 0 110   504   4294966209    python.key  0
+; 1251 953 2669 1022 0 80   391   4294966559    python.key  0

@@ -1,285 +1,156 @@
 # set 
 # set 
-import pygame# event 
+import subprocess# event 
 import time# event 
-import random# event 
-import math# event 
-pygame.init()# set 
-WIDTH, HEIGHT = 600, 400# set 
-BLOCK_SIZE = 20# set 
-WHITE = (255, 255, 255)# set 
-BLACK = (0, 0, 0)# set 
-RED = (255, 0, 0)# set 
-GREEN = (0, 255, 0)# set 
-BLUE = (0, 0, 255)# set 
-YELLOW = (255, 255, 0)# set 
-PURPLE = (128, 0, 128)# set 
-CYAN = (0, 255, 255)# set 
-ORANGE = (255, 165, 0)# set 
-screen = pygame.display.set_mode((WIDTH, HEIGHT))# set 
-pygame.display.set_caption("Snake Game")# set 
-clock = pygame.time.Clock()# set 
-GAME_DURATION = 120  # Game duration in seconds# set 
-class Particle:# input 
-# branch 
-# path 
-# path 
-	def __init__(self, x, y, color):# input 
-		self.x = x# set 
-		self.y = y# set 
-		self.color = color# set 
-		self.size = random.randint(2, 5)# set 
-		self.speed_x = random.uniform(-3, 3)# set 
-		self.speed_y = random.uniform(-3, 3)# set 
-		self.lifetime = random.randint(20, 30)# set 
-				# set  # end 
-	def update(self):# input 
-		self.x += self.speed_x# set 
-		self.y += self.speed_y# set 
-		self.lifetime -= 1# set 
-				# set  # end 
-	def draw(self, surface):# input 
-		pygame.draw.circle(surface, self.color, (int(self.x), int(self.y)), self.size)# set 
-				# set  # end 
-	def is_dead(self):# input 
-		return self.lifetime <= 0# end 
-				# set  # end 
-		# set  # bend 
-def show_score(score):# input 
-	font = pygame.font.SysFont("times new roman", 20)# set 
-	score_surface = font.render(f"Score : {score}", True, WHITE)# set 
-	screen.blit(score_surface, (10, 10))# set 
-		# set  # end 
-def show_speed(speed):# input 
-	font = pygame.font.SysFont("times new roman", 20)# set 
-	speed_surface = font.render(f"Speed : {speed} FPS", True, WHITE)# set 
-	screen.blit(speed_surface, (WIDTH - 150, 10))# set 
-		# set  # end 
-def show_timer(time_left):# input 
-	font = pygame.font.SysFont("times new roman", 20)# set 
-	color = RED if time_left < 30 else YELLOW if time_left < 60 else WHITE# set 
-	time_surface = font.render(f"Time : {time_left} sec", True, color)# set 
-	screen.blit(time_surface, (WIDTH // 2 - 50, 10))# set 
-		# set  # end 
-def game_over(score, time_expired=False):# input 
-	screen.fill(BLACK)# set 
-	font = pygame.font.SysFont("times new roman", 50)# set 
-	if time_expired:# branch  
+import os# event 
+import curses# event 
+from datetime import datetime# event 
+def get_gpu_info():# input 
+	try:# branch  
 
 # path
-		go_surface = font.render("TIME'S UP!", True, YELLOW)# set 
-		# set 
-		else:# path 
-		go_surface = font.render("GAME OVER", True, RED)# set 
-				# set  # bend 
-	screen.blit(go_surface, (WIDTH // 4, HEIGHT // 3 - 50))# set 
-	score_font = pygame.font.SysFont("times new roman", 36)# set 
-	score_surface = score_font.render(f"Final Score: {score}", True, WHITE)# set 
-	screen.blit(score_surface, (WIDTH // 4, HEIGHT // 2))# set 
-	pygame.display.flip()# set 
-	time.sleep(3)# set 
-	pygame.quit()# set 
-	quit()# set 
-		# set  # end 
-def create_explosion(x, y, num_particles=30):# input 
-	particles = []# set 
-	colors = [RED, ORANGE, YELLOW, WHITE]# set 
-	for _ in range(num_particles):# loop 
-		color = random.choice(colors)# set 
-		particles.append(Particle(x + BLOCK_SIZE / 2, y + BLOCK_SIZE / 2, color))# set 
-				# set  # lend 
-	return particles# end 
-		# set  # end 
-def get_snake_color(score):# input 
-	if score < 20:# branch  
-
-# path
-		return GREEN# end 
-		# set 
-		elif score < 50:# path 
-		return BLUE# end 
-		# set 
-		elif score < 100:# path 
-		return PURPLE# end 
-		# set 
-		elif score < 150:# path 
-		return CYAN# end 
-		# set 
-		else:# path 
-		colors = [RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE]# set 
-		return colors[int(pygame.time.get_ticks() / 200) % len(colors)]# end 
-				# set  # bend 
-		# set  # end 
-def game_loop():# input 
-	snake_pos = [100, 50]# set 
-	snake_body = [[100, 50], [90, 50], [80, 50]]# set 
-	direction = "RIGHT"# set 
-	change_to = direction# set 
-	food_pos = [random.randrange(1, (WIDTH // BLOCK_SIZE)) * BLOCK_SIZE, random.randrange(1, (HEIGHT // BLOCK_SIZE)) * BLOCK_SIZE]# set 
-	food_spawn = True# set 
-	score = 0# set 
-	game_speed = 15  # Initial game speed (frames per second)# set 
-	particles = []# set 
-	start_time = pygame.time.get_ticks()# set 
-	time_left = GAME_DURATION# set 
-	while True:# loop 
-		current_time = pygame.time.get_ticks()# set 
-		elapsed_seconds = (current_time - start_time) // 1000# set 
-		time_left = max(0, GAME_DURATION - elapsed_seconds)# set 
-		if time_left == 0:# branch  
-
-# path
-			game_over(score, time_expired=True)# set 
-						# set  # bend 
-		for event in pygame.event.get():# loop 
-			if event.type == pygame.QUIT:# branch  
-
-# path
-				pygame.quit()# set 
-				quit()# set 
+		result = subprocess.run(# set 
+			[# set 
+				'nvidia-smi',# set 
+				'--query-gpu=index,name,temperature.gpu,utilization.gpu,utilization.memory,memory.used,memory.total,power.draw',# set 
+				'--format=csv,noheader,nounits',# set 
 								# set  # bend 
-			if event.type == pygame.KEYDOWN:# branch  
+			],# set 
+			stdout=subprocess.PIPE,# set 
+			stderr=subprocess.PIPE,# set 
+			text=True,# set 
+			check=True,# set 
+						# set  # end 
+		)# set 
+		gpus = []# set 
+		for line in result.stdout.strip().split('\n'):# loop 
+			values = [val.strip() for val in line.split(',')]# set 
+			if len(values) >= 8:# branch  
 
 # path
-				if event.key == pygame.K_UP:# branch  
-
-# path
-					if direction != "DOWN":# branch  
-
-# path
-						change_to = "UP"# set 
-												# set  # bend 
-					# set 
-					elif event.key == pygame.K_DOWN:# path 
-					if direction != "UP":# branch  
-
-# path
-						change_to = "DOWN"# set 
-												# set  # bend 
-					# set 
-					elif event.key == pygame.K_LEFT:# path 
-					if direction != "RIGHT":# branch  
-
-# path
-						change_to = "LEFT"# set 
-												# set  # bend 
-					# set 
-					elif event.key == pygame.K_RIGHT:# path 
-					if direction != "LEFT":# branch  
-
-# path
-						change_to = "RIGHT"# set 
-												# set  # bend 
-					# set 
-					elif event.key == pygame.K_1:# path 
-					game_speed = max(5, game_speed - 2)  # Decrease speed (minimum 5)# set 
-					# set 
-					elif event.key == pygame.K_2:# path 
-					game_speed = min(30, game_speed + 2)  # Increase speed (maximum 30)# set 
+				gpu = {# set 
+					'id': values[0],# set 
+					'name': values[1],# set 
+					'temp': values[2],# set 
+					'gpu_util': values[3],# set 
+					'mem_util': values[4],# set 
+					'mem_used': values[5],# set 
+					'mem_total': values[6],# set 
+					'power': values[7],# set 
 										# set  # bend 
-								# set  # bend 
-						# set  # lend 
-		direction = change_to# set 
-		if direction == "UP":# branch  
+				}# set 
+				gpus.append(gpu)# set 
+								# set  # lend 
+						# set  #  
+		return gpus# end 
+		# set 
+		except subprocess.CalledProcessError as e:# path 
+		return [{'error': f"Error executing nvidia-smi: {e.stderr}"}]# end 
+		# set 
+		except Exception as e:# path 
+		return [{'error': f"Unexpected error: {str(e)}"}]# end 
+				# set  #  
+		# set  #  
+def draw_gpu_info(stdscr, refresh_rate=1):# input 
+	curses.start_color()# set 
+	curses.use_default_colors()# set 
+	curses.init_pair(1, curses.COLOR_GREEN, -1)# set 
+	curses.init_pair(2, curses.COLOR_YELLOW, -1)# set 
+	curses.init_pair(3, curses.COLOR_RED, -1)# set 
+	GREEN = curses.color_pair(1)# set 
+	YELLOW = curses.color_pair(2)# set 
+	RED = curses.color_pair(3)# set 
+	curses.curs_set(0)# set 
+	try:# branch  
 
 # path
-			snake_pos[1] -= BLOCK_SIZE# set 
-						# set  # bend 
-		if direction == "DOWN":# branch  
+		while True:# loop 
+			max_y, max_x = stdscr.getmaxyx()# set 
+			stdscr.clear()# set 
+			current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")# set 
+			header = f"GPU Monitor for WSL - {current_time} (Press 'q' to quit)"# set 
+			stdscr.addstr(0, 0, header, curses.A_BOLD)# set 
+			stdscr.addstr(1, 0, "=" * min(len(header), max_x - 1))# set 
+			gpus = get_gpu_info()# set 
+			row = 3# set 
+			for gpu in gpus:# loop 
+				if 'error' in gpu:# branch  
 
 # path
-			snake_pos[1] += BLOCK_SIZE# set 
-						# set  # bend 
-		if direction == "LEFT":# branch  
+					stdscr.addstr(row, 0, f"Error: {gpu['error']}")# set 
+					row += 1# set 
+					continue# output 
+										# set  # bend 
+				stdscr.addstr(row, 0, f"GPU {gpu['id']}: {gpu['name']}", curses.A_BOLD)# set 
+				row += 1# set 
+				temp = float(gpu['temp'])# set 
+				temp_color = GREEN if temp < 70 else (YELLOW if temp < 85 else RED)# set 
+				stdscr.addstr(row, 2, f"Temperature: ", curses.A_BOLD)# set 
+				stdscr.addstr(f"{temp}C", temp_color)# set 
+				row += 1# set 
+				gpu_util = float(gpu['gpu_util'])# set 
+				gpu_util_color = GREEN if gpu_util < 50 else (YELLOW if gpu_util < 90 else RED)# set 
+				bar_width = min(50, max_x - 25)# set 
+				filled_width = int(bar_width * gpu_util / 100)# set 
+				stdscr.addstr(row, 2, f"GPU Utilization: ", curses.A_BOLD)# set 
+				stdscr.addstr(f"{gpu_util}% ", gpu_util_color)# set 
+				stdscr.addstr("[")# set 
+				stdscr.addstr("=" * filled_width, gpu_util_color)# set 
+				stdscr.addstr(" " * (bar_width - filled_width))# set 
+				stdscr.addstr("]")# set 
+				row += 1# set 
+				mem_used = float(gpu['mem_used'])# set 
+				mem_total = float(gpu['mem_total'])# set 
+				mem_percent = (mem_used / mem_total) * 100 if mem_total > 0 else 0# set 
+				mem_color = GREEN if mem_percent < 50 else (YELLOW if mem_percent < 90 else RED)# set 
+				filled_width = int(bar_width * mem_percent / 100)# set 
+				stdscr.addstr(row, 2, f"Memory Usage: ", curses.A_BOLD)# set 
+				stdscr.addstr(f"{mem_used}/{mem_total} MB ({mem_percent:.1f}%) ", mem_color)# set 
+				stdscr.addstr("[")# set 
+				stdscr.addstr("=" * filled_width, mem_color)# set 
+				stdscr.addstr(" " * (bar_width - filled_width))# set 
+				stdscr.addstr("]")# set 
+				row += 1# set 
+				stdscr.addstr(row, 2, f"Power Usage: ", curses.A_BOLD)# set 
+				stdscr.addstr(f"{gpu['power']} W")# set 
+				row += 2# set 
+								# set  # lend 
+			stdscr.addstr(row, 0, f"Refresh rate: {refresh_rate} second(s). Press '+' to increase, '-' to decrease.")# set 
+			stdscr.refresh()# set 
+			stdscr.timeout(refresh_rate * 1000)# set 
+			key = stdscr.getch()# set 
+			if key == ord('q'):# branch  
 
 # path
-			snake_pos[0] -= BLOCK_SIZE# set 
-						# set  # bend 
-		if direction == "RIGHT":# branch  
-
-# path
-			snake_pos[0] += BLOCK_SIZE# set 
-						# set  # bend 
-		if snake_pos[0] < 0:# branch  
-
-# path
-			snake_pos[0] = WIDTH - BLOCK_SIZE# set 
-						# set  # bend 
-		if snake_pos[0] >= WIDTH:# branch  
-
-# path
-			snake_pos[0] = 0# set 
-						# set  # bend 
-		if snake_pos[1] < 0:# branch  
-
-# path
-			snake_pos[1] = HEIGHT - BLOCK_SIZE# set 
-						# set  # bend 
-		if snake_pos[1] >= HEIGHT:# branch  
-
-# path
-			snake_pos[1] = 0# set 
-						# set  # bend 
-		snake_body.insert(0, list(snake_pos))# set 
-		if snake_pos[0] == food_pos[0] and snake_pos[1] == food_pos[1]:# branch  
-
-# path
-			score += 10# set 
-			food_spawn = False# set 
-			particles = create_explosion(food_pos[0], food_pos[1])# set 
-			# set 
-			else:# path 
-			snake_body.pop()# set 
-						# set  # bend 
-		if not food_spawn:# branch  
-
-# path
-			food_pos = [random.randrange(1, (WIDTH // BLOCK_SIZE)) * BLOCK_SIZE, random.randrange(1, (HEIGHT // BLOCK_SIZE)) * BLOCK_SIZE]# set 
-						# set  # bend 
-		food_spawn = True# set 
-		screen.fill(BLACK)# set 
-		for particle in particles[:]:# loop 
-			particle.update()# set 
-			if particle.is_dead():# branch  
-
-# path
-				particles.remove(particle)# set 
+				break# set 
 				# set 
-				else:# path 
-				particle.draw(screen)# set 
-								# set  # bend 
-						# set  # lend 
-		snake_color = get_snake_color(score)# set 
-		for i, block in enumerate(snake_body):# loop 
-			if i == 0:# branch  
-
-# path
-				pygame.draw.rect(screen, snake_color, pygame.Rect(block[0], block[1], BLOCK_SIZE, BLOCK_SIZE))# set 
+				elif key == ord('+') or key == ord('='):# path 
+				refresh_rate = max(0.1, refresh_rate - 0.1)# set 
 				# set 
-				else:# path 
-				darkness = min(i * 10, 100)  # Limit darkness# set 
-				adjusted_color = tuple(max(c - darkness, 0) for c in snake_color)# set 
-				pygame.draw.rect(screen, adjusted_color, pygame.Rect(block[0], block[1], BLOCK_SIZE, BLOCK_SIZE))# set 
+				elif key == ord('-'):# path 
+				refresh_rate = min(10, refresh_rate + 0.1)# set 
 								# set  # bend 
 						# set  # lend 
-		pygame.draw.rect(screen, WHITE, pygame.Rect(food_pos[0], food_pos[1], BLOCK_SIZE, BLOCK_SIZE))# set 
-		for block in snake_body[1:]:# loop 
-			if snake_pos[0] == block[0] and snake_pos[1] == block[1]:# branch  
+		# set 
+		except KeyboardInterrupt:# path 
+		pass# set 
+				# set  # bend 
+		# set  # end 
+def main():# input 
+	try:# branch  
 
 # path
-				game_over(score)# set 
-								# set  # bend 
-						# set  # lend 
-		show_score(score)# set 
-		show_speed(game_speed)# set 
-		show_timer(time_left)# set 
-		pygame.display.update()# set 
-		clock.tick(game_speed)# set 
-				# set  # lend 
+		subprocess.run(['nvidia-smi', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)# set 
+		# set 
+		except (subprocess.CalledProcessError, FileNotFoundError):# path 
+		print("Error: nvidia-smi not found. Make sure NVIDIA drivers are installed correctly in WSL.")# output 
+		return# set 
+				# set  # bend 
+	curses.wrapper(draw_gpu_info)# set 
 		# set  # end 
 if __name__ == "__main__":# branch  
 
 # path
-	game_loop()# set 
+	main()# set 
 # bend
 # end

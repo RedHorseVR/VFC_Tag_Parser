@@ -9,7 +9,7 @@ def pretty_print(source):
 	
 	try:
 	
-		os.system( f'black -l 500 -S -C  { source }'  )
+		os.system( f'black -l 170 -S -C  { source }'  )
 	except :
 		print(" black made no changes")
 		
@@ -110,5 +110,5 @@ def  footer( exportname  ):
 	foot+=f';{ENVTOK} EMBEDDED ALTSESSION INFORMATION'
 	foot+='; 389 43 901 2029 59 89   344   63    python.key  0'
 	return foot
-#  Export  Date: 06:56:51 PM - 25:Mar:2025.
+#  Export  Date: 11:08:47 PM - 02:Apr:2025.
 

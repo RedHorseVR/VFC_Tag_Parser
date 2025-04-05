@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : VFCtagger.py.vfc
-;  File Date : 06:20:42 PM - 23:Mar:2025
+;  File Date : 11:06:08 PM - 02:Apr:2025
 
 event(import argparse);//
 event(import os);//
@@ -192,7 +192,7 @@ lend( );//
 bend();//
 end();//
 set(PRINTFLOW = False);//
-set(CODEFILE = "TEST2\snake.py");///LANG = args.language.lower( )//
+set(CODEFILE = "TEST2\MonGPU.py");//CODEFILE = "TEST2\snake.py"
 set(LANG = "python");///LANGUAGE = args.language.lower( )//
 branch(if __name__ == "__main__":);//////
 path();//
@@ -213,8 +213,7 @@ set(LANG = 'javascript');///LANG = args.language.lower( )//
 bend( );//
 bend( );//
 path(else: );//
-set(LANG = "python");///LANGUAGE = args.language.lower( )//
-set(CODEFILE = "TEST2\snake.py");///LANG = args.language.lower( )//
+output(pass );//
 bend( );//
 event(lang = import_language( LANG  ));//
 set(lang.commentmarker = lang.commentmarker);//
@@ -257,4 +256,4 @@ end();//
 ;    VFCtagger.py   #   .
 ; notepad++.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 827 361 2570 1367 53 126   1202   4294966269    python.key  0
+; 832 278 1803 995 182 136   838   4294960549    python.key  0

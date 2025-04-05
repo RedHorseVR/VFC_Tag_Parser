@@ -181,7 +181,7 @@ def  writeout( filename, list ) :
 		
 	
 PRINTFLOW = False
-CODEFILE = "TEST2\snake.py"
+CODEFILE = "TEST2\MonGPU.py"
 LANG = "python"
 if __name__ == "__main__":
 
@@ -202,8 +202,7 @@ if __name__ == "__main__":
 				
 			
 	else:
-		LANG = "python"
-		CODEFILE = "TEST2\snake.py"
+		pass
 		
 	lang = import_language( LANG  )
 	lang.commentmarker = lang.commentmarker
@@ -238,5 +237,5 @@ if __name__ == "__main__":
 	os.system( f"start VFC2000 { output_file} -Reload" )
 	
 
-#  Export  Date: 06:20:42 PM - 23:Mar:2025.
+#  Export  Date: 11:06:08 PM - 02:Apr:2025.
 

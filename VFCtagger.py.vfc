@@ -2,7 +2,7 @@
 ;  c1995-2015: Visual Flow Coder by 2LResearch
 ;
 ;  File Name : VFCtagger.py.vfc
-;  File Date : 11:06:08 PM - 02:Apr:2025
+;  File Date : 03:17:56 PM - 12:Apr:2025
 
 event(import argparse);//
 event(import os);//
@@ -36,8 +36,16 @@ set(tabrate = last_TAB-TABS);//
 set(next_tabrate = TABS - next_TABS);//
 branch(if   next_tabrate == 1  :);//
 path();//
-set(marked_line =  f'\t' * (TABS) + f'{line} { lang.commentmarker } { lang.pop() } ');//
+set(popObj = lang.pop().split('+'));//
+event();//input( popObj )
+set(marked_line =  f'\t' * (TABS) + f'{line} { lang.commentmarker } { popObj[0] } ');//marked_line =  f'\t' * (TABS) + f'{line} { lang.commentmarker } { lang.pop() } '
 process(marked_file.append( marked_line ););//////
+branch(if  len(popObj) >1:);//
+path();//
+set(marked_line =  f'\t' * (TABS) + f'#class end { lang.commentmarker } { popObj[1] } ');//marked_line =  f'\t' * (TABS) + f'{line} { lang.commentmarker } { lang.pop() } '
+process(marked_file.append( marked_line ););//////
+event();//input( marked_line )
+bend( );//
 output();//print(  f'{TABS-1} {line}'  )
 path(else: );//
 set(marked_line =  f'{line}');////pass//
@@ -58,7 +66,7 @@ lend( );//
 set(line = tabfile[ i+1 ]);//
 event(line = lang.lang_filter( line  , marked_file  ));//
 process(marked_file.append( line ););//
-set(TYPE = lang.pop());//
+set(TYPE = lang.pop());//<---- use up any remaing stacked ojects
 loop(while len(TYPE) > 0  :);//
 process(marked_file.append(  f'{lang.commentmarker } {TYPE}'  ););//<---- last line 
 set(TYPE = lang.pop());//
@@ -191,6 +199,8 @@ process(out.write( line + '\n'  ));//
 lend( );//
 bend();//
 end();//
+event(## MAIN);//////
+output(print( '------------------------------------------------') );//
 set(PRINTFLOW = False);//
 set(CODEFILE = "TEST2\MonGPU.py");//CODEFILE = "TEST2\snake.py"
 set(LANG = "python");///LANGUAGE = args.language.lower( )//
@@ -212,17 +222,21 @@ path(elif  extension.lower() == '.js' :);//
 set(LANG = 'javascript');///LANG = args.language.lower( )//
 bend( );//
 bend( );//
-path(else: );//
-output(pass );//
-bend( );//
 event(lang = import_language( LANG  ));//
 set(lang.commentmarker = lang.commentmarker);//
+path(else: );//
+output(pass );//
+output(print( "NO ARGUMENTS GIVEN.  CODEFILE IN .py or .js EXPECTED."  ));//
+output(print( '------------------------------------------------') );//
+end(exit());//
+bend( );//
 path();//////////
+set(DEBUG = False;);//
 output( lang.pretty_print( CODEFILE ));//
 set(tabfile = gettabbed_file( CODEFILE ));//////
-output(writeout( 'tabs.txt' ,  tabfile ));//// //
+output(if(DEBUG) : writeout( 'tabs.txt' ,  tabfile ));//// //
 process(markfile = process_tabbed_file( tabfile ) ;);//
-output(writeout( 'marks.txt' ,  markfile ));// 
+output(if(DEBUG) : writeout( 'marks.txt' ,  markfile ));// 
 loop(for line  in  markfile :);//
 output(print( line ));//
 lend( );//
@@ -256,4 +270,4 @@ end();//
 ;    VFCtagger.py   #   .
 ; notepad++.exe
 ;INSECTA EMBEDDED ALTSESSION INFORMATION
-; 832 278 1803 995 182 136   838   4294960549    python.key  0
+; 1816 388 1978 1525 203 125   1054   4294966137    python.key  0

@@ -1,0 +1,74 @@
+ set();//  # set
+ set();//  # set
+ input(def cobol_sample_program():);//  # input
+ set(WS_EOF = "N");//  # MOVE "N" TO WS-EOF# set
+ set(WS_YES = "Y");//  # MOVE "Y" TO WS-YES# set
+ set(WS_TEST1 = " ");//  # MOVE " " TO WS-TEST1# set
+ set(WS_TEST2 = "Y");//  # MOVE "Y" TO WS-TEST2# set
+ branch(if WS_YES == "Y":);//  # branch
+ path();//  # path
+ output(print("DISPLAY 'WS-YES is equal to Y'"));//  # output
+ set();//  # set
+ path(else:);//  # path
+ output(print("DISPLAY 'WS-YES is not equal to Y'"));//  # output
+ bend();//  # set  # bend
+ branch(if WS_EOF == "Y":);//  # branch
+ path();//  # path
+ output(print("DISPLAY 'WS-EOF is equal to Y'"));//  # output
+ set();//  # set
+ path(else:);//  # path
+ output(print("DISPLAY 'WS-EOF is not equal to Y'"));//  # output
+ branch(if WS_TEST1 == "X":);//  # branch
+ path();//  # path
+ output(print("DISPLAY 'WS-TEST1 is equal to X'"));//  # output
+ set();//  # set
+ path(else:);//  # path
+ output(print("DISPLAY 'WS-TEST1 is NOT equal to X'"));//  # output
+ bend();//  # set  # bend
+ bend();//  # set  # bend
+ output(print("PERFORM 1000-CREATE-SAMPLE-DATA"));//  # output
+ set(sample1_in = None);//  # set
+ set(sample1_out = None);//  # set
+ output(print("Opening SAMPLE1.IN for reading"));//  # output
+ branch(if True:);//  # Replace with actual file check# branch
+ path();//  # path
+ set(sample1_in = open("SAMPLE1.IN", "r"));//  # set
+ set(content = sample1_in.read());//  # set
+ branch(if not content or "*" in content:);//  # branch
+ path();//  # path
+ set(WS_EOF = WS_YES);//  # set
+ bend();//  # set  # bend
+ set();//  # set
+ path(else:);//  # path
+ output(print("Error opening input file"));//  # output
+ set(WS_EOF = WS_YES);//  # set
+ bend();//  # set  # bend
+ output(print("Opening SAMPLE1.OUT for writing"));//  # output
+ branch(if True:);//  # Replace with actual permission check# branch
+ path();//  # path
+ set(sample1_out = open("SAMPLE1.OUT", "w"));//  # set
+ set();//  # set
+ path(else:);//  # path
+ output(print("Error opening output file"));//  # output
+ set(WS_EOF = WS_YES);//  # set
+ bend();//  # set  # bend
+ output(print("PERFORM 1500-READ-INPUT-RECORD"));//  # output
+ output(print("PERFORM 2000-WRITE-OUTPUT-RECORD"));//  # output
+ output(print("PERFORM 3000-CLOSE-FILES"));//  # output
+ branch(if sample1_in is not None:);//  # branch
+ path();//  # path
+ set(sample1_in.close());//  # set
+ bend();//  # set  # bend
+ branch(if sample1_out is not None:);//  # branch
+ path();//  # path
+ set(sample1_out.close());//  # set
+ bend();//  # set  # bend
+ output(print("GOBACK"));//  # output
+ set(return);//  # set
+ end();//  # set  # end
+ branch(if __name__ == "__main__":);//  # branch
+ path();//  # path
+ set(cobol_sample_program());//  # set
+ bend();//  # bend
+ end();//  # end
+;INSECTA EMBEDDED SESSION INFORMATION; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384;    cobol.py . ; notepad.exe;INSECTA EMBEDDED ALTSESSION INFORMATION; 389 43 901 2029 59 89   344   63    python.key  0

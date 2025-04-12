@@ -1,0 +1,1 @@
+python C:\Users\luisr\VFC_Tag_Parser\VFCtagger.py %1

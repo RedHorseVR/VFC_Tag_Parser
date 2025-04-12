@@ -1,0 +1,149 @@
+ set();//  # set
+ set();//  # set
+ event(import subprocess);//  # event
+ event(import time);//  # event
+ event(import os);//  # event
+ event(import curses);//  # event
+ event(from datetime import datetime);//  # event
+ input(def get_gpu_info():);//  # input
+ branch(try:);//  # branch
+ path();//  # path
+ set(result = subprocess.run();//  # set
+ set([);//  # set
+ set('nvidia-smi',);//  # set
+ set('--query-gpu=index,name,temperature.gpu,utilization.gpu,utilization.memory,memory.used,memory.total,power.draw',);//  # set
+ set('--format=csv,noheader,nounits',);//  # set
+ bend();//  # set  # bend
+ set(],);//  # set
+ set(stdout=subprocess.PIPE,);//  # set
+ set(stderr=subprocess.PIPE,);//  # set
+ set(text=True,);//  # set
+ set(check=True,);//  # set
+ end();//  # set  # end
+ set());//  # set
+ set(gpus = []);//  # set
+ loop(for line in result.stdout.strip().split('\n'):);//  # loop
+ set(values = [val.strip() for val in line.split(',')]);//  # set
+ branch(if len(values) >= 8:);//  # branch
+ path();//  # path
+ set(gpu = {);//  # set
+ set('id': values[0],);//  # set
+ set('name': values[1],);//  # set
+ set('temp': values[2],);//  # set
+ set('gpu_util': values[3],);//  # set
+ set('mem_util': values[4],);//  # set
+ set('mem_used': values[5],);//  # set
+ set('mem_total': values[6],);//  # set
+ set('power': values[7],);//  # set
+ bend();//  # set  # bend
+ set(});//  # set
+ set(gpus.append(gpu));//  # set
+ lend();//  # set  # lend
+ set();//  # set  #
+ end(return gpus);//  # end
+ set();//  # set
+ path(except subprocess.CalledProcessError as e:);//  # path
+ end(return [{'error': f"Error executing nvidia-smi: {e.stderr}"}]);//  # end
+ set();//  # set
+ path(except Exception as e:);//  # path
+ end(return [{'error': f"Unexpected error: {str(e)}"}]);//  # end
+ set();//  # set  #
+ set();//  # set  #
+ input(def draw_gpu_info(stdscr, refresh_rate=1):);//  # input
+ set(curses.start_color());//  # set
+ set(curses.use_default_colors());//  # set
+ set(curses.init_pair(1, curses.COLOR_GREEN, -1));//  # set
+ set(curses.init_pair(2, curses.COLOR_YELLOW, -1));//  # set
+ set(curses.init_pair(3, curses.COLOR_RED, -1));//  # set
+ set(GREEN = curses.color_pair(1));//  # set
+ set(YELLOW = curses.color_pair(2));//  # set
+ set(RED = curses.color_pair(3));//  # set
+ set(curses.curs_set(0));//  # set
+ branch(try:);//  # branch
+ path();//  # path
+ loop(while True:);//  # loop
+ set(max_y, max_x = stdscr.getmaxyx());//  # set
+ set(stdscr.clear());//  # set
+ set(current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S"));//  # set
+ set(header = f"GPU Monitor for WSL - {current_time} (Press 'q' to quit)");//  # set
+ set(stdscr.addstr(0, 0, header, curses.A_BOLD));//  # set
+ set(stdscr.addstr(1, 0, "=" * min(len(header), max_x - 1)));//  # set
+ set(gpus = get_gpu_info());//  # set
+ set(row = 3);//  # set
+ loop(for gpu in gpus:);//  # loop
+ branch(if 'error' in gpu:);//  # branch
+ path();//  # path
+ set(stdscr.addstr(row, 0, f"Error: {gpu['error']}"));//  # set
+ set(row += 1);//  # set
+ output(continue);//  # output
+ bend();//  # set  # bend
+ set(stdscr.addstr(row, 0, f"GPU {gpu['id']}: {gpu['name']}", curses.A_BOLD));//  # set
+ set(row += 1);//  # set
+ set(temp = float(gpu['temp']));//  # set
+ set(temp_color = GREEN if temp < 70 else (YELLOW if temp < 85 else RED));//  # set
+ set(stdscr.addstr(row, 2, f"Temperature: ", curses.A_BOLD));//  # set
+ set(stdscr.addstr(f"{temp}Â°C", temp_color));//  # set
+ set(row += 1);//  # set
+ set(gpu_util = float(gpu['gpu_util']));//  # set
+ set(gpu_util_color = GREEN if gpu_util < 50 else (YELLOW if gpu_util < 90 else RED));//  # set
+ set(bar_width = min(50, max_x - 25));//  # set
+ set(filled_width = int(bar_width * gpu_util / 100));//  # set
+ set(stdscr.addstr(row, 2, f"GPU Utilization: ", curses.A_BOLD));//  # set
+ set(stdscr.addstr(f"{gpu_util}% ", gpu_util_color));//  # set
+ set(stdscr.addstr("["));//  # set
+ set(stdscr.addstr("=" * filled_width, gpu_util_color));//  # set
+ set(stdscr.addstr(" " * (bar_width - filled_width)));//  # set
+ set(stdscr.addstr("]"));//  # set
+ set(row += 1);//  # set
+ set(mem_used = float(gpu['mem_used']));//  # set
+ set(mem_total = float(gpu['mem_total']));//  # set
+ set(mem_percent = (mem_used / mem_total) * 100 if mem_total > 0 else 0);//  # set
+ set(mem_color = GREEN if mem_percent < 50 else (YELLOW if mem_percent < 90 else RED));//  # set
+ set(filled_width = int(bar_width * mem_percent / 100));//  # set
+ set(stdscr.addstr(row, 2, f"Memory Usage: ", curses.A_BOLD));//  # set
+ set(stdscr.addstr(f"{mem_used}/{mem_total} MB ({mem_percent:.1f}%) ", mem_color));//  # set
+ set(stdscr.addstr("["));//  # set
+ set(stdscr.addstr("=" * filled_width, mem_color));//  # set
+ set(stdscr.addstr(" " * (bar_width - filled_width)));//  # set
+ set(stdscr.addstr("]"));//  # set
+ set(row += 1);//  # set
+ set(stdscr.addstr(row, 2, f"Power Usage: ", curses.A_BOLD));//  # set
+ set(stdscr.addstr(f"{gpu['power']} W"));//  # set
+ set(row += 2);//  # set
+ lend();//  # set  # lend
+ set(stdscr.addstr(row, 0, f"Refresh rate: {refresh_rate} second(s). Press '+' to increase, '-' to decrease."));//  # set
+ set(stdscr.refresh());//  # set
+ set(stdscr.timeout(refresh_rate * 1000));//  # set
+ set(key = stdscr.getch());//  # set
+ branch(if key == ord('q'):);//  # branch
+ path();//  # path
+ set(break);//  # set
+ set();//  # set
+ path(elif key == ord('+') or key == ord('='):);//  # path
+ set(refresh_rate = max(0.1, refresh_rate - 0.1));//  # set
+ set();//  # set
+ path(elif key == ord('-'):);//  # path
+ set(refresh_rate = min(10, refresh_rate + 0.1));//  # set
+ bend();//  # set  # bend
+ lend();//  # set  # lend
+ set();//  # set
+ path(except KeyboardInterrupt:);//  # path
+ set(pass);//  # set
+ bend();//  # set  # bend
+ end();//  # set  # end
+ input(def main():);//  # input
+ branch(try:);//  # branch
+ path();//  # path
+ set(subprocess.run(['nvidia-smi', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True));//  # set
+ set();//  # set
+ path(except (subprocess.CalledProcessError, FileNotFoundError):);//  # path
+ output(print("Error: nvidia-smi not found. Make sure NVIDIA drivers are installed correctly in WSL."));//  # output
+ set(return);//  # set
+ bend();//  # set  # bend
+ set(curses.wrapper(draw_gpu_info));//  # set
+ end();//  # set  # end
+ branch(if __name__ == "__main__":);//  # branch
+ path();//  # path
+ set(main());//  # set
+ bend();//  # bend
+ end();//  # end

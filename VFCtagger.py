@@ -29,8 +29,16 @@ def  process_tabbed_file( tabfile ):
 			next_tabrate = TABS - next_TABS
 			if   next_tabrate == 1  :
 			
-				marked_line =  f'\t' * (TABS) + f'{line} { lang.commentmarker } { lang.pop() } '
+				popObj = lang.pop().split('+')
+				
+				marked_line =  f'\t' * (TABS) + f'{line} { lang.commentmarker } { popObj[0] } '
 				marked_file.append( marked_line );
+				if  len(popObj) >1:
+				
+					marked_line =  f'\t' * (TABS) + f'#class end { lang.commentmarker } { popObj[1] } '
+					marked_file.append( marked_line );
+					
+					
 				
 			else:
 				marked_line =  f'{line}'
@@ -180,6 +188,8 @@ def  writeout( filename, list ) :
 					
 		
 	
+## MAIN
+print( '------------------------------------------------')
 PRINTFLOW = False
 CODEFILE = "TEST2\MonGPU.py"
 LANG = "python"
@@ -201,17 +211,21 @@ if __name__ == "__main__":
 				LANG = 'javascript'
 				
 			
+		lang = import_language( LANG  )
+		lang.commentmarker = lang.commentmarker
 	else:
 		pass
+		print( "NO ARGUMENTS GIVEN.  CODEFILE IN .py or .js EXPECTED."  )
+		print( '------------------------------------------------')
+		exit()
 		
-	lang = import_language( LANG  )
-	lang.commentmarker = lang.commentmarker
 
+	DEBUG = False;
 	lang.pretty_print( CODEFILE )
 	tabfile = gettabbed_file( CODEFILE )
-	writeout( 'tabs.txt' ,  tabfile )
+	if(DEBUG) : writeout( 'tabs.txt' ,  tabfile )
 	markfile = process_tabbed_file( tabfile ) ;
-	writeout( 'marks.txt' ,  markfile )
+	if(DEBUG) : writeout( 'marks.txt' ,  markfile )
 	for line  in  markfile :
 		print( line )
 			
@@ -237,5 +251,5 @@ if __name__ == "__main__":
 	os.system( f"start VFC2000 { output_file} -Reload" )
 	
 
-#  Export  Date: 11:06:08 PM - 02:Apr:2025.
+#  Export  Date: 03:17:56 PM - 12:Apr:2025.
 

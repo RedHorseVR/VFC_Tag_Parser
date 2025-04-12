@@ -1,0 +1,94 @@
+;  IRL FlowCode Version: Version 10.0
+;  c1995-2015: Visual Flow Coder by 2LResearch
+;
+;  File Name : LOCcheck.py.vfc
+;  File Date : 06:55:23 PM - 25:Mar:2025
+
+set();//  # set
+set();//  # set
+event(import os);//  # event
+event(import argparse);//  # event
+
+input(def count_lines_in_file(file_path):);//  # input
+branch(try:);//  # branch
+path();//  # path
+branch(with open(file_path, 'r', encoding='utf-8') as file:);//  # branch
+path();//  # path
+end(return sum(1 for _ in file));//  # end
+bend();//  # set  # bend
+set();//  # set
+path(except UnicodeDecodeError:);//  # path
+branch(try:);//  # branch
+path();//  # path
+branch(with open(file_path, 'r', encoding='latin-1') as file:);//  # branch
+path();//  # path
+end(return sum(1 for _ in file));//  # end
+bend();//  # set  # bend
+set();//  # set
+path(except Exception as e:);//  # path
+output(print(f"Error reading {file_path}: {e}"));//  # output
+end(return 0);//  # end
+bend();//  # set  # bend
+set();//  # set
+path(except Exception as e:);//  # path
+output(print(f"Error reading {file_path}: {e}"));//  # output
+end(return 0);//  # end
+bend();//  # set  # bend
+end();//  # set  # end
+
+input(def scan_directory(directory_path):);//  # input
+set();//  #    """
+set();//  #    Returns a tuple: (total_line_count, file_count, file_details) # set --
+set();//  #    """ # set --
+set(total_lines = 0);//  # set
+set(file_count = 0);//  # set
+set(file_details = []);//  # set
+loop(for root, _, files in os.walk(directory_path):);//  # loop
+loop(for file in files:);//  # loop
+branch(if file.endswith(('.vfc', '.ins')):);//  # branch
+path();//  # path
+set(file_path = os.path.join(root, file));//  # set
+set(line_count = count_lines_in_file(file_path));//  # set
+set(total_lines += line_count);//  # set
+set(file_count += 1);//  # set
+set(file_details.append({'path': file_path, 'lines': line_count}));//  # set
+bend();//  # set  # bend
+lend();//  # set  # lend
+lend();//  # set  # lend
+end(return total_lines, file_count, file_details);//  # end
+end();//  # set  # end
+
+input(def main():);//  # input
+set(parser = argparse.ArgumentParser(description='Count lines in .vfc and .ins files.'));//  # set
+set(parser.add_argument('directory', help='Directory to scan recursively'));//  # set
+set(args = parser.parse_args());//  # set
+branch(if not os.path.isdir(args.directory):);//  # branch
+path();//  # path
+output(print(f"Error: {args.directory} is not a valid directory"));//  # output
+set(return);//  # set
+bend();//  # set  # bend
+output(print(f"Scanning {args.directory} for .vfc and .ins files..."));//  # output
+set(total_lines, file_count, file_details = scan_directory(args.directory));//  # set
+set(file_details.sort(key=lambda x: x['lines'], reverse=True));//  # set
+output(print("\nFile Details:"));//  # output
+loop(for file_info in file_details:);//  # loop
+output(print(f"{file_info['lines']:8,d} lines - {file_info['path']}"));//  # output
+lend();//  # set  # lend
+output(print("\nSummary:"));//  # output
+output(print(f"Total files found: {file_count}"));//  # output
+output(print(f"Total lines: {total_lines:,}"));//  # output
+end();//  # set  # end
+branch(if __name__ == "__main__":);//  # branch
+path();//  # path
+set(main());//  # set
+bend();//  # bend
+end();//  # end
+
+
+
+;INSECTA EMBEDDED SESSION INFORMATION
+; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384
+;    LOCcheck.py   #   .
+; notepad.exe
+;INSECTA EMBEDDED ALTSESSION INFORMATION
+; 4294965957 4294966392 941 2198 59 89   344   63    python.key  0

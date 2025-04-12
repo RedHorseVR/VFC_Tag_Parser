@@ -49,10 +49,12 @@ def  lang_filter( line ,  marked_file ):
 		push( 'lend' )
 		newline  =  line + f'{ commentmarker } loop '
 	elif  scanTok( line, input_types  ) :
+		
 		if  'class' in line  :
 		
+			marked_file.append(   f'{ commentmarker } end ' )
 			
-			push( 'bend' )
+			push( 'bend+end' )
 			marked_file.append(  line + f'{ commentmarker } input ' )
 			marked_file.append(  f'{ commentmarker } branch ' )
 			marked_file.append(   f'{ commentmarker } path ' )
@@ -110,5 +112,5 @@ def  footer( exportname  ):
 	foot+=f';{ENVTOK} EMBEDDED ALTSESSION INFORMATION'
 	foot+='; 389 43 901 2029 59 89   344   63    python.key  0'
 	return foot
-#  Export  Date: 11:08:47 PM - 02:Apr:2025.
+#  Export  Date: 03:18:43 PM - 12:Apr:2025.
 

@@ -107,10 +107,10 @@ def  footer( exportname  ):
 	ENVTOK = 'INSECTA'
 	foot = f';{ENVTOK} EMBEDDED SESSION INFORMATION'
 	foot+= '; 255 16777215 65280 16777088 16711680 13158600 13158600 0 255 255 9895835 6946660 16384'
-	foot+= f';    { exportname } . '
+	foot+= f';    _{ exportname } . '
 	foot+='; notepad.exe'
 	foot+=f';{ENVTOK} EMBEDDED ALTSESSION INFORMATION'
 	foot+='; 389 43 901 2029 59 89   344   63    python.key  0'
 	return foot
-#  Export  Date: 03:18:43 PM - 12:Apr:2025.
+#  Export  Date: 02:11:35 PM - 13:Apr:2025.
 
